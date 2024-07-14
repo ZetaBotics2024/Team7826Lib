@@ -1,0 +1,36 @@
+A. Set up project
+    a. Install of libraries(Done)
+    b. Set up Advantage Kit(Done)
+    c. Deleate Uneaded Files
+B. Add basics untill
+    a. Create Motor Wrapper
+    b. Add all custem Command sequences
+    c. Add a genaric wait command that works easialy without stupidity
+    c. Set up controler wrappers for ease of use
+        a. XBoxControlers
+        b. Button Moneky Controller
+    d. Create State Based System
+        a. ?
+        b. Add commended in state example usege for teleop
+C. Set up swerve with Advantage Kit
+    a. Refactor Swerve for Advantage Kit
+    b. Refactor Swerve drive for motor wrappers
+D. Set up Odometry Vision
+    a. Refactor Vision code to work with Advantage Kit and run on a second thread
+    b. Refactor Vision code to be easaly modifable and work with any amount of cameras.
+    c. Inigrate vision with Swerve as needed
+E. Set up Auton System
+    a. Set up system to take in commands and run them during Auton(or for auto positining in teleop)(Must make use of a state based system)
+        b. Provide an example of an auto rotune in commands using the state based system.
+    b. Set up a go to Pose with PIDS in a way that makes it work pretter than last years(Rename and refactor)
+        a. Create GoToPoseAfterTime(Or something of the same function)
+        b. Create all types of GoToPose that we used last year.
+    c. Set up extracted auton system that lets you slot in PathPlanener auton, WPILib Trejectors and Choreo trejectories.
+    d. Find a better way to do auto positioning.
+D. Set up Game Object Tracking
+    a. Create Game Object Tracking code for Photon Vision and test it
+    b. If it works works good enough set up a system to move to a game object based on the location read by the camera and make it in a way that is easy to use with auton
+    c. If posible make it so that it live tracks the game object and goes to ware it is in relation to the robot every frame 
+        rather than based on a one time read inital value that the robot reads
+
+    

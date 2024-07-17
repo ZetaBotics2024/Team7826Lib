@@ -3,9 +3,8 @@ A. Set up project
     b. Set up Advantage Kit(Done)
     c. Deleate Uneaded Files(Done)
 B. Add basics untill
-    a. Create Motor Wrapper
-    b. Add all custem Command sequences
-    c. Add a genaric wait command that works easialy without stupidity
+    a. Add all custem Command sequences-Done
+    b. Add a genaric wait command that works easialy without stupidity(Done)
     c. Set up controler wrappers for ease of use
         a. XBoxControlers
         b. Button Moneky Controller

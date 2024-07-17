@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.utils.LEDUtils.LEDManager;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -69,6 +70,10 @@ public class Robot extends LoggedRobot {
     }
     // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
     Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
+    
+    // Initalized the LEDs
+    LEDManager.init(); 
+
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.

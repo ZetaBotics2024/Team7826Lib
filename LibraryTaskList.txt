@@ -6,14 +6,15 @@ B. Add basics untill
     a. Add all custem Command sequences-Done
     b. Add a genaric wait command that works easialy without stupidity(Done)
     c. Set up controler wrappers for ease of use
-        a. XBoxControlers
-        b. Button Moneky Controller
+        a. XBoxControlers(Done)
+        b. Button Moneky Controller(Done)
     d. Create State Based System
         a. ?
         b. Add commended in state example usege for teleop
+B.2
+    a. Impliment Cadle LEDs with Advantage Kit(Done)
 C. Set up swerve with Advantage Kit
     a. Refactor Swerve for Advantage Kit
-    b. Refactor Swerve drive for motor wrappers
 D. Set up Odometry Vision
     a. Refactor Vision code to work with Advantage Kit and run on a second thread
     b. Refactor Vision code to be easaly modifable and work with any amount of cameras.

@@ -1,3 +1,5 @@
+Note: Make sure to set call can devesise to be on the correct canbus
+
 A. Set up project
     a. Install of libraries(Done)
     b. Set up Advantage Kit(Done)
@@ -15,6 +17,14 @@ B.2
     a. Impliment Cadle LEDs with Advantage Kit(Done)
 C. Set up swerve with Advantage Kit
     a. Refactor Swerve for Advantage Kit
+        a. Set up SwerveModuleIO(Done)
+        b. Impliment SwerveModuleIOSparkMax
+        c. Tripple Check SwerveModuleIOSparkMax to be correct based on last years swerve
+        d. Impliment GyroIO
+        e. Impliment SwerveDriveSubsystem. 
+        f. Impliment SwerveModuleIOTalonFX and tripple check it to be correct
+        g. Impliment DriveCommands and add them to Robot Container. 
+
 D. Set up Odometry Vision
     a. Refactor Vision code to work with Advantage Kit and run on a second thread
     b. Refactor Vision code to be easaly modifable and work with any amount of cameras.

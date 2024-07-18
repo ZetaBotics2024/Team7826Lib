@@ -161,7 +161,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
      * From there the value can be gotton from Pheonix Tuner. 
      */
     private void configTurningAbsoluteEncoder(int turnAbsoluteEncoderID, double turningAbsoluteEncoderOffset) {
-        this.turnAbsoluteEncoder = new CANcoder(turnAbsoluteEncoderID, null);
+        this.turnAbsoluteEncoder = new CANcoder(turnAbsoluteEncoderID, SwerveDriveConstants.kCANLoopName);
         CANcoderConfiguration turningAbsoluteEncoderConfig = new CANcoderConfiguration();
         MagnetSensorConfigs magnetConfigs = new MagnetSensorConfigs();
         magnetConfigs.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;

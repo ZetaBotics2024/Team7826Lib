@@ -1,5 +1,7 @@
 package frc.robot.Constants;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 // Do not create an instants of a constant class
@@ -10,6 +12,12 @@ public final class DrivetrainConstants {
      * Constants for the Swerve Drive
      */
     public static final class SwerveDriveConstants {
+        // Driver Interaction constants
+        public static final double kMaxSpeedMetersPerSecond = 4.3;
+        public static final double kMaxRotationAnglePerSecond = 11.4;
+
+        // Name of the CAN Bus the Swerve Drive is on.
+        public static final String kCANLoopName = "rio"; // To swich to CANivor set the CANLoopName to the CANivors serial number or name
 
         // Swerve Module Configuration Constants
         public static final String kFrontLeftModuleName = "FrontLeftModule";
@@ -50,6 +58,28 @@ public final class DrivetrainConstants {
         public static final double kFrontRightTurningAbsoluteEncoderOffsetRotations= 11;
         public static final double kBackLeftTurningAbsoluteEncoderOffsetRotations = 12;
         public static final double kBackRightTurningAbsoluteEncoderOffsetRotations = 13;
+    
+        // End of Swerve Module Configuration Constants
+
+        public static final int kGyroCANID = 14; 
+
+        // Kinematic Configuration
+
+        public static final double kDistanceBetweenCentersOfRightAndLeftWheels = .60325;
+        public static final double kDistanceBetweenCentersOfFrontAndBackWheels = .60325;
+        public static final double kRadiusFromCenterToFarthestSwerveModule = Math
+        .sqrt(((kDistanceBetweenCentersOfRightAndLeftWheels * kDistanceBetweenCentersOfRightAndLeftWheels)
+            + (kDistanceBetweenCentersOfFrontAndBackWheels * kDistanceBetweenCentersOfFrontAndBackWheels)));
+
+        public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+        new Translation2d(kDistanceBetweenCentersOfFrontAndBackWheels / 2,
+            kDistanceBetweenCentersOfRightAndLeftWheels / 2),
+        new Translation2d(kDistanceBetweenCentersOfFrontAndBackWheels / 2,
+            -kDistanceBetweenCentersOfRightAndLeftWheels / 2),
+        new Translation2d(-kDistanceBetweenCentersOfFrontAndBackWheels / 2,
+            kDistanceBetweenCentersOfRightAndLeftWheels / 2),
+        new Translation2d(-kDistanceBetweenCentersOfFrontAndBackWheels / 2,
+            -kDistanceBetweenCentersOfRightAndLeftWheels / 2));
     }
 
     /**

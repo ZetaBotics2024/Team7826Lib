@@ -4,44 +4,40 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
-import com.revrobotics.SparkPIDController.AccelStrategy;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
 
-public class SwerveModuleIOSparkMax implements SwerveModuleIO{
+public class SwerveModuleIOTalonFX implements SwerveModuleIO{
 
     private String swerveModuleName; 
 
-    private CANSparkMax driveMotor;
-    private CANSparkMax turnMotor;
-
-    private SparkPIDController drivePIDController;
-    private SparkPIDController turnPIDController;
-
-    private RelativeEncoder driveRelativeEncoder;
+    private TalonFX driveMotor;
+    private TalonFX turnMotor;
 
     private CANcoder turnAbsoluteEncoder;
-    private RelativeEncoder turnRelativeEncoder;
 
     private double turningAbsoluteEncoderOffset;
 
+    private VelocityVoltage driveControlRequest = new VelocityVoltage(0);
+    private PositionDutyCycle turnControlRequest = new PositionDutyCycle(0);
+
     /**
-     * Creates a SwerveModuleIOSparkMax object and completes all configuration for the module
+     * Creates a SwerveModuleIOTalonFX object and completes all configuration for the module
      * @param swerveModuleName String: The name of the module. List of valid module names can be found in SwerveDriveConstants
      */
-    public SwerveModuleIOSparkMax(String swerveModuleName) {
+    public SwerveModuleIOTalonFX(String swerveModuleName) {
         this.swerveModuleName = swerveModuleName;
 
         switch (this.swerveModuleName) {
@@ -69,15 +65,8 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
                 throw new RuntimeException("Invalid Module Name: " + swerveModuleName + ", Please change to a valid name. List of valid names can be found in SwerveModuleConstants");
         }
 
-        this.driveRelativeEncoder = this.driveMotor.getEncoder();
-        this.turnRelativeEncoder = this.turnMotor.getEncoder();
-
         configDirvePID();
         configTurnPID();
-
-        this.driveMotor.burnFlash();
-        this.turnMotor.burnFlash();
-
         Timer.delay(1); // We should see if we can reduce this to dramaticly increase robot boot time. 
         resetTurningMotorToAbsolute();
 
@@ -90,34 +79,35 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
      * @param driveMotorInverted Boolean: Wether or not the drive motor is inverted
      */
     private void configDriveMotor(int driveMotorID, boolean driveMotorInverted) {
-        this.driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
-        this.driveMotor.restoreFactoryDefaults();
+        this.driveMotor = new TalonFX(driveMotorID, SwerveDriveConstants.kCANLoopName);
+        TalonFXConfiguration driveMotorConfig = new TalonFXConfiguration();
+        driveMotorConfig.MotorOutput.Inverted = driveMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+        driveMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-        this.driveMotor.setInverted(driveMotorInverted);
-        this.driveMotor.setIdleMode(IdleMode.kBrake);
-
-        this.driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-        this.driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-        this.driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
-
-        this.driveMotor.setSmartCurrentLimit(SwerveModuleConstants.kDriveMotorMaxAmpsSparkMax);
-        this.driveMotor.enableVoltageCompensation(12);
+        // May need to set more fields becuase optimize useage 
+        this.driveMotor.getVelocity().setUpdateFrequency(20);
+        this.driveMotor.getAcceleration().setUpdateFrequency(20);
+        this.driveMotor.getPosition().setUpdateFrequency(20);
+        this.driveMotor.getTorqueCurrent().setUpdateFrequency(50);
+    
+        driveMotorConfig.Voltage.PeakForwardVoltage = SwerveModuleConstants.kDriveMotorMaxVoltageSparkMaxTalonFX;
+        driveMotorConfig.Voltage.PeakReverseVoltage = -SwerveModuleConstants.kDriveMotorMaxVoltageSparkMaxTalonFX;
+        this.driveMotor.optimizeBusUtilization();
+        this.driveMotor.getConfigurator().apply(driveMotorConfig);
     }
 
      /**
       * Configures the drive motor PID Controller. 
       */
     private void configDirvePID() {
-        this.drivePIDController = this.driveMotor.getPIDController();
-        
-        this.drivePIDController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
+        Slot0Configs drivePIDConfig = new Slot0Configs();
 
-        this.drivePIDController.setP(SwerveModuleConstants.kPModuleDrivePIDValue, 0);
-        this.drivePIDController.setI(SwerveModuleConstants.kIModuleDrivePIDValue, 0);
-        this.drivePIDController.setD(SwerveModuleConstants.kDModuleDrivePIDValue, 0);
-        this.drivePIDController.setFF(SwerveModuleConstants.kFFModuleDrivePIDValue, 0);
-        this.drivePIDController.setIZone(SwerveModuleConstants.kIZoneModuleDrivePIDValue, 0);
-        this.drivePIDController.setOutputRange(SwerveModuleConstants.kDriveMotorMinPercentOutput, SwerveModuleConstants.kDriveMotorMaxPercentOutput);
+        drivePIDConfig.kP = SwerveModuleConstants.kPModuleDrivePIDValue;
+        drivePIDConfig.kI = SwerveModuleConstants.kIModuleDrivePIDValue;
+        drivePIDConfig.kD = SwerveModuleConstants.kDModuleDrivePIDValue;
+        drivePIDConfig.kS = SwerveModuleConstants.kFFModuleDrivePIDValue;  
+
+        this.driveMotor.getConfigurator().apply(drivePIDConfig);
     }
 
     /**
@@ -126,31 +116,36 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
      * @param turnMotorInverted Boolean: Wether or not the turn motor is inverted
      */
     private void configTurnMotor(int turnMotorID, boolean turnMotorInverted) {
-        this.turnMotor = new CANSparkMax(turnMotorID, MotorType.kBrushless);
-        this.turnMotor.restoreFactoryDefaults();
+        this.turnMotor = new TalonFX(turnMotorID, SwerveDriveConstants.kCANLoopName);
+        TalonFXConfiguration turnMotorConfig = new TalonFXConfiguration();
+        turnMotorConfig.MotorOutput.Inverted = turnMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+        turnMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-        this.turnMotor.setInverted(turnMotorInverted);
-        this.turnMotor.setIdleMode(IdleMode.kBrake);
+        // May need to set more fields becuase optimize useage 
+        this.turnMotor.getVelocity().setUpdateFrequency(20);
+        this.turnMotor.getAcceleration().setUpdateFrequency(20);
+        this.turnMotor.getPosition().setUpdateFrequency(20);
+        this.turnMotor.getTorqueCurrent().setUpdateFrequency(50);
 
-        this.turnMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-        this.turnMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
-        this.turnMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
+        turnMotorConfig.Voltage.PeakForwardVoltage = SwerveModuleConstants.kTurnMotorMaxVoltageSparkMaxTalonFX;
+        turnMotorConfig.Voltage.PeakReverseVoltage = -SwerveModuleConstants.kTurnMotorMaxVoltageSparkMaxTalonFX;
 
-        this.driveMotor.setSmartCurrentLimit(SwerveModuleConstants.kTurnMotorMaxAmpsSparkMax);
+        this.turnMotor.optimizeBusUtilization();
+        this.turnMotor.getConfigurator().apply(turnMotorConfig);
     }
     
     /**
       * Configures the turn motor PID Controller. 
-      */
+     */
     private void configTurnPID() {
-        this.turnPIDController = this.turnMotor.getPIDController();
+        Slot0Configs turnPIDConfig = new Slot0Configs();
 
-        this.turnPIDController.setP(SwerveModuleConstants.kPModuleTurnPIDValue, 0);
-        this.turnPIDController.setI(SwerveModuleConstants.kIModuleTurnPIDValue, 0);
-        this.turnPIDController.setD(SwerveModuleConstants.kDModuleTurnPIDValue, 0);
-        this.turnPIDController.setFF(SwerveModuleConstants.kFFModuleTurnPIDValue, 0);
-        this.turnPIDController.setIZone(SwerveModuleConstants.kIZoneModuleTurnPIDValue, 0);
-        this.turnPIDController.setOutputRange(SwerveModuleConstants.kTurnMotorMinPercentOutput, SwerveModuleConstants.kTurnMotorMaxPercentOutput);
+        turnPIDConfig.kP = SwerveModuleConstants.kPModuleTurnPIDValue;
+        turnPIDConfig.kI = SwerveModuleConstants.kIModuleTurnPIDValue;
+        turnPIDConfig.kD = SwerveModuleConstants.kDModuleTurnPIDValue;
+        turnPIDConfig.kS = SwerveModuleConstants.kFFModuleTurnPIDValue;  
+
+        this.driveMotor.getConfigurator().apply(turnPIDConfig);
     }
 
     /**
@@ -177,7 +172,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
      * Resets the relitive built in encoder of the turn motor to be equal to the offsetted absolute angle reading from the absolute encoder.
      */
     public void resetTurningMotorToAbsolute() {
-        this.turnRelativeEncoder.setPosition((
+        this.turnMotor.setPosition((
             this.turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble() 
             - this.turningAbsoluteEncoderOffset) * SwerveModuleConstants.kTurningGearRatio);
       }
@@ -191,25 +186,29 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
 
     @Override
     public void updateInputs(SwerveModuleIOInputs inputs) {
-        inputs.driveMotorRotations = this.driveRelativeEncoder.getPosition();
-        inputs.driveMotorRPM = this.driveRelativeEncoder.getVelocity();
+        inputs.driveMotorRotations = this.driveMotor.getPosition().getValueAsDouble();
+        inputs.driveMotorRPM = this.driveMotor.getVelocity().getValueAsDouble() * 60; // 60 For number of seconds in a minute.
+        // This is done because TalonFX uses RPS instead of RMP
         inputs.driveMotorSpeedMetersPerSecond = inputs.driveMotorRPM * SwerveModuleConstants.kDriveConversionVelocityFactor;
         inputs.driveMotorDistanceMeters = (inputs.driveMotorRotations / SwerveModuleConstants.kDriveGearRatio) * SwerveModuleConstants.kWheelDistancePerRotation;
-        inputs.driveMotorAppliedVolts = driveMotor.getAppliedOutput() * driveMotor.getBusVoltage();
-        inputs.driveMotorCurrentAmps = new double[] {driveMotor.getOutputCurrent()};
+        inputs.driveMotorAppliedVolts = this.driveMotor.getMotorVoltage().getValueAsDouble();
+        inputs.driveMotorCurrentAmps = new double[] {this.driveMotor.getSupplyCurrent().getValueAsDouble()};
 
         inputs.turnMotorAbsolutePositionRotations = this.turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble();
-        inputs.turnMotorRelitivePositionRotations = this.turnRelativeEncoder.getPosition();
+        inputs.turnMotorRelitivePositionRotations = this.turnMotor.getPosition().getValueAsDouble();
         inputs.wheelAngleRelitivePositionRotations = inputs.turnMotorRelitivePositionRotations / SwerveModuleConstants.kTurningGearRatio;
-        inputs.turnMotorRPM = this.turnRelativeEncoder.getVelocity();
-        inputs.turnMotorAppliedVolts = turnMotor.getAppliedOutput() * turnMotor.getBusVoltage();
-        inputs.turnMotorCurrentAmps = new double[] {turnMotor.getOutputCurrent()};
+        inputs.turnMotorRPM = this.turnMotor.getVelocity().getValueAsDouble() * 60; // 60 For number of seconds in a minute.
+        // This is done because TalonFX uses RPS instead of RMP
+        inputs.turnMotorAppliedVolts = this.turnMotor.getMotorVoltage().getValueAsDouble();
+        inputs.turnMotorCurrentAmps = new double[] {this.turnMotor.getSupplyCurrent().getValueAsDouble()};
     }
 
     @Override
     public void setDesiredModuleVelocityRPM(double desiredRPM) {
         Logger.recordOutput("SwerveDrive/Module" + swerveModuleName + " Desired RPM", desiredRPM);
-        this.drivePIDController.setReference(desiredRPM, CANSparkMax.ControlType.kVelocity);
+        this.driveControlRequest.Velocity = desiredRPM / 60; // 60 For number of seconds in a minute.
+        // This is done because TalonFX uses RPS instead of RMP
+        this.driveMotor.setControl(this.driveControlRequest);
     }
 
     @Override
@@ -220,6 +219,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
         Logger.recordOutput("SwerveDrive/Module" + swerveModuleName + " Desired Module Rotations" , desiredModuleRotations);
         Logger.recordOutput("SwerveDrive/Module" + swerveModuleName + " Desired Motor Rotations" , desiredMotorRotation);
 
-        turnPIDController.setReference(desiredMotorRotation, CANSparkMax.ControlType.kPosition); 
+        this.turnControlRequest.Position = desiredMotorRotation;
+        this.turnMotor.setControl(this.turnControlRequest);
     }
 }

@@ -27,6 +27,7 @@ public interface SwerveModuleIO {
     public static class SwerveModuleIOInputs {
         public double driveMotorRotations = 0.0;
         public double driveMotorRPM = 0.0;
+        public double driveMotorSpeedMetersPerSecond = 0.0;
         public double driveMotorDistanceMeters = 0.0;
         public double driveMotorAppliedVolts = 0.0;
         public double[] driveMotorCurrentAmps = new double[] {};

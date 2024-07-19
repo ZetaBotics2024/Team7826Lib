@@ -96,6 +96,7 @@ public final class DrivetrainConstants {
         public static final double kFFModuleDrivePIDValue = 0;
         public static final double kIZoneModuleDrivePIDValue = 0.0;
 
+        // If useing TalonFX Swerve these can not be set. Instead please rely on the the max and min voltage.
         public static final double kDriveMotorMinPercentOutput = -1;
         public static final double kDriveMotorMaxPercentOutput = 1;
 
@@ -105,40 +106,27 @@ public final class DrivetrainConstants {
         public static final double kFFModuleTurnPIDValue = 0;
         public static final double kIZoneModuleTurnPIDValue = 0.5 / 360; // 1/2 degrees converted to rotations
 
+        // If useing TalonFX Swerve these can not be set. Instead please rely on the the max and min voltage.
         public static final double kTurnMotorMinPercentOutput = -.2;
         public static final double kTurnMotorMaxPercentOutput = .2;
 
-        // Swerve Module Configuration Values
+        public static final int kDriveMotorMaxAmpsSparkMax = 40;
+        public static final int kTurnMotorMaxAmpsSparkMax = 5;
         
-        public static final double kAbsoluteTurningEncoderCPR = 4096.0;
-        public static final double kNeoEncoderCPR = 4096.0;
+        public static final int kDriveMotorMaxVoltageSparkMaxTalonFX = 12;
+
+        //TODO: This can definetly be lowered
+        public static final int kTurnMotorMaxVoltageSparkMaxTalonFX = 12; 
+
+        // Swerve Module Configuration Values
         public static final double kMaxRPM = 5676.0;
         public static final double kWheelDiameterMeters = Units.inchesToMeters(3.733428923);// 3.83931974);//0.1016;
         public static final double kDriveGearRatio = (50.0 * 17.0 * 45.0) / (14.0 * 27.0 * 15.0);// 6.75/1.0;
         public static final double kTurningGearRatio = 150.0 / 7.0;
 
-        public static final double kTurningConversionFactor = 360.0 / kTurningGearRatio;
-
-        public static final double kAbsoluteTurningEncoderCPRToDegrees = (kAbsoluteTurningEncoderCPR
-            / kAbsoluteTurningEncoderCPR) * 360.0;
-
-        public static final double kAbsoluteTurningEncoderCPRToDegreesMult = 360.0 / 4096.0;
-
-        public static final double kRelativeTurningEncoderDegreesToCPRMult = kNeoEncoderCPR / 360;
-        // ((kNeoEncoderCPR / kNeoEncoderCPR) * 360) * kTurningGearRatio;
-
         public static final double kWheelDistancePerRotation = kWheelDiameterMeters * Math.PI;
-
-        public static final double kDriveConversionPositionFactor = (kWheelDiameterMeters * Math.PI) / kDriveGearRatio;
-        public static final double kDriveConversionVelocityFactor = kDriveConversionPositionFactor / 60.0;
-
-        public static final double kDriveEncoderDistancePerPulse = ((kWheelDiameterMeters * Math.PI) / kDriveGearRatio)
-            / kNeoEncoderCPR;
-
-        public static final double kTurningEncoderRadiansPerPulse =
-            // Assumes the encoders are on a 1:1 reduction with the module shaft.
-            (2 * Math.PI) / kAbsoluteTurningEncoderCPR;
-        public static final int kDriveMotorMaxVoltage = 0;
-        public static final int kTurnMotorMaxVoltage = 0;
+        public static final double kDriveConversionPositionFactor = kWheelDistancePerRotation / kDriveGearRatio;
+        public static final double kDriveConversionVelocityFactor = kDriveConversionPositionFactor / 60.0; /* Figure why this sixty is here. It was last seasion
+            on it work so it does not need to change but why is it here. */
     }
 }

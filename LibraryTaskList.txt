@@ -18,10 +18,10 @@ B.2
 C. Set up swerve with Advantage Kit
     a. Refactor Swerve for Advantage Kit
         a. Set up SwerveModuleIO(Done)
-        b. Impliment SwerveModuleIOSparkMax
+        b. Impliment SwerveModuleIOSparkMax(Done)
         c. Tripple Check SwerveModuleIOSparkMax to be correct based on last years swerve
-        d. Impliment GyroIO
-        e. Impliment SwerveDriveSubsystem. 
+        d. Impliment GyroIO(Done)
+        e. Impliment SwerveDriveSubsystem.(Done)
         f. Impliment SwerveModuleIOTalonFX and tripple check it to be correct
         g. Impliment DriveCommands and add them to Robot Container. 
 

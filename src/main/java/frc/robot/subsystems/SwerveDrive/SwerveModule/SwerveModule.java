@@ -36,7 +36,8 @@ public class SwerveModule {
      * Must be called in DriveSubsystem Periodic. Updates all logged inputes
      */
     public void periodic() {
-        Logger.processInputs("SwerveDrive/Module" + swerveModuleName, swerveModuleInputs);
+        updateInputs();
+        Logger.processInputs("SwerveDrive/" + swerveModuleName, swerveModuleInputs);
     }
 
     /**
@@ -47,7 +48,7 @@ public class SwerveModule {
         SwerveModuleState optimizedState = SwerveModuleAngleOptimizer.optimize(desiredState, getModuleState().angle); 
         
         double desiredRPM = optimizedState.speedMetersPerSecond / SwerveModuleConstants.kDriveConversionVelocityFactor; 
-        Logger.recordOutput("SwerveDrive/Module" + swerveModuleName + " Desired MPS", optimizedState.speedMetersPerSecond);
+        Logger.recordOutput("SwerveDrive/DesiredModuleStates/" + swerveModuleName + "DesiredMPS", optimizedState.speedMetersPerSecond);
 
         this.swerveModuleIO.setDesiredModuleVelocityRPM(desiredRPM);
         this.swerveModuleIO.setDesiredModuleAngle(desiredState.angle);

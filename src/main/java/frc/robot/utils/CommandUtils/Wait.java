@@ -21,7 +21,8 @@ public class Wait {
     }
 
     /**
-     *  Returns whether or not the time has passed;
+     *  Returns whether or not the time has passed
+     * @return Boolean: Whether or not the desired wait time has passed. 
      */
     public boolean hasTimePassed() {
         return Timer.getFPGATimestamp() < this.endTime;

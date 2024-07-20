@@ -1,6 +1,5 @@
 package frc.robot.subsystems.SwerveDrive.Gyro;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 

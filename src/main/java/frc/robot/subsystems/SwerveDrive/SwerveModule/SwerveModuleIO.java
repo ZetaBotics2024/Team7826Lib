@@ -14,7 +14,6 @@
 package frc.robot.subsystems.SwerveDrive.SwerveModule;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 import org.littletonrobotics.junction.AutoLog;
 
@@ -48,9 +47,9 @@ public interface SwerveModuleIO {
 
     /**
      * Sets the desired RPM of the module
-     * @param desiredMPS Double: The desired RPM for the module
+     * @param desiredRPM Double: The desired RPM for the module
      */
-    public default void setDesiredModuleVelocityRPM(double desiredMPS) {}
+    public default void setDesiredModuleVelocityRPM(double desiredRPM) {}
 
     /**
      * Sets the desired angle of the modules wheel

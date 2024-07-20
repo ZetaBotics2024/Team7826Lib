@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
+import frc.robot.Constants.LoggerConstants;
 
 public class SwerveModuleIOSparkMax implements SwerveModuleIO{
 
@@ -186,7 +187,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
      * Adds Swerve Module logs that never need to be updated to the dashboard.
      */
     private void addInitLogs() {
-        Logger.recordOutput("SwerveDrive/Module" + swerveModuleName + " Turning Absolute Mncoder Offset", this.turningAbsoluteEncoderOffset);
+        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + "TurningAbsoluteEncoderOffset", this.turningAbsoluteEncoderOffset);
     }
 
     @Override
@@ -195,20 +196,20 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
         inputs.driveMotorRPM = this.driveRelativeEncoder.getVelocity();
         inputs.driveMotorSpeedMetersPerSecond = inputs.driveMotorRPM * SwerveModuleConstants.kDriveConversionVelocityFactor;
         inputs.driveMotorDistanceMeters = (inputs.driveMotorRotations / SwerveModuleConstants.kDriveGearRatio) * SwerveModuleConstants.kWheelDistancePerRotation;
-        inputs.driveMotorAppliedVolts = driveMotor.getAppliedOutput() * driveMotor.getBusVoltage();
-        inputs.driveMotorCurrentAmps = new double[] {driveMotor.getOutputCurrent()};
+        inputs.driveMotorAppliedVolts = this.driveMotor.getAppliedOutput() * this.driveMotor.getBusVoltage();
+        inputs.driveMotorCurrentAmps = new double[] {this.driveMotor.getOutputCurrent()};
 
         inputs.turnMotorAbsolutePositionRotations = this.turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble();
         inputs.turnMotorRelitivePositionRotations = this.turnRelativeEncoder.getPosition();
         inputs.wheelAngleRelitivePositionRotations = inputs.turnMotorRelitivePositionRotations / SwerveModuleConstants.kTurningGearRatio;
         inputs.turnMotorRPM = this.turnRelativeEncoder.getVelocity();
         inputs.turnMotorAppliedVolts = turnMotor.getAppliedOutput() * turnMotor.getBusVoltage();
-        inputs.turnMotorCurrentAmps = new double[] {turnMotor.getOutputCurrent()};
+        inputs.turnMotorCurrentAmps = new double[] {this.turnMotor.getOutputCurrent()};
     }
 
     @Override
     public void setDesiredModuleVelocityRPM(double desiredRPM) {
-        Logger.recordOutput("SwerveDrive/Module" + swerveModuleName + " Desired RPM", desiredRPM);
+        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + " Desired RPM", desiredRPM);
         this.drivePIDController.setReference(desiredRPM, CANSparkMax.ControlType.kVelocity);
     }
 
@@ -217,8 +218,8 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
         double desiredModuleRotations = desiredModuleAngle.getRotations(); 
         double desiredMotorRotation = desiredModuleRotations * SwerveModuleConstants.kTurningGearRatio;
 
-        Logger.recordOutput("SwerveDrive/Module" + swerveModuleName + " Desired Module Rotations" , desiredModuleRotations);
-        Logger.recordOutput("SwerveDrive/Module" + swerveModuleName + " Desired Motor Rotations" , desiredMotorRotation);
+        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + "DesiredModuleRotations" , desiredModuleRotations);
+        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + "DesiredMotorRotations" , desiredMotorRotation);
 
         turnPIDController.setReference(desiredMotorRotation, CANSparkMax.ControlType.kPosition); 
     }

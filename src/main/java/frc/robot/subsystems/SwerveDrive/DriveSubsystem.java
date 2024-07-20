@@ -2,6 +2,7 @@ package frc.robot.subsystems.SwerveDrive;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -27,13 +28,13 @@ public class DriveSubsystem extends SubsystemBase{
 
     private ChassisSpeeds desiredChassisSpeeds;
 
-    public DriveSubsystem(SwerveModuleIO frontLeftSwerveModuleIO, SwerveModule frontRightSwerveModuleIO,
-        SwerveModuleIO backLeftSwerveModulemIO, SwerveModuleIO backRightSwerveModuleIO, GyroIO gyroIO) {
+    public DriveSubsystem(SwerveModuleIO frontLeftSwerveModuleIO, SwerveModuleIO frontRightSwerveModuleIO,
+        SwerveModuleIO backLeftSwerveModuleIO, SwerveModuleIO backRightSwerveModuleIO, GyroIO gyroIO) {
         
         this.frontLeftSwerveModule = new SwerveModule(frontLeftSwerveModuleIO, SwerveDriveConstants.kFrontLeftModuleName);
-        this.frontRightSwerveModule = new SwerveModule(frontLeftSwerveModuleIO, SwerveDriveConstants.kFrontLeftModuleName);
-        this.backLeftSwerveModule = new SwerveModule(frontLeftSwerveModuleIO, SwerveDriveConstants.kFrontLeftModuleName);
-        this.backRightSwerveModule = new SwerveModule(frontLeftSwerveModuleIO, SwerveDriveConstants.kFrontLeftModuleName);
+        this.frontRightSwerveModule = new SwerveModule(frontRightSwerveModuleIO, SwerveDriveConstants.kFrontRightModuleName);
+        this.backLeftSwerveModule = new SwerveModule(backLeftSwerveModuleIO, SwerveDriveConstants.kBackLeftModuleName);
+        this.backRightSwerveModule = new SwerveModule(backRightSwerveModuleIO, SwerveDriveConstants.kBackRightModuleName);
 
         this.gyroIO = gyroIO;
     }
@@ -46,6 +47,21 @@ public class DriveSubsystem extends SubsystemBase{
   
     public void stop() {
         this.drive(0, 0, 0);
+    }
+
+    /**
+     * Sets the swerves to 45 degrees to lock the robot in place.
+     */
+    public void lockSwerves(){
+        SwerveModuleState frontLeftLockupState = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+        SwerveModuleState frontRightLockupState = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
+        SwerveModuleState rearLeftLockupState = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
+        SwerveModuleState rearRightLockupState = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+
+        this.frontLeftSwerveModule.setDesiredModuleState(frontLeftLockupState);
+        this.frontRightSwerveModule.setDesiredModuleState(frontRightLockupState);
+        this.backLeftSwerveModule.setDesiredModuleState(rearLeftLockupState);
+        this.backRightSwerveModule.setDesiredModuleState(rearRightLockupState);
     }
 
     @Override
@@ -73,18 +89,24 @@ public class DriveSubsystem extends SubsystemBase{
     }
 
     private void logSwerveDrive() {
+        this.frontLeftSwerveModule.periodic();
+        this.frontRightSwerveModule.periodic();
+        this.backLeftSwerveModule.periodic();
+        this.backRightSwerveModule.periodic();
         this.gyroIO.updateInputs(gyroInputs);
-        Logger.processInputs("SwerveDrive", gyroInputs);
+        Logger.processInputs("SwerveDrive/Gyro", gyroInputs);
 
         ChassisSpeeds currentChassisSpeeds = getChassisSpeeds();
         Logger.recordOutput("SwerveDrive/ChassisSpeeds/CurrentXVelocityMPS", currentChassisSpeeds.vxMetersPerSecond);
         Logger.recordOutput("SwerveDrive/ChassisSpeeds/CurrentYVelocityMPS", currentChassisSpeeds.vyMetersPerSecond);
         Logger.recordOutput("SwerveDrive/ChassisSpeeds/CurrentRotationVelocityRadiansPerSecond", currentChassisSpeeds.omegaRadiansPerSecond);
 
-        Logger.recordOutput("SwerveDrive/ChassisSpeeds/DesiredXVelocityMPS", this.desiredChassisSpeeds.vxMetersPerSecond);
-        Logger.recordOutput("SwerveDrive/ChassisSpeeds/DesiredYVelocityMPS", this.desiredChassisSpeeds.vyMetersPerSecond);
-        Logger.recordOutput("SwerveDrive/ChassisSpeeds/DesiredRotationVelocityRadiansPerSecond", this.desiredChassisSpeeds.omegaRadiansPerSecond);
-
+        if(desiredChassisSpeeds != null) {
+            Logger.recordOutput("SwerveDrive/DesiredChassisSpeeds/DesiredXVelocityMPS", this.desiredChassisSpeeds.vxMetersPerSecond);
+            Logger.recordOutput("SwerveDrive/DesiredChassisSpeeds/DesiredYVelocityMPS", this.desiredChassisSpeeds.vyMetersPerSecond);
+            Logger.recordOutput("SwerveDrive/DesiredChassisSpeeds/DesiredRotationVelocityRadiansPerSecond", this.desiredChassisSpeeds.omegaRadiansPerSecond);
+        }
+    
         Logger.recordOutput("SwerveDrive/DesiredModuleStates", getModuleStates());
     }
 

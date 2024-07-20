@@ -16,6 +16,9 @@ public final class DrivetrainConstants {
         public static final double kMaxSpeedMetersPerSecond = 4.3;
         public static final double kMaxRotationAnglePerSecond = 11.4;
 
+        public static final double kTranslationMaxRateOfChangePerSecond = 8;
+        public static final double kRotationMaxRateOfChangePerSecond = 100;
+
         // Name of the CAN Bus the Swerve Drive is on.
         public static final String kCANLoopName = "rio"; // To swich to CANivor set the CANLoopName to the CANivors serial number or name
 

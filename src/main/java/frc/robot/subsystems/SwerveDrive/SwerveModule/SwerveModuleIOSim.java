@@ -6,15 +6,17 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.LoggerConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
 
 public class SwerveModuleIOSim implements SwerveModuleIO{
     private static final double LOOP_PERIOD_SECS = 0.02;
 
-    private DCMotorSim driveMotor = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
-    private DCMotorSim turnMotor = new DCMotorSim(DCMotor.getNEO(1), 150.0 / 7.0, 0.004);
+    private DCMotorSim driveMotor = new DCMotorSim(DCMotor.getNEO(1), 1, .025/SwerveModuleConstants.kDriveGearRatio);// 0.025);
+    private DCMotorSim turnMotor = new DCMotorSim(DCMotor.getNEO(1), 1, 0.004);
 
     private PIDController drivePIDController; 
     private PIDController turnPIDController; 
@@ -24,16 +26,23 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
 
     private String swerveModuleName;
 
+    private double pValue = 0;
+    private double lastPValue = 0;
+
+
     public SwerveModuleIOSim(String swerveModuleName) {
         this.swerveModuleName = swerveModuleName;
+        SmartDashboard.putNumber("DriveMotorPIDConstants", this.pValue);
         configDirvePID();
         configTurnPID();
     }
 
     private void configDirvePID() {
-        this.drivePIDController = new PIDController(SwerveModuleConstants.kPModuleDrivePIDValue,
+        this.drivePIDController = new PIDController(.1, 0, 0, .02);
+        //this.drivePIDController = new PIDController(5, 0, 0);
+        /* SwerveModuleConstants.kPModuleDrivePIDValue,
             SwerveModuleConstants.kIModuleDrivePIDValue,
-            SwerveModuleConstants.kDModuleDrivePIDValue);
+            SwerveModuleConstants.kDModuleDrivePIDValue */
     }
     
     /**
@@ -49,6 +58,12 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
     public void updateInputs(SwerveModuleIOInputs inputs) {
         driveMotor.update(LOOP_PERIOD_SECS);
         turnMotor.update(LOOP_PERIOD_SECS);
+        this.pValue = SmartDashboard.getNumber("DriveMotorPIDConstants", 0);
+        if(this.pValue != this.lastPValue) {
+            this.turnPIDController = new PIDController(this.pValue, 0, .01, .02);
+            this.lastPValue = pValue;
+            SmartDashboard.putNumber("DriveMotorPIDConstants", lastPValue);
+        }
 
         double driveVolts = MathUtil.clamp(this.drivePIDController.calculate(this.driveMotor.getAngularVelocityRPM(), this.desiredVelocityRPM), -12, 12);
         double turnVolts = MathUtil.clamp(this.turnPIDController.calculate(this.turnMotor.getAngularPositionRotations(), this.desiredPositionRotations), -12, 12);
@@ -73,7 +88,7 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
 
     
     public void setDesiredModuleVelocityRPM(double desiredRPM) {
-        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + " Desired RPM", desiredRPM);
+        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + "DesiredRPM", desiredRPM);
 
         this.desiredVelocityRPM = desiredRPM;
     }

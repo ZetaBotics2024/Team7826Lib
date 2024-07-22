@@ -21,7 +21,7 @@ public class GyroIOPigeon2 implements GyroIO{
     } 
 
     @Override
-    public void updateInputs(GyroIOInputs inputs) {
+    public void updateInputs(GyroIOInputs inputs, double rotationRate) {
         inputs.yawAngle = this.gyro.getRotation2d();
         inputs.yawVelocityDegreesPerSecond = this.gyro.getAngularVelocityZWorld().getValueAsDouble();
     }

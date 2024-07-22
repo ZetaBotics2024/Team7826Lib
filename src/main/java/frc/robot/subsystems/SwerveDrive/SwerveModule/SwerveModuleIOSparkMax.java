@@ -209,7 +209,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
 
     @Override
     public void setDesiredModuleVelocityRPM(double desiredRPM) {
-        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + " Desired RPM", desiredRPM);
+        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + "DesiredRPM", desiredRPM);
         this.drivePIDController.setReference(desiredRPM, CANSparkMax.ControlType.kVelocity);
     }
 

@@ -35,60 +35,60 @@ public class Robot extends LoggedRobot {
          */
         @Override
         public void robotInit() {
-        // BuiltConstatns is generated when the project is built. No imports or anything is needed if it is red underlined just build the project
+            enableLiveWindowInTest(true);
+            // BuiltConstatns is generated when the project is built. No imports or anything is needed if it is red underlined just build the project
 
-        // Record metadata
-        Logger.recordMetadata("RuntimeType", getRuntimeType().toString());
-        Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
-        Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-        Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-        Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-        Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+            // Record metadata
+            Logger.recordMetadata("RuntimeType", getRuntimeType().toString());
+            Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+            Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+            Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+            Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+            Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
 
-        switch (BuildConstants.DIRTY) {
-        case 0:
-            Logger.recordMetadata("GitDirty", "All changes committed");
-            break;
-        case 1:
-            Logger.recordMetadata("GitDirty", "Uncomitted changes");
-            break;
-        default:
-            Logger.recordMetadata("GitDirty", "Unknown");
-            break;
+            switch (BuildConstants.DIRTY) {
+                case 0:
+                    Logger.recordMetadata("GitDirty", "All changes committed");
+                    break;
+                case 1:
+                    Logger.recordMetadata("GitDirty", "Uncomitted changes");
+                    break;
+                default:
+                    Logger.recordMetadata("GitDirty", "Unknown");
+                    break;
+            }
+
+            // Set up data receivers & replay source
+            switch (RobotModeConstants.currentMode) {
+                case REAL:
+                    // Running on a real robot, log to a USB stick ("/U/logs")
+                    Logger.addDataReceiver(new WPILOGWriter());
+                    Logger.addDataReceiver(new NT4Publisher());
+                    new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+                    break;
+                case SIM:
+                    // Running a physics simulator, log to NT
+                    Logger.addDataReceiver(new NT4Publisher());
+                    break;
+                case REPLAY:
+                    // Replaying a log, set up replay source
+                    setUseTiming(false); // Run as fast as possible
+                    String logPath = LogFileUtil.findReplayLog();
+                    Logger.setReplaySource(new WPILOGReader(logPath));
+                    Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+                    break;
+            }
+
+            // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
+            Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
+
+            // Initalized the LEDs
+            LEDManager.init(); 
+
+            // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+            // autonomous chooser on the dashboard.
+            m_robotContainer = new RobotContainer();
         }
-
-        // Set up data receivers & replay source
-        switch (RobotModeConstants.currentMode) {
-            case REAL:
-                // Running on a real robot, log to a USB stick ("/U/logs")
-                Logger.addDataReceiver(new WPILOGWriter());
-                Logger.addDataReceiver(new NT4Publisher());
-                new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
-                break;
-            case SIM:
-                // Running a physics simulator, log to NT
-                Logger.addDataReceiver(new NT4Publisher());
-                break;
-            case REPLAY:
-                // Replaying a log, set up replay source
-                setUseTiming(false); // Run as fast as possible
-                String logPath = LogFileUtil.findReplayLog();
-                Logger.setReplaySource(new WPILOGReader(logPath));
-                Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
-                break;
-        }
-
-        // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
-        Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
-
-        // Initalized the LEDs
-        LEDManager.init(); 
-
-
-        // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-        // autonomous chooser on the dashboard.
-        m_robotContainer = new RobotContainer();
-    }
 
     /**
      * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics

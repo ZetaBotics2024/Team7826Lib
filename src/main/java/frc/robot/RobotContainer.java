@@ -4,15 +4,11 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.controls.jni.ControlConfigJNI;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ControlConstants;
-import frc.robot.Constants.RobotModeConstants;
-import frc.robot.commands.SwerveDriveCommands.FieldOrientedDriveCommand;
-import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.utils.GeneralUtils.SubsystemContainer;
 import frc.robot.utils.JoystickUtils.ControllerInterface;
-import frc.robot.utils.SwerveDriveUtils.DriveSubsystemCreationUtils;
+import frc.robot.utils.SwerveDriveUtils.SwervedriveSetupUtils;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -26,41 +22,21 @@ public class RobotContainer {
     private ControllerInterface buttonBoard = new ControllerInterface(ControlConstants.kButtonBoardPort);
     private ControllerInterface buttonBoardAlt = new ControllerInterface(ControlConstants.kButtonBoardAltPort);
 
-    // Decloration of Subsystems
-    private DriveSubsystem driveSubsystem;
+    // SubsystemContainer
+    private SubsystemContainer subsystemContainer;
 
     // Decloration of Commands
-    FieldOrientedDriveCommand fieldOrientedDriveCommand;
 
     /** 
      * Initalized all Subsystem and Commands 
      */
     public RobotContainer() {
-        configureRobotBasedOnMode();
-        createFieldOrientedDriveCommand();
+        this.subsystemContainer = new SubsystemContainer();
         
-
-
+        SwervedriveSetupUtils.createFieldOrientedDriveCommand(
+            this.subsystemContainer.getDriveSubsystem(), this.driverController);
+        
         configureBindings();
-    }
-
-    public void configureRobotBasedOnMode() {
-        switch (RobotModeConstants.currentMode) {
-            case REAL:
-                // Real robot, instantiate hardware IO implementations
-                this.driveSubsystem = DriveSubsystemCreationUtils.createSparkMaxSwerve();
-                break;
-            case SIM:
-                // Sim robot, instantiate physics sim IO implementation
-                this.driveSubsystem = DriveSubsystemCreationUtils.createSimSwerve();
-                break;
-            case REPLAY:
-                // Replayed robot, disable IO implementations
-                this.driveSubsystem = DriveSubsystemCreationUtils.createReplaySwerve();
-                break;
-        default:
-            throw new RuntimeException("Invalid Robot Mode. Please set teh current mode value in RobotModeConstants");
-        }
     }
 
     /**
@@ -76,16 +52,5 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return null;
-    }
-
-    public void createFieldOrientedDriveCommand() {
-        System.out.println(this.driverController.getLeftX());
-        this.fieldOrientedDriveCommand = new FieldOrientedDriveCommand(
-        this.driveSubsystem, 
-        () -> -this.driverController.getLeftY(),
-        () -> -this.driverController.getLeftX(),
-        () -> -this.driverController.getRightX());
-        
-        this.driveSubsystem.setDefaultCommand(this.fieldOrientedDriveCommand);
     }
 }

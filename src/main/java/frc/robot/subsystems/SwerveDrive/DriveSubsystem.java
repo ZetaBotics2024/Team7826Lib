@@ -2,6 +2,7 @@ package frc.robot.subsystems.SwerveDrive;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -29,6 +30,8 @@ public class DriveSubsystem extends SubsystemBase{
 
     private ChassisSpeeds desiredChassisSpeeds;
 
+    private SwerveDrivePoseEstimator poseEstimator;
+
     public DriveSubsystem(SwerveModuleIO frontLeftSwerveModuleIO, SwerveModuleIO frontRightSwerveModuleIO,
         SwerveModuleIO backLeftSwerveModuleIO, SwerveModuleIO backRightSwerveModuleIO, GyroIO gyroIO) {
         
@@ -38,6 +41,8 @@ public class DriveSubsystem extends SubsystemBase{
         this.backRightSwerveModule = new SwerveModule(backRightSwerveModuleIO, SwerveDriveConstants.kBackRightModuleName);
         
         this.gyroIO = gyroIO;
+
+        this.poseEstimator = new SwerveDrivePoseEstimator(SwerveDriveConstants.kDriveKinematics, this.gyroInputs.yawAngle, getModulePositions(), new Pose2d());
     }
 
     public void drive(double desiredXVelocity, double desiredYVelocity, double desiredRotationalVelocity) {
@@ -67,8 +72,7 @@ public class DriveSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        Logger.recordOutput("Odometry/RobotPose", new Pose2d(5, 5, Rotation2d.fromDegrees(30)));
-     
+
         this.swerveModuleStates = getModuleStates();
 
         if (desiredChassisSpeeds != null) {  
@@ -90,6 +94,10 @@ public class DriveSubsystem extends SubsystemBase{
 
         // Resets the desiredChassisSpeeds to null to stop it from "sticking" to the last states
         desiredChassisSpeeds = null;
+
+
+        this.poseEstimator.update(this.gyroInputs.yawAngle, getModulePositions());
+        Logger.recordOutput("Odometry/RobotPose", this.poseEstimator.getEstimatedPosition());
     }
 
     private void logSwerveDrive() {

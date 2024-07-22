@@ -6,17 +6,16 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.LoggerConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
+import frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 
 public class SwerveModuleIOSim implements SwerveModuleIO{
     private static final double LOOP_PERIOD_SECS = 0.02;
 
     private DCMotorSim driveMotor = new DCMotorSim(DCMotor.getNEO(1), 1, .025/SwerveModuleConstants.kDriveGearRatio);// 0.025);
-    private DCMotorSim turnMotor = new DCMotorSim(DCMotor.getNEO(1), 1, 0.004);
+    private DCMotorSim turnMotor = new DCMotorSim(DCMotor.getNEO(1), 1, 0.004/SwerveModuleConstants.kTurningGearRatio);
 
     private PIDController drivePIDController; 
     private PIDController turnPIDController; 
@@ -26,44 +25,69 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
 
     private String swerveModuleName;
 
-    private double pValue = 0;
-    private double lastPValue = 0;
-
+    private NetworkTablesTunablePIDConstants driveMotorPIDConstantTuner;
+    private NetworkTablesTunablePIDConstants turnMotorPIDConstantTuner;
 
     public SwerveModuleIOSim(String swerveModuleName) {
         this.swerveModuleName = swerveModuleName;
-        SmartDashboard.putNumber("DriveMotorPIDConstants", this.pValue);
         configDirvePID();
         configTurnPID();
+
+        this.driveMotorPIDConstantTuner = new NetworkTablesTunablePIDConstants("SwerveModule/DrivePIDValues",
+            SwerveModuleConstants.kPModuleSIMDrivePIDValue,
+            SwerveModuleConstants.kIModuleSIMDrivePIDValue,
+            SwerveModuleConstants.kDModuleSIMDrivePIDValue, 0);
+
+        this.turnMotorPIDConstantTuner = new NetworkTablesTunablePIDConstants("SwerveModule/TurnPIDValues",
+            SwerveModuleConstants.kPModuleSIMTurnPIDValue,
+            SwerveModuleConstants.kIModuleSIMTurnPIDValue,
+            SwerveModuleConstants.kDModuleSIMTurnPIDValue, 0);
     }
 
+    /**
+     * Configures the drive motor PID Controller. 
+     */
     private void configDirvePID() {
-        this.drivePIDController = new PIDController(.1, 0, 0, .02);
-        //this.drivePIDController = new PIDController(5, 0, 0);
-        /* SwerveModuleConstants.kPModuleDrivePIDValue,
-            SwerveModuleConstants.kIModuleDrivePIDValue,
-            SwerveModuleConstants.kDModuleDrivePIDValue */
+        this.drivePIDController = new PIDController(SwerveModuleConstants.kPModuleSIMDrivePIDValue,
+            SwerveModuleConstants.kIModuleSIMDrivePIDValue,
+            SwerveModuleConstants.kDModuleSIMDrivePIDValue, .02);
     }
     
     /**
-      * Configures the turn motor PID Controller. 
-      */
+     * Configures the turn motor PID Controller. 
+     */
     private void configTurnPID() {
-        this.turnPIDController = new PIDController(SwerveModuleConstants.kPModuleTurnPIDValue,
-            SwerveModuleConstants.kIModuleTurnPIDValue,
-            SwerveModuleConstants.kDModuleTurnPIDValue);
+        this.turnPIDController = new PIDController(SwerveModuleConstants.kPModuleSIMTurnPIDValue,
+            SwerveModuleConstants.kIModuleSIMTurnPIDValue,
+            SwerveModuleConstants.kDModuleSIMTurnPIDValue);
+    }
+
+    /**
+     * WORNIGN!!! There should only be one call of this method and that
+     *  call should be commented out before going to a competition. 
+     * Updates the PID values for the module bassed on network tables.
+     * Must be called periodicly.
+     */
+    private void updatePIDValuesFromNetworkTables() {
+        double[] currentDrivePIDValues = this.driveMotorPIDConstantTuner.getUpdatedPIDConstants();
+        if(this.driveMotorPIDConstantTuner.hasAnyPIDValueChanged()) {
+            this.drivePIDController = new PIDController(currentDrivePIDValues[0],
+                currentDrivePIDValues[1], currentDrivePIDValues[2], .02);
+        }
+
+        double[] currentTurnPIDValues = this.turnMotorPIDConstantTuner.getUpdatedPIDConstants();
+        if(this.turnMotorPIDConstantTuner.hasAnyPIDValueChanged()) {
+            this.turnPIDController = new PIDController(currentTurnPIDValues[0],
+                currentTurnPIDValues[1], currentTurnPIDValues[2], .02);
+        }
     }
 
     @Override
     public void updateInputs(SwerveModuleIOInputs inputs) {
         driveMotor.update(LOOP_PERIOD_SECS);
         turnMotor.update(LOOP_PERIOD_SECS);
-        this.pValue = SmartDashboard.getNumber("DriveMotorPIDConstants", 0);
-        if(this.pValue != this.lastPValue) {
-            this.turnPIDController = new PIDController(this.pValue, 0, .01, .02);
-            this.lastPValue = pValue;
-            SmartDashboard.putNumber("DriveMotorPIDConstants", lastPValue);
-        }
+        
+        updatePIDValuesFromNetworkTables();
 
         double driveVolts = MathUtil.clamp(this.drivePIDController.calculate(this.driveMotor.getAngularVelocityRPM(), this.desiredVelocityRPM), -12, 12);
         double turnVolts = MathUtil.clamp(this.turnPIDController.calculate(this.turnMotor.getAngularPositionRotations(), this.desiredPositionRotations), -12, 12);

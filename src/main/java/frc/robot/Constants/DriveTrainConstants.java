@@ -99,6 +99,10 @@ public final class DrivetrainConstants {
         public static final double kFFModuleDrivePIDValue = 0;
         public static final double kIZoneModuleDrivePIDValue = 0.0;
 
+        public static final double kPModuleSIMDrivePIDValue = .1;
+        public static final double kIModuleSIMDrivePIDValue = 2;
+        public static final double kDModuleSIMDrivePIDValue = 0;
+
         // If useing TalonFX Swerve these can not be set. Instead please rely on the the max and min voltage.
         public static final double kDriveMotorMinPercentOutput = -1;
         public static final double kDriveMotorMaxPercentOutput = 1;
@@ -108,6 +112,10 @@ public final class DrivetrainConstants {
         public static final double kDModuleTurnPIDValue = 0;
         public static final double kFFModuleTurnPIDValue = 0;
         public static final double kIZoneModuleTurnPIDValue = 0.5 / 360; // 1/2 degrees converted to rotations
+
+        public static final double kPModuleSIMTurnPIDValue = 1.5;
+        public static final double kIModuleSIMTurnPIDValue = 0;
+        public static final double kDModuleSIMTurnPIDValue = 0;
 
         // If useing TalonFX Swerve these can not be set. Instead please rely on the the max and min voltage.
         public static final double kTurnMotorMinPercentOutput = -.2;

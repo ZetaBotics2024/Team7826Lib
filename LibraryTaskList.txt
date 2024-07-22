@@ -24,6 +24,7 @@ C. Set up swerve with Advantage Kit(Done)
         g. Impliment DriveCommands and add them to Robot Container. (Done)
         h. Figure out why desired module states and actuale module states are the same in the logger.(Done)
         i. Add an PID tuning tool that makes use of advantage scope.
+        g. Add a gyro sim.(done)
 
 D. Set up Odometry Vision
     a. Refactor Vision code to work with Advantage Kit and run on a second thread

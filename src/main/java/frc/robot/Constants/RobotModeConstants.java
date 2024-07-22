@@ -9,6 +9,6 @@ public class RobotModeConstants {
         /** Running a physics simulator. */
         SIM,
         /** Replaying from a log file. */
-        REPLAY
+        REPLAY,
     }
 }

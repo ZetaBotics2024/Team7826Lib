@@ -15,11 +15,13 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.SparkPIDController.AccelStrategy;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
 import frc.robot.Constants.LoggerConstants;
+import frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 
 public class SwerveModuleIOSparkMax implements SwerveModuleIO{
 
@@ -37,6 +39,9 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
     private RelativeEncoder turnRelativeEncoder;
 
     private double turningAbsoluteEncoderOffset;
+
+    private NetworkTablesTunablePIDConstants driveMotorPIDConstantTuner;
+    private NetworkTablesTunablePIDConstants turnMotorPIDConstantTuner;
 
     /**
      * Creates a SwerveModuleIOSparkMax object and completes all configuration for the module
@@ -119,6 +124,11 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
         this.drivePIDController.setFF(SwerveModuleConstants.kFFModuleDrivePIDValue, 0);
         this.drivePIDController.setIZone(SwerveModuleConstants.kIZoneModuleDrivePIDValue, 0);
         this.drivePIDController.setOutputRange(SwerveModuleConstants.kDriveMotorMinPercentOutput, SwerveModuleConstants.kDriveMotorMaxPercentOutput);
+
+         this.driveMotorPIDConstantTuner = new NetworkTablesTunablePIDConstants("SwerveModule/DrivePIDValues",
+            SwerveModuleConstants.kPModuleDrivePIDValue,
+            SwerveModuleConstants.kIModuleDrivePIDValue,
+            SwerveModuleConstants.kDModuleDrivePIDValue, 0);
     }
 
     /**
@@ -152,6 +162,11 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
         this.turnPIDController.setFF(SwerveModuleConstants.kFFModuleTurnPIDValue, 0);
         this.turnPIDController.setIZone(SwerveModuleConstants.kIZoneModuleTurnPIDValue, 0);
         this.turnPIDController.setOutputRange(SwerveModuleConstants.kTurnMotorMinPercentOutput, SwerveModuleConstants.kTurnMotorMaxPercentOutput);
+
+        this.turnMotorPIDConstantTuner = new NetworkTablesTunablePIDConstants("SwerveModule/TurnPIDValues",
+            SwerveModuleConstants.kPModuleTurnPIDValue,
+            SwerveModuleConstants.kIModuleTurnPIDValue,
+            SwerveModuleConstants.kDModuleTurnPIDValue, 0);
     }
 
     /**
@@ -205,6 +220,35 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
         inputs.turnMotorRPM = this.turnRelativeEncoder.getVelocity();
         inputs.turnMotorAppliedVolts = turnMotor.getAppliedOutput() * turnMotor.getBusVoltage();
         inputs.turnMotorCurrentAmps = new double[] {this.turnMotor.getOutputCurrent()};
+
+        updatePIDValuesFromNetworkTables();
+    }
+
+    /**
+     * WORNING!!! There should only be one call of this method and that
+     *  call should be commented out before going to a competition. 
+     * Updates the PID values for the module bassed on network tables.
+     * Must be called periodicly.
+     */
+    private void updatePIDValuesFromNetworkTables() {
+        double[] currentDrivePIDValues = this.driveMotorPIDConstantTuner.getUpdatedPIDConstants();
+        if(this.driveMotorPIDConstantTuner.hasAnyPIDValueChanged()) {
+            this.drivePIDController.setP(currentDrivePIDValues[0]);
+            this.drivePIDController.setI(currentDrivePIDValues[1]);
+            this.drivePIDController.setD(currentDrivePIDValues[2]);
+            this.drivePIDController.setFF(currentDrivePIDValues[3]);
+            this.driveMotor.burnFlash();
+        }
+        
+        double[] currentTurnPIDValues = this.turnMotorPIDConstantTuner.getUpdatedPIDConstants();
+        if(this.turnMotorPIDConstantTuner.hasAnyPIDValueChanged()) {
+            this.turnPIDController.setP(currentTurnPIDValues[0]);
+            this.turnPIDController.setI(currentTurnPIDValues[1]);
+            this.turnPIDController.setD(currentTurnPIDValues[2]);
+            this.turnPIDController.setFF(currentTurnPIDValues[3]);
+            this.turnMotor.burnFlash();
+        }
+        
     }
 
     @Override

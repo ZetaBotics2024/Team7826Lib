@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
 import frc.robot.Constants.LoggerConstants;
+import frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 
 public class SwerveModuleIOTalonFX implements SwerveModuleIO{
 
@@ -33,6 +34,9 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO{
 
     private VelocityVoltage driveControlRequest = new VelocityVoltage(0);
     private PositionDutyCycle turnControlRequest = new PositionDutyCycle(0);
+
+    private NetworkTablesTunablePIDConstants driveMotorPIDConstantTuner;
+    private NetworkTablesTunablePIDConstants turnMotorPIDConstantTuner;
 
     /**
      * Creates a SwerveModuleIOTalonFX object and completes all configuration for the module
@@ -109,6 +113,11 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO{
         drivePIDConfig.kS = SwerveModuleConstants.kFFModuleDrivePIDValue;  
 
         this.driveMotor.getConfigurator().apply(drivePIDConfig);
+
+        this.driveMotorPIDConstantTuner = new NetworkTablesTunablePIDConstants("SwerveModule/DrivePIDValues",
+            SwerveModuleConstants.kPModuleDrivePIDValue,
+            SwerveModuleConstants.kIModuleDrivePIDValue,
+            SwerveModuleConstants.kDModuleDrivePIDValue, 0);
     }
 
     /**
@@ -147,6 +156,11 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO{
         turnPIDConfig.kS = SwerveModuleConstants.kFFModuleTurnPIDValue;  
 
         this.driveMotor.getConfigurator().apply(turnPIDConfig);
+
+        this.turnMotorPIDConstantTuner = new NetworkTablesTunablePIDConstants("SwerveModule/TurnPIDValues",
+            SwerveModuleConstants.kPModuleTurnPIDValue,
+            SwerveModuleConstants.kIModuleTurnPIDValue,
+            SwerveModuleConstants.kDModuleTurnPIDValue, 0);
     }
 
     /**
@@ -202,6 +216,37 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO{
         // This is done because TalonFX uses RPS instead of RMP
         inputs.turnMotorAppliedVolts = this.turnMotor.getMotorVoltage().getValueAsDouble();
         inputs.turnMotorCurrentAmps = new double[] {this.turnMotor.getSupplyCurrent().getValueAsDouble()};
+
+        updatePIDValuesFromNetworkTables();
+    }
+
+    /**
+     * WORNING!!! There should only be one call of this method and that
+     *  call should be commented out before going to a competition. 
+     * Updates the PID values for the module bassed on network tables.
+     * Must be called periodicly.
+     */
+    private void updatePIDValuesFromNetworkTables() {
+        double[] currentDrivePIDValues = this.driveMotorPIDConstantTuner.getUpdatedPIDConstants();
+        if(this.driveMotorPIDConstantTuner.hasAnyPIDValueChanged()) {
+            Slot0Configs newDrivePIDConfigs = new Slot0Configs();
+            newDrivePIDConfigs.kP = currentDrivePIDValues[0];
+            newDrivePIDConfigs.kI = currentDrivePIDValues[1];
+            newDrivePIDConfigs.kD = currentDrivePIDValues[2];
+            newDrivePIDConfigs.kS = currentDrivePIDValues[3];
+            this.driveMotor.getConfigurator().apply(newDrivePIDConfigs);
+        }
+        
+
+        double[] currentTurnPIDValues = this.turnMotorPIDConstantTuner.getUpdatedPIDConstants();
+        if(this.turnMotorPIDConstantTuner.hasAnyPIDValueChanged()) {
+            Slot0Configs newTurnPIDConfigs = new Slot0Configs();
+            newTurnPIDConfigs.kP = currentTurnPIDValues[0];
+            newTurnPIDConfigs.kI = currentTurnPIDValues[1];
+            newTurnPIDConfigs.kD = currentTurnPIDValues[2];
+            newTurnPIDConfigs.kS = currentTurnPIDValues[3];
+            this.turnMotor.getConfigurator().apply(newTurnPIDConfigs);
+        }
     }
 
     @Override

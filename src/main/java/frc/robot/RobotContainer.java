@@ -4,9 +4,14 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ControlConstants;
 import frc.robot.utils.GeneralUtils.SubsystemContainer;
+import frc.robot.utils.GeneralUtils.AutonUtils.AutonPoint;
+import frc.robot.utils.GeneralUtils.AutonUtils.FudgeFactor;
 import frc.robot.utils.JoystickUtils.ControllerInterface;
 import frc.robot.utils.SwerveDriveUtils.SwervedriveSetupUtils;
 
@@ -35,6 +40,10 @@ public class RobotContainer {
         
         SwervedriveSetupUtils.createFieldOrientedDriveCommand(
             this.subsystemContainer.getDriveSubsystem(), this.driverController);
+        
+        AutonPoint testPoint = new AutonPoint(3, 3, 60, new FudgeFactor(0, 0, 0, 0, 0, 0));
+        Logger.recordOutput("TestAutonPointBlue", testPoint.getAutonPoint(false));
+        Logger.recordOutput("TestAutonPointRed", testPoint.getAutonPoint(true));
         
         configureBindings();
     }

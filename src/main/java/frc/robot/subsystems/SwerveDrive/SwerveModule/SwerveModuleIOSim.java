@@ -6,6 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.LoggerConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
@@ -63,7 +64,7 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
     }
 
     /**
-     * WORNIGN!!! There should only be one call of this method and that
+     * WORNING!!! There should only be one call of this method and that
      *  call should be commented out before going to a competition. 
      * Updates the PID values for the module bassed on network tables.
      * Must be called periodicly.
@@ -87,7 +88,7 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
         driveMotor.update(LOOP_PERIOD_SECS);
         turnMotor.update(LOOP_PERIOD_SECS);
         
-        updatePIDValuesFromNetworkTables();
+        //updatePIDValuesFromNetworkTables();
 
         double driveVolts = MathUtil.clamp(this.drivePIDController.calculate(this.driveMotor.getAngularVelocityRPM(), this.desiredVelocityRPM), -12, 12);
         double turnVolts = MathUtil.clamp(this.turnPIDController.calculate(this.turnMotor.getAngularPositionRotations(), this.desiredPositionRotations), -12, 12);

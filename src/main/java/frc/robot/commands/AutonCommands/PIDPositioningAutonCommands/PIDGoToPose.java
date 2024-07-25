@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ControlConstants;
 import frc.robot.Constants.AutonConstants.PIDPositioningAutonConstants;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.GeneralUtils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
 import frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 import frc.robot.utils.LEDUtils.LEDManager;
 
@@ -118,7 +118,6 @@ public class PIDGoToPose extends Command {
     @Override
     public void execute() {
         updatePIDValuesFromNetworkTables();
-        System.out.println(this.xTranslationPIDController.getP());
 
         Pose2d currentRobotPose = this.driveSubsystem.getRobotPose();
         double xVelocity = this.xTranslationPIDController.calculate(currentRobotPose.getX(),

@@ -15,7 +15,7 @@ import frc.robot.subsystems.SwerveDrive.Gyro.GyroIO;
 import frc.robot.subsystems.SwerveDrive.Gyro.GyroIOInputsAutoLogged;
 import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModule;
 import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModuleIO;
-import frc.robot.utils.GeneralUtils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
 
 public class DriveSubsystem extends SubsystemBase{
 

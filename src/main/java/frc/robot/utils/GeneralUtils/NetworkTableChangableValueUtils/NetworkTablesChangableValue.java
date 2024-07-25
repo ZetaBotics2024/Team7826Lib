@@ -52,17 +52,21 @@ public class NetworkTablesChangableValue {
      * @return Object: The current changableValue's value as a genaric object. Must be cased to desired type
      */
     public Object getChangableValueOnNetworkTables() {
+        boolean hasChanged = false;
         if(this.changableValueType.equals(this.genericInt.getClass())) {
             this.changableValue =  SmartDashboard.getNumber(networkTablesKey, (int)changableValue);
+           hasChanged =  (int)this.changableValue != (int)this.lastChangableValue;
         } else if (this.changableValueType.equals(this.genericDouble.getClass())) {
             this.changableValue = SmartDashboard.getNumber(networkTablesKey, (double)changableValue);
+            hasChanged = (double)this.changableValue != (double)this.lastChangableValue;
         } else if(this.changableValueType.equals(this.genericBoolean.getClass())) {
             this.changableValue = SmartDashboard.getBoolean(networkTablesKey, (boolean)changableValue);
+            hasChanged = (boolean)this.changableValue != (boolean)this.lastChangableValue;
         } else {
             SmartDashboard.putString(networkTablesKey, "ChangableValuesUnsupportedTypeAdded:Only Integers, Doubles and Booleans supported");
         }
     
-        if((double)this.changableValue != (double)this.lastChangableValue) {
+        if(hasChanged) {
             this.lastChangableValue = this.changableValue;
             this.hasChangableValueChanged = true;
         }

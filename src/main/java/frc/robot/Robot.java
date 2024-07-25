@@ -10,16 +10,10 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-import org.opencv.features2d.FastFeatureDetector;
-
-import com.ctre.phoenix6.controls.jni.ControlConfigJNI;
-
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.ControlConstants;
 import frc.robot.Constants.RobotModeConstants;
 import frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesChangableValue;
 import frc.robot.utils.LEDUtils.LEDManager;
@@ -34,6 +28,8 @@ public class Robot extends LoggedRobot {
     private Command m_autonomousCommand;
 
     private RobotContainer m_robotContainer;
+
+    private NetworkTablesChangableValue autonDebugMode = new NetworkTablesChangableValue("RobotMode/AutonDebugMode", RobotModeConstants.kAutonDebugMode);
 
         /**
          * This function is run when the robot is first started up and should be used for any
@@ -104,6 +100,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void robotPeriodic() {
+        RobotModeConstants.kAutonDebugMode = (boolean)this.autonDebugMode.getChangableValueOnNetworkTables();
         // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
         // commands, running already-scheduled commands, removing finished or interrupted commands,
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -114,8 +111,11 @@ public class Robot extends LoggedRobot {
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {    
+        if(RobotModeConstants.kAutonDebugMode) {
+            this.m_robotContainer = new RobotContainer();
+        }
         if (m_autonomousCommand != null) {
-        m_autonomousCommand.cancel();
+            m_autonomousCommand.cancel();
         }
     }
 

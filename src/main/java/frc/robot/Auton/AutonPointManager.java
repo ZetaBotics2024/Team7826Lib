@@ -5,8 +5,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveDrive.DriveCommandFactory;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.GeneralUtils.AutonUtils.AutonPointUtils.AutonPoint;
-import frc.robot.utils.GeneralUtils.AutonUtils.AutonPointUtils.FudgeFactor;
+import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.utils.AutonUtils.AutonPointUtils.FudgeFactor;
 
 public class AutonPointManager {
     // Robot start positions

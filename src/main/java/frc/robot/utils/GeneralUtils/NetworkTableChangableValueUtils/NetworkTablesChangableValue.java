@@ -1,17 +1,15 @@
 package frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils;
 
-import org.littletonrobotics.junction.inputs.LoggableInputs;
-import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
-
-import com.google.flatbuffers.FlexBuffers.Key;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class NetworkTablesChangableValue {
     
-    private LoggedDashboardNumber changableValue;
-    private double lastChangableValue;
+    private Object changableValue;
+    private Object changableValueType;
+    private Object lastChangableValue;
+    private Integer genericInt = 0;
+    private Double genericDouble = 0.0;
+    private Boolean genericBoolean = false; 
     private String networkTablesKey = "NoChangableValueKeyProvided";
     private boolean hasChangableValueChanged = false;
 
@@ -24,26 +22,52 @@ public class NetworkTablesChangableValue {
      * Adds a changable value to Smartdashboard. This allows for PID values to be 
      * tuned without redeploying code every change or for flywheel speed tuning, or other things of this nature.
      * @param networkTablesKey String: The key underwhich the value will be added to networktables. 
-     * @param changableValue The inital value for the changable value. This can be a Integer, Double or Boolean
+     * @param changableValue Object: The inital value for the changable value. This can be a Integer, Double or Boolean
      */
-    public NetworkTablesChangableValue(String networkTablesKey, double changableValue) {
-        this.changableValue = new LoggedDashboardNumber(networkTablesKey, changableValue);
+    public NetworkTablesChangableValue(String networkTablesKey, Object changableValue) {
+        this.changableValue = changableValue;
         this.networkTablesKey = networkTablesKey;
-        this.lastChangableValue = this.changableValue.get();
+        this.lastChangableValue = this.changableValue;
+        this.changableValueType = this.changableValue.getClass();
+        addChangableValueToNetworkTables();
     }   
 
+    /**
+     * Adds the changable value in network tables.. 
+     */
+    private void addChangableValueToNetworkTables() {
+        if(this.changableValueType.equals(this.genericInt.getClass())) {
+            SmartDashboard.putNumber(networkTablesKey, (int)changableValue);
+        } else if(this.changableValueType.equals(this.genericDouble.getClass())) {
+            SmartDashboard.putNumber(networkTablesKey, (double)changableValue);
+        } else if(this.changableValueType.equals(this.genericBoolean.getClass())) {
+            SmartDashboard.putBoolean(networkTablesKey, (boolean)changableValue);
+        } else {
+            SmartDashboard.putString(networkTablesKey, "ChangableValuesUnsupportedTypeAdded:Only Integers, Doubles and Booleans supported");
+        }
+    }
 
     /**
      * Returns the current changableValue's value as a genaric object. Must be cased to desired type
      * @return Object: The current changableValue's value as a genaric object. Must be cased to desired type
      */
-    public double getChangableValueOnNetworkTables() {
-        if(this.changableValue.get() != this.lastChangableValue) {
-            this.lastChangableValue = this.changableValue.get();
+    public Object getChangableValueOnNetworkTables() {
+        if(this.changableValueType.equals(this.genericInt.getClass())) {
+            this.changableValue =  SmartDashboard.getNumber(networkTablesKey, (int)changableValue);
+        } else if (this.changableValueType.equals(this.genericDouble.getClass())) {
+            this.changableValue = SmartDashboard.getNumber(networkTablesKey, (double)changableValue);
+        } else if(this.changableValueType.equals(this.genericBoolean.getClass())) {
+            this.changableValue = SmartDashboard.getBoolean(networkTablesKey, (boolean)changableValue);
+        } else {
+            SmartDashboard.putString(networkTablesKey, "ChangableValuesUnsupportedTypeAdded:Only Integers, Doubles and Booleans supported");
+        }
+    
+        if((double)this.changableValue != (double)this.lastChangableValue) {
+            this.lastChangableValue = this.changableValue;
             this.hasChangableValueChanged = true;
         }
 
-        return this.changableValue.get();
+        return this.changableValue;
     }
 
     /**
@@ -52,9 +76,7 @@ public class NetworkTablesChangableValue {
      */
     public boolean hasChangableValueChanged() {
         boolean originalValue = this.hasChangableValueChanged;
-        if(this.hasChangableValueChanged) {
-            this.hasChangableValueChanged = false;
-        }
+        this.hasChangableValueChanged = this.hasChangableValueChanged ? !this.hasChangableValueChanged : this.hasChangableValueChanged;
         return originalValue;
     }
 }

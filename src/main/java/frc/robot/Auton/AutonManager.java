@@ -35,6 +35,7 @@ public class AutonManager {
 
     private void addAllAutons() {
         addAuton(exampleAutonName);
+        this.autonChooser.addDefaultOption(exampleAutonName, exampleAutonName);
     }
 
     private void addAuton(String autonName) {

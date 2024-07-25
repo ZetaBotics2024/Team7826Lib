@@ -37,8 +37,6 @@ public class RobotContainer {
     private ControllerInterface driverController = new ControllerInterface(ControlConstants.kDriverControllerPort);
     private ControllerInterface buttonBoard = new ControllerInterface(ControlConstants.kButtonBoardPort);
     private ControllerInterface buttonBoardAlt = new ControllerInterface(ControlConstants.kButtonBoardAltPort);
-    private LoggedDashboardChooser<Command> loggablLoggedDashboardChooser = new LoggedDashboardChooser<>("AutonTestLog");
-    private SendableChooser<Command> autonChooser = new SendableChooser<>();
     // Declare all Subsystems and Command Factories
     private DriveSubsystem driveSubsystem;
     private DriveCommandFactory driveCommandFactory;

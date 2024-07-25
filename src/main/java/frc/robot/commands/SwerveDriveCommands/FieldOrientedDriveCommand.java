@@ -44,9 +44,7 @@ public class FieldOrientedDriveCommand extends Command {
   public FieldOrientedDriveCommand(
         DriveSubsystem m_driveSubsystem, DoubleSupplier translationXSupplier,
         DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
-
-        System.out.println("Created");
-
+            
         this.m_driveSubsystem = m_driveSubsystem;
         this.translationXSupplier = translationXSupplier;
         this.translationYSupplier = translationYSupplier;

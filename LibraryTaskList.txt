@@ -31,7 +31,7 @@ D. Set up swerve with Advantage Kit(Done)
 E. Set up Auton System
     a. Set up system to take in commands and run them during Auton(or for auto positining in teleop)(Also add logging)
         b. Provide an example of an auto rotune in commands using the state based system. 
-        c. Make the system take in custem automaticly mirroded pose2d that can take in fudge factors for the position for each allience sepretly.
+        c. Make the system take in custem automaticly mirroded pose2d that can take in fudge factors for the position for each allience sepretly.(Done)
     b. Set up a go to Pose with PIDS in a way that makes it work pretter than last years(Rename and refactor)
         a. Create GoToPoseAfterTime(Or something of the same function)
         b. Create all types of GoToPose that we used last year.

@@ -1,4 +1,4 @@
-package frc.robot.utils.GeneralUtils.AutonUtils;
+package frc.robot.utils.GeneralUtils.AutonUtils.AutonPointUtils;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,9 +13,9 @@ public class AutonPoint {
     
     /**
      * Current Mirring assumes assumes mirred standered mirred field rather than a rotated or fliped.
-     * @param xPointMeters
-     * @param yPointMeters
-     * @param rotationAngleDegrees
+     * @param xPointMeters The x coordnet in meters
+     * @param yPointMeters The y coordnet in meters
+     * @param rotationAngleDegrees The rotation angle in degrees
      * @param fudgeFactor
      */
     public AutonPoint(double xPointMeters, double yPointMeters, double rotationAngleDegrees, FudgeFactor fudgeFactor) {
@@ -23,6 +23,10 @@ public class AutonPoint {
         this.fudgeFactor = fudgeFactor;
     }
 
+    /**
+     * Gets the auton point. Auto mirred depending on alliance.
+     * @return Pose2d: The auton point which is mirred for the current alliance.
+     */
     public Pose2d getAutonPoint()
     {
         if(!RobotModeConstants.kIsBlueAlliance) {
@@ -40,6 +44,11 @@ public class AutonPoint {
         
     }  
 
+    /**
+     * Gets the auton point. Mirred bassed on the argument.
+     * @param shouldMirror Boolean: shouldMirror Whether or not the point should be mirred
+     * @return Pose2d: The auton point mirred based on the argument.
+     */
     public Pose2d getAutonPoint(boolean shouldMirror) {
        if(shouldMirror) {
             return new Pose2d(this.autonPoint.getX() + fudgeFactor.getRedFudgeFactors().getX(),

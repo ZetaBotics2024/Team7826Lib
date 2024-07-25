@@ -35,7 +35,6 @@ public class Robot extends LoggedRobot {
          */
         @Override
         public void robotInit() {
-            enableLiveWindowInTest(true);
             // BuiltConstatns is generated when the project is built. No imports or anything is needed if it is red underlined just build the project
 
             // Record metadata

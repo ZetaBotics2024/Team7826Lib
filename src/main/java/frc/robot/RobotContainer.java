@@ -4,16 +4,21 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.ControlConstants;
-import frc.robot.utils.GeneralUtils.SubsystemContainer;
-import frc.robot.utils.GeneralUtils.AutonUtils.AutonPoint;
-import frc.robot.utils.GeneralUtils.AutonUtils.FudgeFactor;
+import frc.robot.commands.SwerveDriveCommands.FieldOrientedDriveCommand;
+import frc.robot.commands.SwerveDriveCommands.LockSwerves;
+import frc.robot.commands.SwerveDriveCommands.TestDrive;
+import frc.robot.commands.SwerveDriveCommands.TestDrive2;
+import frc.robot.subsystems.SwerveDrive.DriveCommandFactory;
+import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.JoystickUtils.ControllerInterface;
-import frc.robot.utils.SwerveDriveUtils.SwervedriveSetupUtils;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,29 +27,34 @@ import frc.robot.utils.SwerveDriveUtils.SwervedriveSetupUtils;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {  
+    private RobotCreater robotCreater;
+
     // Controller Decloration and Instantiation
     private ControllerInterface driverController = new ControllerInterface(ControlConstants.kDriverControllerPort);
     private ControllerInterface buttonBoard = new ControllerInterface(ControlConstants.kButtonBoardPort);
     private ControllerInterface buttonBoardAlt = new ControllerInterface(ControlConstants.kButtonBoardAltPort);
-
-    // SubsystemContainer
-    private SubsystemContainer subsystemContainer;
+    private LoggedDashboardChooser<Command> loggablLoggedDashboardChooser = new LoggedDashboardChooser<>("AutonTestLog");
+    private SendableChooser<Command> autonChooser = new SendableChooser<>();
+    // Declare all Subsystems and Command Factories
+    private DriveSubsystem driveSubsystem;
+    private DriveCommandFactory driveCommandFactory;
 
     // Decloration of Commands
+    FieldOrientedDriveCommand fieldOrientedDriveCommand;
 
     /** 
      * Initalized all Subsystem and Commands 
      */
     public RobotContainer() {
-        this.subsystemContainer = new SubsystemContainer();
-        
-        SwervedriveSetupUtils.createFieldOrientedDriveCommand(
-            this.subsystemContainer.getDriveSubsystem(), this.driverController);
-        
-        AutonPoint testPoint = new AutonPoint(3, 3, 60, new FudgeFactor(0, 0, 0, 0, 0, 0));
-        Logger.recordOutput("TestAutonPointBlue", testPoint.getAutonPoint(false));
-        Logger.recordOutput("TestAutonPointRed", testPoint.getAutonPoint(true));
-        
+        // Creates all subsystems. Must be first call. 
+        this.robotCreater = new RobotCreater();
+
+        this.driveSubsystem = this.robotCreater.getDriveSubsystem();
+        this.driveCommandFactory = new DriveCommandFactory(this.driveSubsystem, this.driverController);   
+        this.fieldOrientedDriveCommand = this.driveCommandFactory.createFieldOrientedDriveCommand();
+        this.driveSubsystem.setDefaultCommand(this.fieldOrientedDriveCommand);
+
+        SmartDashboard.putData(this.autonChooser);
         configureBindings();
     }
 
@@ -60,6 +70,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return null;
+        return this.loggablLoggedDashboardChooser.get();
     }
 }

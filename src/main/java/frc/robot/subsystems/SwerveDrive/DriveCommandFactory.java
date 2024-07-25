@@ -1,6 +1,7 @@
 package frc.robot.subsystems.SwerveDrive;
 
 import frc.robot.commands.SwerveDriveCommands.FieldOrientedDriveCommand;
+import frc.robot.commands.SwerveDriveCommands.LockSwerves;
 import frc.robot.utils.JoystickUtils.ControllerInterface;
 
 public class DriveCommandFactory {
@@ -18,9 +19,13 @@ public class DriveCommandFactory {
     public FieldOrientedDriveCommand createFieldOrientedDriveCommand() {
         return new FieldOrientedDriveCommand(
         this.driveSubsystem, 
-        () -> -driverController.getLeftY(),
-        () -> -driverController.getLeftX(),
-        () -> -driverController.getRightX());
+        () -> -this.driverController.getLeftY(),
+        () -> -this.driverController.getLeftX(),
+        () -> -this.driverController.getRightX());
+    }
+
+    public LockSwerves createLockSwervesCommand() {
+        return new LockSwerves(this.driveSubsystem);
     }
 
 }

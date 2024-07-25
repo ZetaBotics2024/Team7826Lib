@@ -44,7 +44,7 @@ public class FieldOrientedDriveCommand extends Command {
   public FieldOrientedDriveCommand(
         DriveSubsystem m_driveSubsystem, DoubleSupplier translationXSupplier,
         DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
-            
+
         this.m_driveSubsystem = m_driveSubsystem;
         this.translationXSupplier = translationXSupplier;
         this.translationYSupplier = translationYSupplier;
@@ -88,7 +88,6 @@ public class FieldOrientedDriveCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("Ended");
         m_driveSubsystem.stop();
     }
 }

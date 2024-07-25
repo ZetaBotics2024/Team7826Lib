@@ -5,12 +5,15 @@
 package frc.robot;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Auton.AutonManager;
 import frc.robot.Constants.ControlConstants;
 import frc.robot.commands.SwerveDriveCommands.FieldOrientedDriveCommand;
 import frc.robot.commands.SwerveDriveCommands.LockSwerves;
@@ -28,6 +31,7 @@ import frc.robot.utils.JoystickUtils.ControllerInterface;
  */
 public class RobotContainer {  
     private RobotCreater robotCreater;
+    private AutonManager autonManager;
 
     // Controller Decloration and Instantiation
     private ControllerInterface driverController = new ControllerInterface(ControlConstants.kDriverControllerPort);
@@ -40,7 +44,8 @@ public class RobotContainer {
     private DriveCommandFactory driveCommandFactory;
 
     // Decloration of Commands
-    FieldOrientedDriveCommand fieldOrientedDriveCommand;
+    private FieldOrientedDriveCommand fieldOrientedDriveCommand;
+    private LockSwerves lockSwerves;
 
     /** 
      * Initalized all Subsystem and Commands 
@@ -53,16 +58,17 @@ public class RobotContainer {
         this.driveCommandFactory = new DriveCommandFactory(this.driveSubsystem, this.driverController);   
         this.fieldOrientedDriveCommand = this.driveCommandFactory.createFieldOrientedDriveCommand();
         this.driveSubsystem.setDefaultCommand(this.fieldOrientedDriveCommand);
+        this.lockSwerves = this.driveCommandFactory.createLockSwervesCommand();
 
-        SmartDashboard.putData(this.autonChooser);
         configureBindings();
+        this.autonManager = new AutonManager(this.driveCommandFactory, this.driveSubsystem);
     }
 
     /**
      * Used to configure button binding
      */
     private void configureBindings() {
-
+        this.driverController.bindToButton(lockSwerves, XboxController.Button.kY.value);
     }
 
     /**
@@ -70,6 +76,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return this.loggablLoggedDashboardChooser.get();
+        return this.autonManager.getSelectedAuton();
     }
 }

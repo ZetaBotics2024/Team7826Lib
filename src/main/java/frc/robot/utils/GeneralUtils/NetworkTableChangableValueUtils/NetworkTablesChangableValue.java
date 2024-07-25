@@ -1,15 +1,17 @@
 package frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils;
 
+import org.littletonrobotics.junction.inputs.LoggableInputs;
+import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
+import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
+
+import com.google.flatbuffers.FlexBuffers.Key;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class NetworkTablesChangableValue {
     
-    private Object changableValue;
-    private Object changableValueType;
-    private Object lastChangableValue;
-    private Integer genericInt = 0;
-    private Double genericDouble = 0.0;
-    private Boolean genericBoolean = false; 
+    private LoggedDashboardNumber changableValue;
+    private double lastChangableValue;
     private String networkTablesKey = "NoChangableValueKeyProvided";
     private boolean hasChangableValueChanged = false;
 
@@ -22,52 +24,26 @@ public class NetworkTablesChangableValue {
      * Adds a changable value to Smartdashboard. This allows for PID values to be 
      * tuned without redeploying code every change or for flywheel speed tuning, or other things of this nature.
      * @param networkTablesKey String: The key underwhich the value will be added to networktables. 
-     * @param changableValueObject: The inital value for the changable value. This can be a Integer, Double or Boolean
+     * @param changableValue The inital value for the changable value. This can be a Integer, Double or Boolean
      */
-    public NetworkTablesChangableValue(String networkTablesKey, Object changableValue) {
-        this.changableValue = changableValue;
+    public NetworkTablesChangableValue(String networkTablesKey, double changableValue) {
+        this.changableValue = new LoggedDashboardNumber(networkTablesKey, changableValue);
         this.networkTablesKey = networkTablesKey;
-        this.lastChangableValue = this.changableValue;
-        this.changableValueType = this.changableValue.getClass();
-        addChangableValueToNetworkTables();
+        this.lastChangableValue = this.changableValue.get();
     }   
 
-    /**
-     * Adds the changable value in network tables.. 
-     */
-    private void addChangableValueToNetworkTables() {
-        if(this.changableValueType.equals(this.genericInt.getClass())) {
-            SmartDashboard.putNumber(networkTablesKey, (int)changableValue);
-        } else if(this.changableValueType.equals(this.genericDouble.getClass())) {
-            SmartDashboard.putNumber(networkTablesKey, (double)changableValue);
-        } else if(this.changableValueType.equals(this.genericBoolean.getClass())) {
-            SmartDashboard.putBoolean(networkTablesKey, (boolean)changableValue);
-        } else {
-            SmartDashboard.putString(networkTablesKey, "ChangableValuesUnsupportedTypeAdded:Only Integers, Doubles and Booleans supported");
-        }
-    }
 
     /**
      * Returns the current changableValue's value as a genaric object. Must be cased to desired type
      * @return Object: The current changableValue's value as a genaric object. Must be cased to desired type
      */
-    public Object getChangableValueOnNetworkTables() {
-        if(this.changableValueType.equals(this.genericInt.getClass())) {
-            this.changableValue =  SmartDashboard.getNumber(networkTablesKey, (int)changableValue);
-        } else if (this.changableValueType.equals(this.genericDouble.getClass())) {
-            this.changableValue = SmartDashboard.getNumber(networkTablesKey, (double)changableValue);
-        } else if(this.changableValueType.equals(this.genericBoolean.getClass())) {
-            this.changableValue = SmartDashboard.getBoolean(networkTablesKey, (boolean)changableValue);
-        } else {
-            SmartDashboard.putString(networkTablesKey, "ChangableValuesUnsupportedTypeAdded:Only Integers, Doubles and Booleans supported");
-        }
-
-        if(this.changableValue != this.lastChangableValue) {
-            this.lastChangableValue = this.changableValue;
+    public double getChangableValueOnNetworkTables() {
+        if(this.changableValue.get() != this.lastChangableValue) {
+            this.lastChangableValue = this.changableValue.get();
             this.hasChangableValueChanged = true;
         }
 
-        return this.changableValue;
+        return this.changableValue.get();
     }
 
     /**

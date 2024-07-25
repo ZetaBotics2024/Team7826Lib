@@ -15,6 +15,7 @@ import frc.robot.subsystems.SwerveDrive.Gyro.GyroIO;
 import frc.robot.subsystems.SwerveDrive.Gyro.GyroIOInputsAutoLogged;
 import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModule;
 import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModuleIO;
+import frc.robot.utils.GeneralUtils.AutonUtils.AutonPointUtils.AutonPoint;
 
 public class DriveSubsystem extends SubsystemBase{
 
@@ -164,4 +165,11 @@ public class DriveSubsystem extends SubsystemBase{
         return SwerveDriveConstants.kDriveKinematics.toChassisSpeeds(this.swerveModuleStates);
     }
 
+    public Pose2d getRobotPose() {
+        return this.poseEstimator.getEstimatedPosition();
+    }
+
+    public void resetRobotPose(AutonPoint newRobotPose) {
+        this.poseEstimator.resetPosition(this.gyroInputs.yawAngle, getModulePositions(), newRobotPose.getAutonPoint());
+    }
 }

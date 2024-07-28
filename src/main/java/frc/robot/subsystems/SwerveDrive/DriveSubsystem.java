@@ -2,6 +2,11 @@ package frc.robot.subsystems.SwerveDrive;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,13 +14,16 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.AutonConstants.PathPlannerAutonConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
 import frc.robot.subsystems.SwerveDrive.Gyro.GyroIO;
 import frc.robot.subsystems.SwerveDrive.Gyro.GyroIOInputsAutoLogged;
 import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModule;
 import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModuleIO;
 import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 
 public class DriveSubsystem extends SubsystemBase{
 
@@ -33,6 +41,9 @@ public class DriveSubsystem extends SubsystemBase{
 
     private SwerveDrivePoseEstimator poseEstimator;
 
+    private NetworkTablesTunablePIDConstants pathPlannerTranslationPIDValueTuner;
+    private NetworkTablesTunablePIDConstants pathPlannerRotationPIDValueTuner;
+
     public DriveSubsystem(SwerveModuleIO frontLeftSwerveModuleIO, SwerveModuleIO frontRightSwerveModuleIO,
         SwerveModuleIO backLeftSwerveModuleIO, SwerveModuleIO backRightSwerveModuleIO, GyroIO gyroIO) {
         
@@ -44,12 +55,29 @@ public class DriveSubsystem extends SubsystemBase{
         this.gyroIO = gyroIO;
 
         this.poseEstimator = new SwerveDrivePoseEstimator(SwerveDriveConstants.kDriveKinematics, this.gyroInputs.yawAngle, getModulePositions(), new Pose2d());
+        
+        this.pathPlannerTranslationPIDValueTuner = new NetworkTablesTunablePIDConstants("PathPlanner/TranslationPIDValues",
+            PathPlannerAutonConstants.kTranslationPIDConstants.kP,
+            PathPlannerAutonConstants.kTranslationPIDConstants.kI,
+            PathPlannerAutonConstants.kTranslationPIDConstants.kD, 0);
+
+        this.pathPlannerRotationPIDValueTuner = new NetworkTablesTunablePIDConstants("PathPlanner/RotationPIDValues",
+            PathPlannerAutonConstants.kRotationPIDConstants.kP,
+            PathPlannerAutonConstants.kRotationPIDConstants.kI,
+            PathPlannerAutonConstants.kRotationPIDConstants.kD, 0);
+
+
+        configurePathPlannerAutoBuilder();
     }
 
     public void drive(double desiredXVelocity, double desiredYVelocity, double desiredRotationalVelocity) {
         this.desiredChassisSpeeds =
             ChassisSpeeds.fromFieldRelativeSpeeds(desiredXVelocity, desiredYVelocity,
                 desiredRotationalVelocity, this.gyroInputs.yawAngle);   
+    }
+
+    private void drive(ChassisSpeeds desiredChassisSpeeds) {
+        this.desiredChassisSpeeds = desiredChassisSpeeds;
     }
   
     public void stop() {
@@ -73,7 +101,6 @@ public class DriveSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-
         this.swerveModuleStates = getModuleStates();
 
         if (desiredChassisSpeeds != null) {  
@@ -96,9 +123,25 @@ public class DriveSubsystem extends SubsystemBase{
         // Resets the desiredChassisSpeeds to null to stop it from "sticking" to the last states
         desiredChassisSpeeds = null;
 
+        updatePathPannerPIDValues();
 
         this.poseEstimator.update(this.gyroInputs.yawAngle, getModulePositions());
         Logger.recordOutput("Odometry/RobotPose", this.poseEstimator.getEstimatedPosition());
+
+    }
+
+    public void updatePathPannerPIDValues() {
+        double[] currentTranslationPIDValues = this.pathPlannerTranslationPIDValueTuner.getUpdatedPIDConstants();
+        if(this.pathPlannerTranslationPIDValueTuner.hasAnyPIDValueChanged()) {
+            PathPlannerAutonConstants.kTranslationPIDConstants = new PIDConstants(currentTranslationPIDValues[0], currentTranslationPIDValues[1], currentTranslationPIDValues[2]);
+            configurePathPlannerAutoBuilder();
+        }
+
+        double[] currentRotationPIDValues = this.pathPlannerRotationPIDValueTuner.getUpdatedPIDConstants();
+        if(this.pathPlannerRotationPIDValueTuner.hasAnyPIDValueChanged()) {
+            PathPlannerAutonConstants.kRotationPIDConstants = new PIDConstants(currentRotationPIDValues[0], currentRotationPIDValues[1], currentRotationPIDValues[2]);
+            configurePathPlannerAutoBuilder();
+        }
     }
 
     private void logSwerveDrive() {
@@ -161,7 +204,7 @@ public class DriveSubsystem extends SubsystemBase{
         this.backRightSwerveModule.setDesiredModuleState(desiredStates[3]); 
     }
 
-    private ChassisSpeeds getChassisSpeeds() {
+    public ChassisSpeeds getChassisSpeeds() {
         return SwerveDriveConstants.kDriveKinematics.toChassisSpeeds(this.swerveModuleStates);
     }
 
@@ -169,7 +212,35 @@ public class DriveSubsystem extends SubsystemBase{
         return this.poseEstimator.getEstimatedPosition();
     }
 
-    public void resetRobotPose(AutonPoint newRobotPose) {
-        this.poseEstimator.resetPosition(this.gyroInputs.yawAngle, getModulePositions(), newRobotPose.getAutonPoint());
+    public void setRobotPose(AutonPoint newRobotPose) {
+        setRobotPose(newRobotPose.getAutonPoint());
     }
+
+    private void setRobotPose(Pose2d newRobotPose) {
+        this.poseEstimator.resetPosition(this.gyroInputs.yawAngle, getModulePositions(), newRobotPose);
+    }
+
+    public void resetRobotPose() {
+        this.poseEstimator.resetPosition(this.gyroInputs.yawAngle, getModulePositions(), new Pose2d());
+    }
+
+    private void configurePathPlannerAutoBuilder() {
+        System.out.println(PathPlannerAutonConstants.kTranslationPIDConstants.kP);
+        AutoBuilder.configureHolonomic(
+            this::getRobotPose, // Robot pose supplier
+            this::setRobotPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                    PathPlannerAutonConstants.kTranslationPIDConstants, // Translation PID constants
+                    PathPlannerAutonConstants.kRotationPIDConstants, // Rotation PID constants
+                    PathPlannerAutonConstants.kMaxModuleSpeedMetersPerSecond, // Max module speed, in m/s
+                    SwerveDriveConstants.kRadiusFromCenterToFarthestSwerveModule, // Drive base radius in meters. Distance from robot center to furthest module.
+                    new ReplanningConfig() // Default path replanning config. See the API for the options here
+            ),
+            ()->false,
+            this // Reference to this subsystem to set requirements
+        );
+    }
+    
 }

@@ -19,6 +19,7 @@ public class CustomWaitCommand extends Command{
 
     @Override
     public void initialize() {
+        System.out.println("WaitCommand");
         this.endTime = Timer.getFPGATimestamp() + waitTime;
     }
 
@@ -28,11 +29,12 @@ public class CustomWaitCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
+        System.out.println("Wiat Command finished");
     }
 
     @Override
     public boolean isFinished() {
-        return Timer.getFPGATimestamp() < this.endTime;
+        return Timer.getFPGATimestamp() > this.endTime;
     }
 }
 

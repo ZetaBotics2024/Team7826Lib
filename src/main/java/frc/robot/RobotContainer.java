@@ -4,14 +4,24 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Auton.AutonManager;
 import frc.robot.Constants.ControlConstants;
+import frc.robot.commands.AutonCommands.PathplannerAutonCommands.PathPlannerCreateAutonFromPoints;
 import frc.robot.commands.SwerveDriveCommands.FieldOrientedDriveCommand;
 import frc.robot.commands.SwerveDriveCommands.LockSwerves;
 import frc.robot.subsystems.SwerveDrive.DriveCommandFactory;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.utils.AutonUtils.GenerateAuto;
+import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.utils.CommandUtils.SequentialGroupCommand;
 import frc.robot.utils.JoystickUtils.ControllerInterface;
 
 /**
@@ -50,6 +60,7 @@ public class RobotContainer {
         this.lockSwerves = this.driveCommandFactory.createLockSwervesCommand();
 
         configureBindings();
+
         this.autonManager = new AutonManager(this.driveCommandFactory, this.driveSubsystem);
     }
 
@@ -64,7 +75,11 @@ public class RobotContainer {
      * Used to select our send our selected autonomus command to the Robot.java file.
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand() {
+    public Command getAutonomousCommand() {    
         return this.autonManager.getSelectedAuton();
+    }
+
+    public DriveSubsystem getDriveSubsystem() {
+        return this.driveSubsystem;
     }
 }

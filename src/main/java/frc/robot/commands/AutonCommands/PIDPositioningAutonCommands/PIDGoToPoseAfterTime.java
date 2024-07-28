@@ -10,10 +10,11 @@ import frc.robot.Constants.ControlConstants;
 import frc.robot.Constants.AutonConstants.PIDPositioningAutonConstants;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.utils.CommandUtils.Wait;
 import frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 import frc.robot.utils.LEDUtils.LEDManager;
 
-public class PIDGoToPose extends Command {
+public class PIDGoToPoseAfterTime extends Command {
     private ProfiledPIDController xTranslationPIDController;
     private ProfiledPIDController yTranslationPIDController;
     private ProfiledPIDController rotationPIDController;
@@ -27,9 +28,12 @@ public class PIDGoToPose extends Command {
 
     private double startTime = 0;
 
-    public PIDGoToPose(AutonPoint endPoint, DriveSubsystem driveSubsystem) {
+    private Wait wait;
+
+    public PIDGoToPoseAfterTime(AutonPoint endPoint, double waitTime, DriveSubsystem driveSubsystem) {
         this.endPoint = endPoint;
         this.driveSubsystem = driveSubsystem;
+        this.wait = new Wait(waitTime);
         Logger.recordOutput("Auton/GoToPosePIDGoalEndPose", endPoint.getAutonPoint());
         
         configurePIDs();
@@ -121,24 +125,29 @@ public class PIDGoToPose extends Command {
         this.yTranslationPIDController.reset(this.driveSubsystem.getRobotPose().getY());
         this.rotationPIDController.reset(this.driveSubsystem.getRobotPose().getRotation().getDegrees());
 
+        this.startTime = Timer.getFPGATimestamp();
+        wait.startTimer();
         LEDManager.setSolidColor(new int[] {255, 0, 0});
     }
 
     @Override
     public void execute() {
+        
         updatePIDValuesFromNetworkTables();
-
-        Pose2d currentRobotPose = this.driveSubsystem.getRobotPose();
-        double xVelocity = this.xTranslationPIDController.calculate(currentRobotPose.getX(),
-            endPoint.getAutonPoint().getX());
-        double yVelocity = this.yTranslationPIDController.calculate(currentRobotPose.getY(),
-            endPoint.getAutonPoint().getY());
-        double rotationVelocity = this.rotationPIDController.calculate(currentRobotPose.getRotation().getDegrees(),
-            endPoint.getAutonPoint().getRotation().getDegrees());
-        Logger.recordOutput("Auton/PIDGoToPose/TranlsationDesiredVelXMPS", xVelocity);
-        Logger.recordOutput("Auton/PIDGoToPose/TranlsationDesiredVelYMPS", yVelocity);
-        Logger.recordOutput("Auton/PIDGoToPose/RotationDisiredRadsPerSecond", rotationVelocity);
-        this.driveSubsystem.drive(xVelocity, yVelocity, rotationVelocity);
+        if(wait.hasTimePassed()) {
+            Pose2d currentRobotPose = this.driveSubsystem.getRobotPose();
+            double xVelocity = this.xTranslationPIDController.calculate(currentRobotPose.getX(),
+                endPoint.getAutonPoint().getX());
+            double yVelocity = this.yTranslationPIDController.calculate(currentRobotPose.getY(),
+                endPoint.getAutonPoint().getY());
+            double rotationVelocity = this.rotationPIDController.calculate(currentRobotPose.getRotation().getDegrees(),
+                endPoint.getAutonPoint().getRotation().getDegrees());
+            Logger.recordOutput("Auton/PIDGoToPoseAfterTime/TranlsationDesiredVelXMPS", xVelocity);
+            Logger.recordOutput("Auton/PIDGoToPoseAfterTime/TranlsationDesiredVelYMPS", yVelocity);
+            Logger.recordOutput("Auton/PIDGoToPoseAfterTime/RotationDisiredRadsPerSecond", rotationVelocity);
+            this.driveSubsystem.drive(xVelocity, yVelocity, rotationVelocity);
+        }
+        
     }
 
     @Override

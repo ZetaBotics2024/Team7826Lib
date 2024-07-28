@@ -5,11 +5,16 @@ import java.util.HashMap;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.SwerveDrive.DriveCommandFactory;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
 import frc.robot.utils.AutonUtils.AutonPointUtils.FudgeFactor;
+import frc.robot.utils.CommandUtils.CustomWaitCommand;
 
 public class AutonManager {
     // Decloration of auton names
@@ -27,6 +32,7 @@ public class AutonManager {
         this.autonPointManager = new AutonPointManager();
         this.driveCommandFactory = driveCommandFactory;
         this.driveSubsystem = driveSubsystem;
+        registerAllPathPlannerCommands();
 
         this.autonChooser = new LoggedDashboardChooser<>("AutonChooser");
         addAllAutons();
@@ -40,6 +46,10 @@ public class AutonManager {
 
     private void addAuton(String autonName) {
         this.autonChooser.addOption(autonName, autonName);
+    }
+
+    private void registerAllPathPlannerCommands() {
+        NamedCommands.registerCommand("WaitCommand", new CustomWaitCommand(.2));
     }
 
     public Command getSelectedAuton() {

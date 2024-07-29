@@ -3,6 +3,8 @@ package frc.robot.subsystems.SwerveDrive;
 import frc.robot.commands.SwerveDriveCommands.FieldOrientedDriveCommand;
 import frc.robot.commands.SwerveDriveCommands.LockSwerves;
 import frc.robot.utils.JoystickUtils.ControllerInterface;
+import frc.robot.utils.SwerveDriveUtils.SwerveDriveRotationProfiler;
+import frc.robot.utils.SwerveDriveUtils.SwerveDriveTranslationProfiler;
 
 public class DriveCommandFactory {
     // All Subsystems needed for every command
@@ -26,6 +28,14 @@ public class DriveCommandFactory {
 
     public LockSwerves createLockSwervesCommand() {
         return new LockSwerves(this.driveSubsystem);
+    }
+
+    public SwerveDriveTranslationProfiler createSwerveDriveTranslationProfiler() {
+        return new SwerveDriveTranslationProfiler(this.driveSubsystem, 4.22);
+    }
+
+    public SwerveDriveRotationProfiler createSwerveDriveRotationProfiler() {
+        return new SwerveDriveRotationProfiler(driveSubsystem, 9.892);
     }
 
 }

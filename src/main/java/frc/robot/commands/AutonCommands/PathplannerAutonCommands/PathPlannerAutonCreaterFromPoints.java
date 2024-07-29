@@ -14,18 +14,20 @@ import frc.robot.Constants.AutonConstants.PathPlannerAutonConstants;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
 
-public class PathPlannerCreateAutonFromPoints {
+public class PathPlannerAutonCreaterFromPoints {
 
-    public static Command createAutonCommand(AutonPoint[] goalPoints, double maxTime, DriveSubsystem driveSubsystem) {
-        AutonPoint startPoint = goalPoints[0];
-        AutonPoint endPoint = goalPoints[goalPoints.length-1];
+    public static Command createAutonCommand(AutonPoint[] points, double maxTime, DriveSubsystem driveSubsystem) {
+        AutonPoint startPoint = points[0];
+        AutonPoint endPoint = points[points.length-1];
         Pose2d realStartPoint = new Pose2d(startPoint.getAutonPoint().getTranslation(), new Rotation2d());
         Pose2d realEndPoint = new Pose2d(endPoint.getAutonPoint().getTranslation(), new Rotation2d());
    
         ArrayList<Pose2d> pointsAsPose2d = new ArrayList<>();
         pointsAsPose2d.add(realStartPoint);
-        for(int i = 1; i < goalPoints.length-1; i++) {
-            //pointsAsPose2d.add(goalPoints[i].getAutonPoint());
+        for(int i = 1; i < points.length-1; i++) {
+            Pose2d pointAsPose2d = points[i].getAutonPoint();
+            Pose2d modifedPoint = new Pose2d(pointAsPose2d.getTranslation(), new Rotation2d());
+            pointsAsPose2d.add(modifedPoint);
         }
         pointsAsPose2d.add(realEndPoint);
 

@@ -12,7 +12,7 @@ import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModuleIOSparkMax;
 import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModuleIOTalonFX;
 import frc.robot.utils.JoystickUtils.ControllerInterface;
 
-public class SwervedriveSetupUtils {
+public class SwerveDriveSetupUtils {
     public static DriveSubsystem createSparkMaxSwerve() {
         return new DriveSubsystem(
             new SwerveModuleIOSparkMax(SwerveDriveConstants.kFrontLeftModuleName),

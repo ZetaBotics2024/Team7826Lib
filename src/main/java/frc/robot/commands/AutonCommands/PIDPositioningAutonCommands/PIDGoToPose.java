@@ -56,6 +56,8 @@ public class PIDGoToPose extends Command {
             PIDPositioningAutonConstants.kDRotationPIDConstant,
             PIDPositioningAutonConstants.kTranslationPIDControllerConstraints);
 
+        //this.rotationPIDController.enableContinuousInput(-Math.PI, Math.PI);
+
         this.xTranslationPIDController.setTolerance(PIDPositioningAutonConstants.kTranslationToleranceMeters);
         this.yTranslationPIDController.setTolerance(PIDPositioningAutonConstants.kTranslationToleranceMeters);
         this.rotationPIDController.setTolerance(PIDPositioningAutonConstants.kRotationToleranceRadians);
@@ -109,6 +111,7 @@ public class PIDGoToPose extends Command {
                 currentRotationPIDValues[1],
                 currentRotationPIDValues[2],
                 PIDPositioningAutonConstants.kRotationPIDControllerConstraints);
+            //this.rotationPIDController.enableContinuousInput(-Math.PI, Math.PI);
             this.rotationPIDController.setTolerance(PIDPositioningAutonConstants.kRotationToleranceRadians);
         }
     }
@@ -120,6 +123,8 @@ public class PIDGoToPose extends Command {
         this.xTranslationPIDController.reset(this.driveSubsystem.getRobotPose().getX());
         this.yTranslationPIDController.reset(this.driveSubsystem.getRobotPose().getY());
         this.rotationPIDController.reset(this.driveSubsystem.getRobotPose().getRotation().getDegrees());
+
+        this.startTime = Timer.getFPGATimestamp();
 
         LEDManager.setSolidColor(new int[] {255, 0, 0});
     }
@@ -133,17 +138,19 @@ public class PIDGoToPose extends Command {
             endPoint.getAutonPoint().getX());
         double yVelocity = this.yTranslationPIDController.calculate(currentRobotPose.getY(),
             endPoint.getAutonPoint().getY());
-        double rotationVelocity = this.rotationPIDController.calculate(currentRobotPose.getRotation().getDegrees(),
-            endPoint.getAutonPoint().getRotation().getDegrees());
+        double rotationVelocity = this.rotationPIDController.calculate(currentRobotPose.getRotation().getRadians(),
+            endPoint.getAutonPoint().getRotation().getRadians());
+        this.driveSubsystem.drive(xVelocity, yVelocity, rotationVelocity);
+
         Logger.recordOutput("Auton/PIDGoToPose/TranlsationDesiredVelXMPS", xVelocity);
         Logger.recordOutput("Auton/PIDGoToPose/TranlsationDesiredVelYMPS", yVelocity);
-        Logger.recordOutput("Auton/PIDGoToPose/RotationDisiredRadsPerSecond", rotationVelocity);
-        this.driveSubsystem.drive(xVelocity, yVelocity, rotationVelocity);
+        Logger.recordOutput("Auton/PIDGoToPose/RotationDesiredRadsPerSecond", rotationVelocity);
+        
     }
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("PID GO TO POSE TOOK: " + (Timer.getFPGATimestamp()-startTime));
+    
         LEDManager.setSolidColor(new int[] {0, 0, 255});
         
         ControlConstants.kIsDriverControlled = true;

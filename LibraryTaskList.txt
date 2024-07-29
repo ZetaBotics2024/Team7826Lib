@@ -33,11 +33,10 @@ E. Set up Auton System
         b. Provide an example of an auto rotune in commands using the state based system. 
         c. Make the system take in custem automaticly mirroded pose2d that can take in fudge factors for the position for each allience sepretly.(Done)
     b. Set up a go to Pose with PIDS in a way that makes it work pretter than last years(Rename and refactor)
-        a. Create GoToPoseAfterTime(Or something of the same function)
+        a. Create GoToPoseAfterTime(Or something of the same function)(Done)
         b. Create all types of GoToPose that we used last year.(Done)
-        c. Create a GoToPose high tolorence and low tolorence
+        c. Create a GoToPose high tolorence and low tolorence(Maybe)
     c. Set up extracted auton system that lets you slot in PathPlanener auton, WPILib Trejectors and Choreo trejectories.
-    d. Find a better way to do auto positioning.
 F. Set up Odometry Vision
     a. Refactor Vision code to work with Advantage Kit and run on a second thread
     b. Refactor Vision code to be easaly modifable and work with any amount of cameras.

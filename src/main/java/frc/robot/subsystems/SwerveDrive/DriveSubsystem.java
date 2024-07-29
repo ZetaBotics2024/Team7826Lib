@@ -17,6 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutonConstants.PathPlannerAutonConstants;
+import frc.robot.Constants.AutonConstants.WPILibAutonConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
 import frc.robot.subsystems.SwerveDrive.Gyro.GyroIO;
 import frc.robot.subsystems.SwerveDrive.Gyro.GyroIOInputsAutoLogged;
@@ -66,7 +67,6 @@ public class DriveSubsystem extends SubsystemBase{
             PathPlannerAutonConstants.kRotationPIDConstants.kI,
             PathPlannerAutonConstants.kRotationPIDConstants.kD, 0);
 
-
         configurePathPlannerAutoBuilder();
     }
 
@@ -76,7 +76,7 @@ public class DriveSubsystem extends SubsystemBase{
                 desiredRotationalVelocity, this.gyroInputs.yawAngle);   
     }
 
-    private void drive(ChassisSpeeds desiredChassisSpeeds) {
+    public void drive(ChassisSpeeds desiredChassisSpeeds) {
         this.desiredChassisSpeeds = desiredChassisSpeeds;
     }
   
@@ -225,7 +225,6 @@ public class DriveSubsystem extends SubsystemBase{
     }
 
     private void configurePathPlannerAutoBuilder() {
-        System.out.println(PathPlannerAutonConstants.kTranslationPIDConstants.kP);
         AutoBuilder.configureHolonomic(
             this::getRobotPose, // Robot pose supplier
             this::setRobotPose, // Method to reset odometry (will be called if your auto has a starting pose)

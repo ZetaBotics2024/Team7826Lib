@@ -6,7 +6,7 @@ public class SequentialGroupCommand extends Command {
     private Command[] commands;
     private int currentRunningIndex = -1;
 
-    public SequentialGroupCommand(Command... commands) {
+    public SequentialGroupCommand(Command[] commands) {
         this.commands = commands;
     }
 
@@ -24,7 +24,7 @@ public class SequentialGroupCommand extends Command {
             currentRunningIndex = 0;
             this.commands[currentRunningIndex].schedule();
         }
-
+        
         if (this.commands[currentRunningIndex].isFinished()) {
             currentRunningIndex++;
             if (currentRunningIndex >= this.commands.length) {

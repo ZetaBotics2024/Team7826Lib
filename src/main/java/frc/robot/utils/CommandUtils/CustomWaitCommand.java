@@ -34,7 +34,7 @@ public class CustomWaitCommand extends Command{
 
     @Override
     public boolean isFinished() {
-        return Timer.getFPGATimestamp() > this.endTime;
+        return isScheduled() && Timer.getFPGATimestamp() > this.endTime;
     }
 }
 

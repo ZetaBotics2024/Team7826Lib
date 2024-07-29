@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Auton.AutonManager;
 import frc.robot.Constants.ControlConstants;
-import frc.robot.commands.AutonCommands.PathplannerAutonCommands.PathPlannerCreateAutonFromPoints;
+import frc.robot.commands.AutonCommands.PathplannerAutonCommands.PathPlannerAutonCreaterFromPoints;
 import frc.robot.commands.SwerveDriveCommands.FieldOrientedDriveCommand;
 import frc.robot.commands.SwerveDriveCommands.LockSwerves;
 import frc.robot.subsystems.SwerveDrive.DriveCommandFactory;
@@ -62,6 +62,7 @@ public class RobotContainer {
         configureBindings();
 
         this.autonManager = new AutonManager(this.driveCommandFactory, this.driveSubsystem);
+
     }
 
     /**
@@ -69,6 +70,8 @@ public class RobotContainer {
      */
     private void configureBindings() {
         this.driverController.bindToButton(lockSwerves, XboxController.Button.kY.value);
+        this.driverController.bindToButton(this.driveCommandFactory.createSwerveDriveTranslationProfiler(), XboxController.Button.kX.value);
+        this.driverController.bindToButton(this.driveCommandFactory.createSwerveDriveRotationProfiler(), XboxController.Button.kB.value);
     }
 
     /**

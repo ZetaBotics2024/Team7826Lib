@@ -10,6 +10,12 @@
           "data": {
             "pathName": "ExampleAutonPath"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ExampleAutonPath2"
+          }
         }
       ]
     }

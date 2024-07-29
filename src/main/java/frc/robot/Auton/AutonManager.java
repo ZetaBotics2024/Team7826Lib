@@ -53,7 +53,7 @@ public class AutonManager {
     }
 
     public Command getSelectedAuton() {
-        // This system allows for auton to be run multable times in one robot init. \
+        // This system allows for auton to be run multable times in one robot init.
         // If this results in a noticable wait before the start of motion this can be swaped out before comp
         Command selectedAuton;
         switch (autonChooser.get()) {

@@ -13,22 +13,27 @@ import frc.robot.utils.CommandUtils.Wait;
 
 public class PathPlannerFollowPath extends Command{
     private Pose2d endPoint;
-    private double maxTime;
-    private PathPlannerFollowPath path;
     private Command followPathCommand;
     private Wait hardCutOffTimer;
     private DriveSubsystem driveSubsystem;
 
     public PathPlannerFollowPath(PathPlannerPath path, Pose2d endPoint, double maxTime, DriveSubsystem driveSubsystem) {
         this.endPoint = endPoint;
-        this.maxTime = maxTime;
         this.followPathCommand = AutoBuilder.followPath(path);
+        this.hardCutOffTimer = new Wait(maxTime);
+        this.driveSubsystem = driveSubsystem;
+    }
+
+    public PathPlannerFollowPath(Command followPathCommand, Pose2d endPoint, double maxTime, DriveSubsystem driveSubsystem) {
+        this.endPoint = endPoint;
+        this.followPathCommand = followPathCommand;
         this.hardCutOffTimer = new Wait(maxTime);
         this.driveSubsystem = driveSubsystem;
     }
     
     @Override
     public void initialize() {
+        System.out.println("Started PathPlanner");
         this.followPathCommand.schedule();
         this.hardCutOffTimer.startTimer();
     }
@@ -40,9 +45,10 @@ public class PathPlannerFollowPath extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("PATH OVER");
+        System.out.println("PP Ended");
+        this.followPathCommand.cancel();
         this.driveSubsystem.stop();
-        this.followPathCommand.end(true);
+
     }
 
     @Override
@@ -57,8 +63,7 @@ public class PathPlannerFollowPath extends Command{
         boolean hasReachedYTolorence = Math.abs(this.endPoint.getTranslation().getY() - robotPose.getY()) <= 
             PathPlannerAutonConstants.kTranslationToleranceMeters; 
         boolean hasReachedRotationTolorence = Math.abs(this.endPoint.getRotation().getDegrees() - robotPose.getRotation().getDegrees()) <= 
-            PathPlannerAutonConstants.kTranslationToleranceMeters; 
-    
+            PathPlannerAutonConstants.kRotationToleranceDegrees; 
         boolean hasReachedTolorence = hasReachedXTolorence && hasReachedYTolorence && hasReachedRotationTolorence;
         
         return hasReachedTolorence;

@@ -56,7 +56,7 @@ public class PIDGoToPose extends Command {
             PIDPositioningAutonConstants.kDRotationPIDConstant,
             PIDPositioningAutonConstants.kTranslationPIDControllerConstraints);
 
-        //this.rotationPIDController.enableContinuousInput(-Math.PI, Math.PI);
+        this.rotationPIDController.enableContinuousInput(-Math.PI, Math.PI);
 
         this.xTranslationPIDController.setTolerance(PIDPositioningAutonConstants.kTranslationToleranceMeters);
         this.yTranslationPIDController.setTolerance(PIDPositioningAutonConstants.kTranslationToleranceMeters);
@@ -111,14 +111,13 @@ public class PIDGoToPose extends Command {
                 currentRotationPIDValues[1],
                 currentRotationPIDValues[2],
                 PIDPositioningAutonConstants.kRotationPIDControllerConstraints);
-            //this.rotationPIDController.enableContinuousInput(-Math.PI, Math.PI);
+            this.rotationPIDController.enableContinuousInput(-Math.PI, Math.PI);
             this.rotationPIDController.setTolerance(PIDPositioningAutonConstants.kRotationToleranceRadians);
         }
     }
     
     @Override 
     public void initialize() {
-        System.out.println("Started PID");
         ControlConstants.kIsDriverControlled = false;
     
         this.xTranslationPIDController.reset(this.driveSubsystem.getRobotPose().getX());

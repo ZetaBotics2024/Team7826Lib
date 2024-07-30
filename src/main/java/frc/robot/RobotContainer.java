@@ -4,24 +4,17 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
+import java.util.Optional;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
-
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Auton.AutonManager;
 import frc.robot.Constants.ControlConstants;
-import frc.robot.commands.AutonCommands.PathplannerAutonCommands.PathPlannerAutonCreaterFromPoints;
 import frc.robot.commands.SwerveDriveCommands.FieldOrientedDriveCommand;
 import frc.robot.commands.SwerveDriveCommands.LockSwerves;
 import frc.robot.subsystems.SwerveDrive.DriveCommandFactory;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.AutonUtils.GenerateAuto;
-import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
-import frc.robot.utils.CommandUtils.SequentialGroupCommand;
 import frc.robot.utils.JoystickUtils.ControllerInterface;
 
 /**
@@ -82,7 +75,9 @@ public class RobotContainer {
         return this.autonManager.getSelectedAuton();
     }
 
-    public DriveSubsystem getDriveSubsystem() {
-        return this.driveSubsystem;
+    public void onAllianceChanged(Alliance currentAlliance) {
+        this.driveSubsystem.setAlliance(currentAlliance);
     }
+
+    
 }

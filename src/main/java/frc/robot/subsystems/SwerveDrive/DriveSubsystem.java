@@ -15,10 +15,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutonConstants.PathPlannerAutonConstants;
 import frc.robot.Constants.AutonConstants.WPILibAutonConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
+import frc.robot.subsystems.PoseEstimation.PoseEstimatorSubsystem;
 import frc.robot.subsystems.SwerveDrive.Gyro.GyroIO;
 import frc.robot.subsystems.SwerveDrive.Gyro.GyroIOInputsAutoLogged;
 import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModule;
@@ -40,7 +42,7 @@ public class DriveSubsystem extends SubsystemBase{
 
     private ChassisSpeeds desiredChassisSpeeds;
 
-    private SwerveDrivePoseEstimator poseEstimator;
+    private PoseEstimatorSubsystem poseEstimatorSubsystem;
 
     private NetworkTablesTunablePIDConstants pathPlannerTranslationPIDValueTuner;
     private NetworkTablesTunablePIDConstants pathPlannerRotationPIDValueTuner;
@@ -55,7 +57,7 @@ public class DriveSubsystem extends SubsystemBase{
         
         this.gyroIO = gyroIO;
 
-        this.poseEstimator = new SwerveDrivePoseEstimator(SwerveDriveConstants.kDriveKinematics, this.gyroInputs.yawAngle, getModulePositions(), new Pose2d());
+        this.poseEstimatorSubsystem = new PoseEstimatorSubsystem(this);
         
         this.pathPlannerTranslationPIDValueTuner = new NetworkTablesTunablePIDConstants("PathPlanner/TranslationPIDValues",
             PathPlannerAutonConstants.kTranslationPIDConstants.kP,
@@ -101,6 +103,7 @@ public class DriveSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
+        System.out.println("Odometry" + this.poseEstimatorSubsystem.getRobotPose());
         this.swerveModuleStates = getModuleStates();
 
         if (desiredChassisSpeeds != null) {  
@@ -124,10 +127,6 @@ public class DriveSubsystem extends SubsystemBase{
         desiredChassisSpeeds = null;
 
         updatePathPannerPIDValues();
-
-        this.poseEstimator.update(this.gyroInputs.yawAngle, getModulePositions());
-        Logger.recordOutput("Odometry/RobotPose", this.poseEstimator.getEstimatedPosition());
-
     }
 
     public void updatePathPannerPIDValues() {
@@ -208,8 +207,12 @@ public class DriveSubsystem extends SubsystemBase{
         return SwerveDriveConstants.kDriveKinematics.toChassisSpeeds(this.swerveModuleStates);
     }
 
+    public Rotation2d getGyroAngleRotation2d() {
+        return this.gyroInputs.yawAngle;
+    }
+
     public Pose2d getRobotPose() {
-        return this.poseEstimator.getEstimatedPosition();
+        return this.poseEstimatorSubsystem.getRobotPose();
     }
 
     public void setRobotPose(AutonPoint newRobotPose) {
@@ -217,11 +220,19 @@ public class DriveSubsystem extends SubsystemBase{
     }
 
     private void setRobotPose(Pose2d newRobotPose) {
-        this.poseEstimator.resetPosition(this.gyroInputs.yawAngle, getModulePositions(), newRobotPose);
+        this.poseEstimatorSubsystem.setRobotPose(newRobotPose);
     }
 
     public void resetRobotPose() {
-        this.poseEstimator.resetPosition(this.gyroInputs.yawAngle, getModulePositions(), new Pose2d());
+        this.poseEstimatorSubsystem.resetRobotPose();
+    }
+
+    public void setAlliance(Alliance currentAlliance) {
+        this.poseEstimatorSubsystem.setAlliance(currentAlliance);
+    }
+
+    public PoseEstimatorSubsystem getPoseEstimatorSubsystem() {
+        return this.poseEstimatorSubsystem;
     }
 
     private void configurePathPlannerAutoBuilder() {

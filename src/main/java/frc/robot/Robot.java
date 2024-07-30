@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -14,6 +16,8 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveControlRequestParameters;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -21,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.RobotModeConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModule;
 import frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesChangableValue;
 import frc.robot.utils.LEDUtils.LEDManager;
@@ -180,4 +185,14 @@ public class Robot extends LoggedRobot {
     /** This function is called periodically whilst in simulation. */
     @Override
     public void simulationPeriodic() {}
+
+    private void checkDriverStationUpdate() {
+        Optional<Alliance> currentAllianceFromDriverStation = DriverStation.getAlliance();
+        Alliance currentAlliance = currentAllianceFromDriverStation.orElse(Alliance.Blue);
+        // If we have data, and have a new alliance from last time
+        if (DriverStation.isDSAttached() && currentAlliance != FieldConstants.alliance) {
+            RobotModeConstants.isBlueAlliance = currentAlliance == Alliance.Blue;
+            m_robotContainer.onAllianceChanged(currentAlliance);
+        }
+    }
 }

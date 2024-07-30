@@ -24,6 +24,16 @@ public class AutonPoint {
 
     /**
      * Current Mirring assumes assumes mirred standered mirred field rather than a rotated or fliped.
+     * @param pose Pose2d: The x, y and rotaiton value of the point
+     * @param fudgeFactor
+     */
+    public AutonPoint(Pose2d pose, FudgeFactor fudgeFactor) {
+        this.autonPoint = pose;
+        this.fudgeFactor = fudgeFactor;
+    }
+
+    /**
+     * Current Mirring assumes assumes mirred standered mirred field rather than a rotated or fliped.
      * @param xPointMeters The x coordnet in meters
      * @param yPointMeters The y coordnet in meters
      * @param rotationAngleDegrees The rotation angle in degrees
@@ -39,7 +49,7 @@ public class AutonPoint {
      */
     public Pose2d getAutonPoint()
     {
-        if(!RobotModeConstants.kIsBlueAlliance) {
+        if(!RobotModeConstants.isBlueAlliance) {
             return new Pose2d(this.autonPoint.getX() + fudgeFactor.getRedFudgeFactors().getX(),
                 (FieldConstants.kFieldWidthMeters - this.autonPoint.getY()) +
                 fudgeFactor.getRedFudgeFactors().getY(),

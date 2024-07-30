@@ -20,7 +20,7 @@ import org.littletonrobotics.junction.AutoLog;
 public interface SwerveModuleIO {
 
     /**
-     * Contains the inputs to the swerve module that will be logged. They are also used in the SwerveModule class
+     * Contains the inputs to the swerve module that will be logged.
      */
     @AutoLog
     public static class SwerveModuleIOInputs {

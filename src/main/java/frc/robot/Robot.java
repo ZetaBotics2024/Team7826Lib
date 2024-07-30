@@ -10,12 +10,18 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveControlRequestParameters;
+
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.RobotModeConstants;
+import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
+import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModule;
 import frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesChangableValue;
 import frc.robot.utils.LEDUtils.LEDManager;
 
@@ -39,7 +45,7 @@ public class Robot extends LoggedRobot {
         @Override
         public void robotInit() {
             // BuiltConstatns is generated when the project is built. No imports or anything is needed if it is red underlined just build the project
-
+            System.out.println(frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants.kPModuleDrivePIDValue);
             // Record metadata
             Logger.recordMetadata("RuntimeType", getRuntimeType().toString());
             Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);

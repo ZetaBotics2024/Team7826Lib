@@ -36,7 +36,7 @@ E. Set up Auton System
         a. Create GoToPoseAfterTime(Or something of the same function)(Done)
         b. Create all types of GoToPose that we used last year.(Done)
         c. Create a GoToPose high tolorence and low tolorence(Maybe)
-    c. Set up extracted auton system that lets you slot in PathPlanener auton, WPILib Trejectors and Choreo trejectories.
+    c. Set up extracted auton system that lets you slot in PathPlanener auton, WPILib Trejectors and Choreo trejectories.(Done)
 F. Set up Odometry Vision
     a. Refactor Vision code to work with Advantage Kit and run on a second thread
     b. Refactor Vision code to be easaly modifable and work with any amount of cameras.
@@ -46,7 +46,8 @@ G. Set up Game Object Tracking
     b. If it works works good enough set up a system to move to a game object based on the location read by the camera and make it in a way that is easy to use with auton
     c. If posible make it so that it live tracks the game object and goes to ware it is in relation to the robot every frame 
         rather than based on a one time read inital value that the robot reads
-H. Make swerve drive speed profiler
-I. Add a seperation between simulation and real modes for needed constants.
+H. Make swerve drive speed profiler(Done)
+I. Add a seperation between simulation and real modes for needed constants.(Done)
+G. Add all log basses to logger constants.
 
     

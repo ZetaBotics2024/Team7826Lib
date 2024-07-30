@@ -8,6 +8,8 @@ public class RobotModeConstants {
      or redeploying code be reconstructing the robot container when the code is disabled.
     */
     public static boolean kAutonDebugMode = true;
+    public static final boolean kIsNotSim = currentMode != Mode.SIM; 
+
 
     public static enum Mode {
         /** Running on a real robot. */

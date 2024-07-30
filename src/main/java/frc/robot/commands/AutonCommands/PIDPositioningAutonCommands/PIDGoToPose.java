@@ -118,6 +118,7 @@ public class PIDGoToPose extends Command {
     
     @Override 
     public void initialize() {
+        System.out.println("Started PID");
         ControlConstants.kIsDriverControlled = false;
     
         this.xTranslationPIDController.reset(this.driveSubsystem.getRobotPose().getX());

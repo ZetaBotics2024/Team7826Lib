@@ -33,7 +33,6 @@ public class PathPlannerFollowPath extends Command{
     
     @Override
     public void initialize() {
-        System.out.println("Started PathPlanner");
         this.followPathCommand.schedule();
         this.hardCutOffTimer.startTimer();
     }
@@ -45,7 +44,6 @@ public class PathPlannerFollowPath extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("PP Ended");
         this.followPathCommand.cancel();
         this.driveSubsystem.stop();
 
@@ -53,10 +51,6 @@ public class PathPlannerFollowPath extends Command{
 
     @Override
     public boolean isFinished() {
-        if(this.hardCutOffTimer.hasTimePassed()) {
-            return true;
-        }
-
         Pose2d robotPose = this.driveSubsystem.getRobotPose();
         boolean hasReachedXTolorence = Math.abs(this.endPoint.getTranslation().getX() - robotPose.getX()) <= 
             PathPlannerAutonConstants.kTranslationToleranceMeters;
@@ -65,7 +59,6 @@ public class PathPlannerFollowPath extends Command{
         boolean hasReachedRotationTolorence = Math.abs(this.endPoint.getRotation().getDegrees() - robotPose.getRotation().getDegrees()) <= 
             PathPlannerAutonConstants.kRotationToleranceDegrees; 
         boolean hasReachedTolorence = hasReachedXTolorence && hasReachedYTolorence && hasReachedRotationTolorence;
-        
-        return hasReachedTolorence;
+        return hasReachedTolorence || this.hardCutOffTimer.hasTimePassed();
     }
 }

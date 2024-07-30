@@ -13,11 +13,11 @@ public final class DrivetrainConstants {
      */
     public static final class SwerveDriveConstants {
         // Driver Interaction constants
-        public static final double kMaxSpeedMetersPerSecond = 4.3;
-        public static final double kMaxRotationAnglePerSecond = 11.4;
+        public static final double kMaxSpeedMetersPerSecond = RobotModeConstants.kIsNotSim ? 4.3 : 4.3;
+        public static final double kMaxRotationAnglePerSecond = RobotModeConstants.kIsNotSim ? 11.4 : 11.4;
 
-        public static final double kTranslationMaxRateOfChangePerSecond = 8;
-        public static final double kRotationMaxRateOfChangePerSecond = 100;
+        public static final double kTranslationMaxRateOfChangePerSecond = RobotModeConstants.kIsNotSim ? 8 : 8;
+        public static final double kRotationMaxRateOfChangePerSecond = RobotModeConstants.kIsNotSim ? 100 : 100;
 
         // Name of the CAN Bus the Swerve Drive is on.
         public static final String kCANLoopName = "rio"; // To swich to CANivor set the CANLoopName to the CANivors serial number or name
@@ -34,10 +34,10 @@ public final class DrivetrainConstants {
         public static final int kBackLeftDriveMotorCANID = 4;
         public static final int kBackRightDriveMotorCANID = 5;
 
-        public static final boolean kFrontLeftDriveMotorInverted =  false;
-        public static final boolean kFrontRightDriveMotorInverted = false;
-        public static final boolean kBackLeftDriveMotorInverted = false;
-        public static final boolean kBackRightDriveMotorInverted = false;
+        public static final boolean kFrontLeftDriveMotorInverted =  RobotModeConstants.kIsNotSim ? false : false;
+        public static final boolean kFrontRightDriveMotorInverted = RobotModeConstants.kIsNotSim ? false : false;
+        public static final boolean kBackLeftDriveMotorInverted = RobotModeConstants.kIsNotSim ? false : false;
+        public static final boolean kBackRightDriveMotorInverted = RobotModeConstants.kIsNotSim ? false : false;
 
         // Turn Motor CANIDs
         public static final int kFrontLeftTurnMotorCANID = 6;
@@ -45,10 +45,10 @@ public final class DrivetrainConstants {
         public static final int kBackLeftTurnMotorCANID = 8;
         public static final int kBackRightTurnMotorCANID = 9;
 
-        public static final boolean kFrontLeftTurnMotorInverted = true;
-        public static final boolean kFrontRightTurnMotorInverted = true;
-        public static final boolean kBackLeftTurnMotorInverted = true;
-        public static final boolean kBackRightTurnMotorInverted = true;
+        public static final boolean kFrontLeftTurnMotorInverted = RobotModeConstants.kIsNotSim ? true : true;
+        public static final boolean kFrontRightTurnMotorInverted = RobotModeConstants.kIsNotSim ? true : true;
+        public static final boolean kBackLeftTurnMotorInverted = RobotModeConstants.kIsNotSim ? true : true;
+        public static final boolean kBackRightTurnMotorInverted = RobotModeConstants.kIsNotSim ? true : true;
 
         // Turning Absolute Encoder CANIDs
         public static final int kFrontLeftTurningAbsoluteEncoderCANID = 10;
@@ -130,7 +130,6 @@ public final class DrivetrainConstants {
         public static final int kTurnMotorMaxVoltageSparkMaxTalonFX = 12; 
 
         // Swerve Module Configuration Values
-        public static final double kMaxRPM = 5676.0;
         public static final double kWheelDiameterMeters = Units.inchesToMeters(3.733428923);// 3.83931974);//0.1016;
         public static final double kDriveGearRatio = (50.0 * 17.0 * 45.0) / (14.0 * 27.0 * 15.0);// 6.75/1.0;
         public static final double kTurningGearRatio = 150.0 / 7.0;

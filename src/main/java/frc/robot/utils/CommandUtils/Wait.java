@@ -2,7 +2,7 @@ package frc.robot.utils.CommandUtils;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Wait {
-    private double endTime = -1;
+    private double endTime = Double.MAX_VALUE;
     private double waitTime = 0;
 
     /**

@@ -1,4 +1,4 @@
-package frc.robot.utils.JoystickUtils;
+package frc.robot.Utils.JoystickUtils;
 
 public enum ButtonBoardButtonMap {
         /** Left bumper. */

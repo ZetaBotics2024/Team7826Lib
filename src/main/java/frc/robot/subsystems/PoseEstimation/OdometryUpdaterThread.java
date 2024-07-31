@@ -1,4 +1,4 @@
-package frc.robot.subsystems.PoseEstimation;
+package frc.robot.Subsystems.PoseEstimation;
 
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonPoseEstimator;
@@ -10,13 +10,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.RobotModeConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
-import frc.robot.utils.OdometryUtils.FudgedPoint;
+import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
+import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.Utils.OdometryUtils.FudgedPoint;
 
 public class OdometryUpdaterThread extends Thread{
     private DriveSubsystem driveSubsystem;
@@ -97,10 +97,9 @@ public class OdometryUpdaterThread extends Thread{
                 RobotModeConstants.isBlueAlliance = false;
                 break;
             default:
-            // No valid alliance data. Nothing we can do about it
+                // No valid alliance data. Nothing we can do about it
         }
         if (allianceChanged) {
-            SmartDashboard.putBoolean("set alliance", true);
 
           // The alliance changed, which changes the coordinate system.
           // Since a tag may have been seen and the tags are all relative to the

@@ -1,9 +1,9 @@
-package frc.robot.utils.AutonUtils;
+package frc.robot.Utils.AutonUtils;
 
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.utils.CommandUtils.SequentialGroupCommand;
+import frc.robot.Utils.CommandUtils.SequentialGroupCommand;
 
 public class GenerateAuto {
     /**

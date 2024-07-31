@@ -1,4 +1,4 @@
-package frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils;
+package frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

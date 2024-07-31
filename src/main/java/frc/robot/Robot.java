@@ -23,12 +23,12 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.RobotModeConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
-import frc.robot.Constants.FieldConstants;
-import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModule;
-import frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesChangableValue;
-import frc.robot.utils.LEDUtils.LEDManager;
+import frc.robot.Subsystems.SwerveDrive.SwerveModule.SwerveModule;
+import frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesChangableValue;
+import frc.robot.Utils.LEDUtils.LEDManager;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.SwerveDrive.Gyro;
+package frc.robot.Subsystems.SwerveDrive.Gyro;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;

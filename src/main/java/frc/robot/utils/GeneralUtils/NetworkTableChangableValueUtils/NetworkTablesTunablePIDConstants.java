@@ -1,4 +1,4 @@
-package frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils;
+package frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils;
 
 public class NetworkTablesTunablePIDConstants {
 

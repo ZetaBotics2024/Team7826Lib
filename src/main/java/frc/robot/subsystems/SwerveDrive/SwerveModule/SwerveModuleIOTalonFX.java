@@ -1,4 +1,4 @@
-package frc.robot.subsystems.SwerveDrive.SwerveModule;
+package frc.robot.Subsystems.SwerveDrive.SwerveModule;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -16,10 +16,10 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Constants.LoggerConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
-import frc.robot.Constants.LoggerConstants;
-import frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
+import frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 
 public class SwerveModuleIOTalonFX implements SwerveModuleIO{
 

@@ -9,11 +9,9 @@ B. Add basics untill
     b. Add a genaric wait command that works easialy without stupidity(Done)
     c. Set up controler wrappers for ease of use(Done)
         a. XBoxControlers(Done)
-        b. Button Moneky Controller(Done)
-
- C.
+        b. Button Moneky Controller(Done).
+C.
     a. Impliment Cadle LEDs with Advantage Kit(Done)
-
 D. Set up swerve with Advantage Kit(Done)
     a. Refactor Swerve for Advantage Kit(Done)
         a. Set up SwerveModuleIO(Done)
@@ -37,7 +35,7 @@ E. Set up Auton System
         b. Create all types of GoToPose that we used last year.(Done)
         c. Create a GoToPose high tolorence and low tolorence(Maybe)
     c. Set up extracted auton system that lets you slot in PathPlanener auton, WPILib Trejectors and Choreo trejectories.(Done)
-    D. Add system to auto mirrer pathplanner and choreo autots
+    D. Add system to auto mirrer pathplanner and choreo autos-MUST BE DONE IN THROUGH A SCRIPT
 F. Set up Odometry Vision
     a. Refactor Vision code to work with Advantage Kit and run on a second thread
     b. Refactor Vision code to be easaly modifable and work with any amount of cameras.

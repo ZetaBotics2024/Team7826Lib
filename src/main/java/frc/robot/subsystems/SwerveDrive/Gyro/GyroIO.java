@@ -1,4 +1,4 @@
-package frc.robot.subsystems.SwerveDrive.Gyro;
+package frc.robot.Subsystems.SwerveDrive.Gyro;
 
 import org.littletonrobotics.junction.AutoLog;
 

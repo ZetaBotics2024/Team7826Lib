@@ -1,4 +1,4 @@
-package frc.robot.commands.SwerveDriveCommands;
+package frc.robot.Commands.SwerveDriveCommands;
 
 import java.util.function.DoubleSupplier;
 
@@ -8,7 +8,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ControlConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
-import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
 
 /**
  * Command for teleop driving where translation is field oriented and rotation

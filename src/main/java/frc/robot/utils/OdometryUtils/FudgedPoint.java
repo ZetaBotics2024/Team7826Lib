@@ -1,10 +1,10 @@
-package frc.robot.utils.OdometryUtils;
+package frc.robot.Utils.OdometryUtils;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.RobotModeConstants;
-import frc.robot.utils.AutonUtils.AutonPointUtils.FudgeFactor;
+import frc.robot.Utils.AutonUtils.AutonPointUtils.FudgeFactor;
 
 public class FudgedPoint {
     

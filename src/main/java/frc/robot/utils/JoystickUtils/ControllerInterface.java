@@ -1,4 +1,4 @@
-package frc.robot.utils.JoystickUtils;
+package frc.robot.Utils.JoystickUtils;
 
 import java.util.function.BooleanSupplier;
 

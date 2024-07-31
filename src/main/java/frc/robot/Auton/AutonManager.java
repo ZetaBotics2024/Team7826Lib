@@ -11,11 +11,11 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Auton.Autons.ExampleAuton;
-import frc.robot.subsystems.SwerveDrive.DriveCommandFactory;
-import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
-import frc.robot.utils.AutonUtils.AutonPointUtils.FudgeFactor;
-import frc.robot.utils.CommandUtils.CustomWaitCommand;
+import frc.robot.Subsystems.SwerveDrive.DriveCommandFactory;
+import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.Utils.AutonUtils.AutonPointUtils.FudgeFactor;
+import frc.robot.Utils.CommandUtils.CustomWaitCommand;
 
 public class AutonManager {
     // Decloration of auton names

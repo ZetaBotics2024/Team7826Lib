@@ -1,4 +1,4 @@
-package frc.robot.subsystems.PoseEstimation;
+package frc.robot.Subsystems.PoseEstimation;
 
 import java.util.Optional;
 
@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
 
 public class OdometryIOOdometryUpdaterThread implements OdometryIO{
 

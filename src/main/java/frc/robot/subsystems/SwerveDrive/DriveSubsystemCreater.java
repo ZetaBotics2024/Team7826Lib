@@ -1,13 +1,13 @@
-package frc.robot.subsystems.SwerveDrive;
+package frc.robot.Subsystems.SwerveDrive;
 
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
-import frc.robot.subsystems.SwerveDrive.Gyro.GyroIO;
-import frc.robot.subsystems.SwerveDrive.Gyro.GyroIOPigeon2;
-import frc.robot.subsystems.SwerveDrive.Gyro.GyroIOSim;
-import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModuleIO;
-import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModuleIOSim;
-import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModuleIOSparkMax;
-import frc.robot.subsystems.SwerveDrive.SwerveModule.SwerveModuleIOTalonFX;
+import frc.robot.Subsystems.SwerveDrive.Gyro.GyroIO;
+import frc.robot.Subsystems.SwerveDrive.Gyro.GyroIOPigeon2;
+import frc.robot.Subsystems.SwerveDrive.Gyro.GyroIOSim;
+import frc.robot.Subsystems.SwerveDrive.SwerveModule.SwerveModuleIO;
+import frc.robot.Subsystems.SwerveDrive.SwerveModule.SwerveModuleIOSim;
+import frc.robot.Subsystems.SwerveDrive.SwerveModule.SwerveModuleIOSparkMax;
+import frc.robot.Subsystems.SwerveDrive.SwerveModule.SwerveModuleIOTalonFX;
 
 public class DriveSubsystemCreater {
     private DriveSubsystem driveSubsystem;

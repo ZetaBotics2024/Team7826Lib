@@ -1,4 +1,4 @@
-package frc.robot.commands.AutonCommands.PathplannerAutonCommands;
+package frc.robot.Commands.AutonCommands.PathplannerAutonCommands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -7,9 +7,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonConstants.PathPlannerAutonConstants;
-import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
-import frc.robot.utils.CommandUtils.Wait;
+import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.Utils.CommandUtils.Wait;
 
 public class PathPlannerFollowPath extends Command{
     private Pose2d endPoint;

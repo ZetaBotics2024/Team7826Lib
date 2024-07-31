@@ -1,4 +1,4 @@
-package frc.robot.utils.CommandUtils;
+package frc.robot.Utils.CommandUtils;
 
 import java.util.function.Supplier;
 

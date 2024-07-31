@@ -1,4 +1,4 @@
-package frc.robot.utils.LEDUtils;
+package frc.robot.Utils.LEDUtils;
 
 import org.littletonrobotics.junction.Logger;
 

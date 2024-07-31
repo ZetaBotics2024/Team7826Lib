@@ -1,4 +1,4 @@
-package frc.robot.commands.AutonCommands.WPILibTrajectoryCommands;
+package frc.robot.Commands.AutonCommands.WPILibTrajectoryCommands;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +21,10 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ControlConstants;
 import frc.robot.Constants.AutonConstants.WPILibAutonConstants;
-import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
-import frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
-import frc.robot.utils.LEDUtils.LEDManager;
+import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
+import frc.robot.Utils.LEDUtils.LEDManager;
 
 public class WPILibTrajectoryCommandCreater extends Command{
     private DriveSubsystem driveSubsystem;

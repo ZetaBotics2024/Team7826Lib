@@ -1,4 +1,4 @@
-package frc.robot.subsystems.SwerveDrive.SwerveModule;
+package frc.robot.Subsystems.SwerveDrive.SwerveModule;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.LoggerConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
-import frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
+import frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 
 public class SwerveModuleIOSim implements SwerveModuleIO{
     private static final double LOOP_PERIOD_SECS = 0.02;

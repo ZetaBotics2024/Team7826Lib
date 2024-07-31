@@ -1,11 +1,11 @@
-package frc.robot.utils.SwerveDriveUtils;
+package frc.robot.Utils.SwerveDriveUtils;
 
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
-import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
 
 public class SwerveDriveRotationProfiler extends Command{
     private DriveSubsystem driveSubsystem;

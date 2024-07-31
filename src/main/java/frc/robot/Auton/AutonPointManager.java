@@ -1,6 +1,6 @@
 package frc.robot.Auton;
 
-import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
 
 public class AutonPointManager {
     // Robot start positions

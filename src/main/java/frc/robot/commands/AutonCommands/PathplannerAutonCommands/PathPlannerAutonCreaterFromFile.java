@@ -1,15 +1,17 @@
-package frc.robot.commands.AutonCommands.PathplannerAutonCommands;
+package frc.robot.Commands.AutonCommands.PathplannerAutonCommands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.Constants.RobotModeConstants;
+import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
 
 public class PathPlannerAutonCreaterFromFile {
 
     public static Command createAutonCommand(String autonName, AutonPoint endPoint, double maxTime, DriveSubsystem driveSubsystem) {
-        return new PathPlannerFollowPath(AutoBuilder.buildAuto(autonName), endPoint.getAutonPoint(), maxTime, driveSubsystem);
+        String allianceColor = RobotModeConstants.isBlueAlliance ? "Blue" : "Red";
+        return new PathPlannerFollowPath(AutoBuilder.buildAuto(allianceColor + autonName), endPoint.getAutonPoint(), maxTime, driveSubsystem);
     }
 }

@@ -1,4 +1,4 @@
-package frc.robot.commands.AutonCommands.PathplannerAutonCommands;
+package frc.robot.Commands.AutonCommands.PathplannerAutonCommands;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonConstants.PathPlannerAutonConstants;
-import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
 
 public class PathPlannerAutonCreaterFromPoints {
 

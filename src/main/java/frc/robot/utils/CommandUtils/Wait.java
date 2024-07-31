@@ -1,4 +1,4 @@
-package frc.robot.utils.CommandUtils;
+package frc.robot.Utils.CommandUtils;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Wait {

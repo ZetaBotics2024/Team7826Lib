@@ -1,4 +1,4 @@
-package frc.robot.subsystems.PoseEstimation;
+package frc.robot.Subsystems.PoseEstimation;
 
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
@@ -9,8 +9,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.Subsystems.PoseEstimation.OdometryIOInputsAutoLogged;
 
 public class PoseEstimatorSubsystem extends SubsystemBase{
     private OdometryIO odometryIO;

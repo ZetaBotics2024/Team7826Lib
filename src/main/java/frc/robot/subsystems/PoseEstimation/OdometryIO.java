@@ -11,11 +11,11 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot.subsystems.PoseEstimation;
+package frc.robot.Subsystems.PoseEstimation;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
 
 import org.littletonrobotics.junction.AutoLog;
 

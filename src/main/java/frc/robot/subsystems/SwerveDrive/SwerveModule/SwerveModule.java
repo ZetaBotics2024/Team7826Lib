@@ -1,4 +1,4 @@
-package frc.robot.subsystems.SwerveDrive.SwerveModule;
+package frc.robot.Subsystems.SwerveDrive.SwerveModule;
 
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -6,7 +6,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.LoggerConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
-import frc.robot.utils.SwerveDriveUtils.SwerveModuleAngleOptimizer;
+import frc.robot.Utils.SwerveDriveUtils.SwerveModuleAngleOptimizer;
+import frc.robot.Subsystems.SwerveDrive.SwerveModule.SwerveModuleIOInputsAutoLogged;
 
 public class SwerveModule {
     

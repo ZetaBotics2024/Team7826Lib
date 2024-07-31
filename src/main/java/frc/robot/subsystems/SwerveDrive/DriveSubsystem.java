@@ -103,7 +103,6 @@ public class DriveSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        System.out.println("Odometry" + this.poseEstimatorSubsystem.getRobotPose());
         this.swerveModuleStates = getModuleStates();
 
         if (desiredChassisSpeeds != null) {  

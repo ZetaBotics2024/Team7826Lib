@@ -13,7 +13,7 @@ import frc.robot.utils.AutonUtils.AutonPointUtils.AutonPoint;
 import frc.robot.utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 import frc.robot.utils.LEDUtils.LEDManager;
 
-public class PIDGoToPose extends Command {
+public class PIDGoToPose extends Command{
     private ProfiledPIDController xTranslationPIDController;
     private ProfiledPIDController yTranslationPIDController;
     private ProfiledPIDController rotationPIDController;

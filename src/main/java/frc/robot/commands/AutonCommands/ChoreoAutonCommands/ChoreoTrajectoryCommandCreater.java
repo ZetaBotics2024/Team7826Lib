@@ -13,8 +13,8 @@ import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
 public class ChoreoTrajectoryCommandCreater {
 
     public static Command createChoreoTrajectoryCommand(String choreoTrajectoryFileName, DriveSubsystem driveSubsystem) {
-        String allianceColor = "";//RobotModeConstants.isBlueAlliance ? "Blue" : "Red";
-        ChoreoTrajectory trajectory = Choreo.getTrajectory(allianceColor + choreoTrajectoryFileName);
+        String allianceColor = RobotModeConstants.isBlueAlliance ? "" : "_red";
+        ChoreoTrajectory trajectory = Choreo.getTrajectory(choreoTrajectoryFileName + allianceColor);
         return Choreo.choreoSwerveCommand(trajectory, driveSubsystem::getRobotPose,
             new PIDController(ChoreoAutonConstants.kPTranslationPIDConstant,
                 ChoreoAutonConstants.kITranslationPIDConstant,

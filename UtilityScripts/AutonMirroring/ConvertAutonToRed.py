@@ -10,6 +10,12 @@ private Pose2d flipAlliance(Pose2d poseToMirror) {
       }
 '''
 
+file_type_subfolders = {
+    "path": "paths",
+    "auto": "auto",
+    "choreo": "choreo"
+}
+
 class Rotation2D:
     def __init__(self, degrees: float):
         self.degrees = degrees
@@ -51,9 +57,10 @@ class CoordinateFlipper:
         target = self.json["command"]["data"]["commands"]
         for command in target:
             if command["type"] == "path":
-                flipper = CoordinateFlipper(self.cwd + "/" + command["data"]["pathName"] + ".path")
+                flipper = CoordinateFlipper(self.cwd.removesuffix("autos") + "paths/" + command["data"]["pathName"] + ".path")
                 flipper.iter_over_points()
-                flipper.write()
+
+                command["data"]["pathName"] = ".".join(flipper.write().split(".")[:-1])
 
     def _iter_over_points_traj(self):
         # Samples
@@ -90,10 +97,11 @@ class CoordinateFlipper:
             Rotation2D(pose.rot.degrees * -1)
     )
 
-    def write(self):
+    def write(self) -> str:
         new_file_name = self.name + self.WRITE_OUT_SUFFIX + "." + self.file_format
         with open(self.cwd + "/" + new_file_name, "w+") as file:
-            file.write(json.dumps(self.json))
+            file.write(json.dumps(self.json, indent=2))
+        return new_file_name
 
 # We probably don't want to include .path files, since they are referenced in the .auto files and will be processed along with the .auto files
 def find_files(dir: str, include_paths: bool = False) -> list[str]:
@@ -106,13 +114,23 @@ def find_files(dir: str, include_paths: bool = False) -> list[str]:
             pertinent_files.append(file)
     return pertinent_files
 
+def process_path(path: str):
 
-
-if __name__ == "__main__":
-    path = "C:/RoboticsProjects/Team7826Lib/src/main/deploy/pathplanner/autos"
     files = find_files(path)
-    print(files)
     for file in files:
-        flipper = CoordinateFlipper(path + "/" + file)
-        flipper.iter_over_points()
-        flipper.write()
+        if not ".".join(file.split(".")[:-1]).endswith(CoordinateFlipper.WRITE_OUT_SUFFIX): # Excluding file ending, make sure this file doesn't have the suffix
+            flipper = CoordinateFlipper(path + "/" + file)
+            flipper.iter_over_points()
+            flipper.write()
+
+def process_deploy_path(deploy_path: str):
+    process_path(deploy_path + "/choreo")
+    process_path(deploy_path + "/pathplanner/autos")
+
+# To dearest Elijah,
+# The variable __name__ will be equal to "__main__" if this Python file
+# is being ran by itself. It WON'T run if this Python file is being
+# imported by another file. This is considered best practice.
+if __name__ == "__main__":
+    deploy_path = "C:/RoboticsProjects/Team7826Lib/src/main/deploy"
+    process_deploy_path(deploy_path)

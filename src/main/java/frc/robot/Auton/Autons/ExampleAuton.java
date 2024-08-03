@@ -29,7 +29,7 @@ public class ExampleAuton{
         //autonCommands.add(PathPlannerAutonCreaterFromPoints.createAutonCommand(autonPointManager.kExampleAutonPointArray, 10, driveSubsystem));
         //autonCommands.add(new PIDGoToPose(autonPointManager.kExampleAutonPoint, driveSubsystem));
         //autonCommands.add(PathPlannerAutonCreaterFromFile.createAutonCommand(autonPointManager.kExampleAutonName,
-        //    autonPointManager.kExampleAutonEndPoint, 10, driveSubsystem));
+         //   autonPointManager.kExampleAutonEndPoint, 10, driveSubsystem));
         //autonCommands.add(new WPILibTrajectoryCommandCreater(autonPointManager.kExampleAutonPointArray, driveSubsystem));
 
         SequentialGroupCommand auton = GenerateAuto.generateAuto(autonCommands);

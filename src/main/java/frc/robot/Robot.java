@@ -187,10 +187,10 @@ public class Robot extends LoggedRobot {
         Optional<Alliance> currentAllianceFromDriverStation = DriverStation.getAlliance();
         Alliance currentAlliance = currentAllianceFromDriverStation.orElse(Alliance.Blue);
         // If we have data, and have a new alliance from last time
+        
         if (DriverStation.isDSAttached() && currentAlliance != FieldConstants.alliance) {
             FieldConstants.alliance = currentAlliance;
             RobotModeConstants.isBlueAlliance = currentAlliance == Alliance.Blue;
-            RobotModeConstants.hasAllianceChanged = true;
         }
     }
 }

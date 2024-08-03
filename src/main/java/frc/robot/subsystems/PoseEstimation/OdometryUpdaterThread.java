@@ -1,5 +1,7 @@
 package frc.robot.Subsystems.PoseEstimation;
 
+import java.util.Optional;
+
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -24,7 +26,7 @@ public class OdometryUpdaterThread extends Thread{
     private DriveSubsystem driveSubsystem;
     private SwerveDrivePoseEstimator swerveDrivePoseEstimator;
     private PhotonPoseEstimator[] photonPoseEstimators;
-    private boolean hasAllianceChanged = false;
+    private Alliance lastAlliance = Alliance.Blue;
 
     public OdometryUpdaterThread(DriveSubsystem driveSubsystem, PhotonPoseEstimator... photonPoseEstimators) {
         this.driveSubsystem = driveSubsystem;
@@ -93,18 +95,28 @@ public class OdometryUpdaterThread extends Thread{
     }
 
     public void setAlliance() {
-        AprilTagFieldLayout fieldTags = photonPoseEstimators[0].getFieldTags();
-        if(RobotModeConstants.hasAllianceChanged) {
-            if(RobotModeConstants.isBlueAlliance) {
+        Optional<Alliance> currentAllianceFromDriverStation = DriverStation.getAlliance();
+        Alliance currentAlliance = currentAllianceFromDriverStation.orElse(Alliance.Blue);
+        
+        if(!currentAlliance.equals(lastAlliance)) {
+            boolean isBlueAlliance = currentAlliance.equals(Alliance.Blue);
+            AprilTagFieldLayout fieldTags = photonPoseEstimators[0].getFieldTags();
+            if(isBlueAlliance) {
                 fieldTags.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
                 VisionConstants.originPosition = OriginPosition.kBlueAllianceWallRightSide;
             } else {
                 fieldTags.setOrigin(OriginPosition.kRedAllianceWallRightSide);
                 VisionConstants.originPosition = OriginPosition.kRedAllianceWallRightSide;
             }
+            
             setRobotPose(flipAlliance(getRobotPose()));
-            RobotModeConstants.hasAllianceChanged = false;
-        }    
+            this.lastAlliance = currentAlliance;
+            for(PhotonPoseEstimator photonPoseEstimator : this.photonPoseEstimators) {
+                photonPoseEstimator.getFieldTags().setOrigin(VisionConstants.originPosition);
+            }
+            Logger.recordOutput("Vision/OrginPosition", photonPoseEstimators[0].getFieldTags().getOrigin());
+
+        }   
     }
             
     private Pose2d flipAlliance(Pose2d poseToFlip) {

@@ -19,7 +19,6 @@ public class OdometryIOOdometryUpdaterThread implements OdometryIO{
     public OdometryIOOdometryUpdaterThread(OdometryUpdaterThread odometryUpdaterThread) {
         this.odometryUpdaterThread = odometryUpdaterThread;
         this.odometryUpdaterThread.start();
-
     }
 
     @Override
@@ -42,11 +41,6 @@ public class OdometryIOOdometryUpdaterThread implements OdometryIO{
     @Override
     public void resetRobotPose() {
         this.odometryUpdaterThread.resetRobotPose();
-    }
-
-    @Override
-    public void setAlliance(Alliance currentAlliance) {
-        this.odometryUpdaterThread.setAlliance(currentAlliance);
     }
 
 }

@@ -13,20 +13,14 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveControlRequestParameters;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.RobotModeConstants;
-import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
-import frc.robot.Subsystems.SwerveDrive.SwerveModule.SwerveModule;
 import frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesChangableValue;
 import frc.robot.Utils.LEDUtils.LEDManager;
 
@@ -50,7 +44,6 @@ public class Robot extends LoggedRobot {
         @Override
         public void robotInit() {
             // BuiltConstatns is generated when the project is built. No imports or anything is needed if it is red underlined just build the project
-            System.out.println(frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants.kPModuleDrivePIDValue);
             // Record metadata
             Logger.recordMetadata("RuntimeType", getRuntimeType().toString());
             Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -101,6 +94,7 @@ public class Robot extends LoggedRobot {
             // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
             // autonomous chooser on the dashboard.
             m_robotContainer = new RobotContainer();
+            checkDriverStationUpdate();
         }
 
     /**
@@ -118,6 +112,7 @@ public class Robot extends LoggedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+        checkDriverStationUpdate();
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
@@ -137,6 +132,7 @@ public class Robot extends LoggedRobot {
     /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
     @Override
     public void autonomousInit() {
+        checkDriverStationUpdate();
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
@@ -152,6 +148,7 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void teleopInit() {
+        checkDriverStationUpdate();
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
@@ -191,8 +188,9 @@ public class Robot extends LoggedRobot {
         Alliance currentAlliance = currentAllianceFromDriverStation.orElse(Alliance.Blue);
         // If we have data, and have a new alliance from last time
         if (DriverStation.isDSAttached() && currentAlliance != FieldConstants.alliance) {
+            FieldConstants.alliance = currentAlliance;
             RobotModeConstants.isBlueAlliance = currentAlliance == Alliance.Blue;
-            m_robotContainer.onAllianceChanged(currentAlliance);
+            RobotModeConstants.hasAllianceChanged = true;
         }
     }
 }

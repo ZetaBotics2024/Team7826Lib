@@ -35,11 +35,12 @@ E. Set up Auton System
         b. Create all types of GoToPose that we used last year.(Done)
         c. Create a GoToPose high tolorence and low tolorence(Maybe)
     c. Set up extracted auton system that lets you slot in PathPlanener auton, WPILib Trejectors and Choreo trejectories.(Done)
-    D. Add system to auto mirrer pathplanner and choreo autos-MUST BE DONE IN THROUGH A SCRIPT
+    D. Add system to auto mirrer pathplanner and choreo autos-MUST BE DONE IN THROUGH A SCRIPT(Boyne?)
 F. Set up Odometry Vision
     a. Refactor Vision code to work with Advantage Kit and run on a second thread
-    b. Refactor Vision code to be easaly modifable and work with any amount of cameras.
-    c. Inigrate vision with Swerve as needed
+    b. Refactor Vision code to be easaly modifable and work with any amount of cameras.(Done)
+    c. Inigrate vision with Swerve as needed(Done)
+    d. Add the abylity to add blocked tag ids(Done)
 G. Set up Game Object Tracking
     a. Create Game Object Tracking code for Photon Vision(own thread?) and test it
     b. If it works works good enough set up a system to move to a game object based on the location read by the camera and make it in a way that is easy to use with auton

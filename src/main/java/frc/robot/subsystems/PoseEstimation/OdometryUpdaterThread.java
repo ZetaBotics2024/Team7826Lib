@@ -2,14 +2,16 @@ package frc.robot.Subsystems.PoseEstimation;
 
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.RobotModeConstants;
 import frc.robot.Constants.VisionConstants;
@@ -22,6 +24,7 @@ public class OdometryUpdaterThread extends Thread{
     private DriveSubsystem driveSubsystem;
     private SwerveDrivePoseEstimator swerveDrivePoseEstimator;
     private PhotonPoseEstimator[] photonPoseEstimators;
+    private boolean hasAllianceChanged = false;
 
     public OdometryUpdaterThread(DriveSubsystem driveSubsystem, PhotonPoseEstimator... photonPoseEstimators) {
         this.driveSubsystem = driveSubsystem;
@@ -35,12 +38,22 @@ public class OdometryUpdaterThread extends Thread{
     @Override
     public void run() {
         while(true) {
+            setAlliance();
             this.swerveDrivePoseEstimator.update(this.driveSubsystem.getGyroAngleRotation2d(),
                 this.driveSubsystem.getModulePositions());
             if(VisionConstants.updateVision) {
                 try {
                     for(PhotonPoseEstimator photonPoseEstimator : this.photonPoseEstimators) {
                         photonPoseEstimator.update().ifPresent(visionReading -> {
+                            boolean usedExcludedTag = false;
+                            for(PhotonTrackedTarget target : visionReading.targetsUsed) {
+                                for(int i = 0; i < VisionConstants.kExcludedTags.length; i++) {
+                                    usedExcludedTag = target.getFiducialId() == VisionConstants.kExcludedTags[i];
+                                }
+                                if(usedExcludedTag) {
+                                        break;
+                                    }
+                            }
                             if(visionReading != null) {
                                 Pose2d estimatedPosition = visionReading.estimatedPose.toPose2d();
                                 Pose2d estimatedPositionWithGyroAngle = new Pose2d(estimatedPosition.getTranslation(),
@@ -79,42 +92,25 @@ public class OdometryUpdaterThread extends Thread{
         this.swerveDrivePoseEstimator.addVisionMeasurement(estimatedVisionPose.getFudgedPoint(), timestamp);
     }
 
-    public void setAlliance(Alliance currentAlliance) {
+    public void setAlliance() {
         AprilTagFieldLayout fieldTags = photonPoseEstimators[0].getFieldTags();
-    
-        boolean allianceChanged = false;
-        switch (currentAlliance) {
-            case Blue:
+        if(RobotModeConstants.hasAllianceChanged) {
+            if(RobotModeConstants.isBlueAlliance) {
                 fieldTags.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
-                allianceChanged = (VisionConstants.originPosition == OriginPosition.kRedAllianceWallRightSide);
                 VisionConstants.originPosition = OriginPosition.kBlueAllianceWallRightSide;
-                RobotModeConstants.isBlueAlliance = true;
-                break;
-            case Red:
+            } else {
                 fieldTags.setOrigin(OriginPosition.kRedAllianceWallRightSide);
-                allianceChanged = (VisionConstants.originPosition == OriginPosition.kBlueAllianceWallRightSide);
                 VisionConstants.originPosition = OriginPosition.kRedAllianceWallRightSide;
-                RobotModeConstants.isBlueAlliance = false;
-                break;
-            default:
-                // No valid alliance data. Nothing we can do about it
-        }
-        if (allianceChanged) {
-
-          // The alliance changed, which changes the coordinate system.
-          // Since a tag may have been seen and the tags are all relative to the
-          // coordinate system, the estimated pose
-          // needs to be transformed to the new coordinate system.
-          Pose2d newPose = flipAlliance(getRobotPose());
-          setRobotPose(newPose);
-        }
+            }
+            setRobotPose(flipAlliance(getRobotPose()));
+            RobotModeConstants.hasAllianceChanged = false;
+        }    
     }
             
-    private Pose2d flipAlliance(Pose2d poseToMirror) {
-        Pose2d mirroredPose2d = new Pose2d(poseToMirror.getX(),
-            (FieldConstants.kFieldWidthMeters - poseToMirror.getY()),
-            Rotation2d.fromDegrees(poseToMirror.getRotation().getDegrees() * -1));
-        return mirroredPose2d;
-      }
+    private Pose2d flipAlliance(Pose2d poseToFlip) {
+        return poseToFlip.relativeTo(new Pose2d(
+            new Translation2d(FieldConstants.kFieldLengthMeters, FieldConstants.kFieldWidthMeters),
+            new Rotation2d(Math.PI)));
+    }
     
 }

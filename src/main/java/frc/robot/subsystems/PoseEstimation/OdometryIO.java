@@ -60,10 +60,4 @@ public interface OdometryIO {
      */
     public default void updatedPoseEstimationWithVisionData(Pose2d estimatedVisionPose, double timestamp) {}
 
-    /**
-     * Updates the robots position based on the current alliance. Also updates all future vision data. 
-     * @param currentAlliance
-     */
-    public default void setAlliance(Alliance currentAlliance) {}
-
 }

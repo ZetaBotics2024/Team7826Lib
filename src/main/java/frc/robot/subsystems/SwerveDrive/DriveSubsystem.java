@@ -223,10 +223,6 @@ public class DriveSubsystem extends SubsystemBase{
         this.poseEstimatorSubsystem.resetRobotPose();
     }
 
-    public void setAlliance(Alliance currentAlliance) {
-        this.poseEstimatorSubsystem.setAlliance(currentAlliance);
-    }
-
     public PoseEstimatorSubsystem getPoseEstimatorSubsystem() {
         return this.poseEstimatorSubsystem;
     }

@@ -11,7 +11,7 @@ import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
 public class PathPlannerAutonCreaterFromFile {
 
     public static Command createAutonCommand(String autonName, AutonPoint endPoint, double maxTime, DriveSubsystem driveSubsystem) {
-        String allianceColor = RobotModeConstants.isBlueAlliance ? "Blue" : "Red";
+        String allianceColor = "";//RobotModeConstants.isBlueAlliance ? "Blue" : "Red";
         return new PathPlannerFollowPath(AutoBuilder.buildAuto(allianceColor + autonName), endPoint.getAutonPoint(), maxTime, driveSubsystem);
     }
 }

@@ -7,6 +7,7 @@ package frc.robot;
 import java.util.Optional;
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Auton.AutonManager;
@@ -55,7 +56,6 @@ public class RobotContainer {
         configureBindings();
 
         this.autonManager = new AutonManager(this.driveCommandFactory, this.driveSubsystem);
-
     }
 
     /**
@@ -74,10 +74,5 @@ public class RobotContainer {
     public Command getAutonomousCommand() {    
         return this.autonManager.getSelectedAuton();
     }
-
-    public void onAllianceChanged(Alliance currentAlliance) {
-        this.driveSubsystem.setAlliance(currentAlliance);
-    }
-
-    
+        
 }

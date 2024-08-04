@@ -19,12 +19,14 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonConstants.WPILibAutonConstants;
 import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.Utils.AutonUtils.WPILIBTrajectoryConfig;
 import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
 import frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 import frc.robot.Utils.LEDUtils.LEDManager;
@@ -47,18 +49,25 @@ public class WPILibTrajectoryCommandCreater extends Command{
     private NetworkTablesTunablePIDConstants wpiLibRotationPIDValueTuner;
 
     private TrajectoryConfig trajectoryConfig;
+    private String autonName = "";
 
     private boolean hasSetGoal = false;
 
-    public WPILibTrajectoryCommandCreater(AutonPoint[] points, DriveSubsystem driveSubsystem) {
+    public WPILibTrajectoryCommandCreater(String autonName, AutonPoint[] points, DriveSubsystem driveSubsystem) {
         this.driveSubsystem = driveSubsystem;
+        this.autonName = autonName;
+        double[] translationPIDValues = {WPILibAutonConstants.kPTranslationPIDConstant,
+            WPILibAutonConstants.kITranslationPIDConstant,
+            WPILibAutonConstants.kDTranslationPIDConstant};
+        double[] rotationPIDValues = {WPILibAutonConstants.kPRotationPIDConstant,
+            WPILibAutonConstants.kIRotationPIDConstant,
+            WPILibAutonConstants.kDRotationPIDConstant};
+        intitalConfig(translationPIDValues, rotationPIDValues,
+        WPILibAutonConstants.kMaxRotationalSpeedInRadsPerSecond,
+        WPILibAutonConstants.kMaxRotationalAccelerationInRadsPerSecond);
 
-        configurePIDs();
-        configurePIDTuners();
-        configureWPILibDriveController();
-        configureTrajectoryConfig();
-        
-        setUpTrajectoryFromPoints(points);
+        setUpTrajectoryFromPoints(points, WPILibAutonConstants.kMaxTranslationalSpeedInMetersPerSecond,
+        WPILibAutonConstants.kMaxTranslationalAccelerationInMetersPerSecond);
 
         Logger.recordOutput("Auton/WPILibTrajectory/Trajectory", trajectory);
         addRequirements(this.driveSubsystem);
@@ -66,16 +75,109 @@ public class WPILibTrajectoryCommandCreater extends Command{
 
     public WPILibTrajectoryCommandCreater(String autonName, Rotation2d goalEndRotation, DriveSubsystem driveSubsystem) {
         this.driveSubsystem = driveSubsystem;
-
-        configurePIDs();
-        configurePIDTuners();
-        configureWPILibDriveController();
-        configureTrajectoryConfig();
+        this.autonName = autonName;
+        double[] translationPIDValues = {WPILibAutonConstants.kPTranslationPIDConstant,
+            WPILibAutonConstants.kITranslationPIDConstant,
+            WPILibAutonConstants.kDTranslationPIDConstant};
+        double[] rotationPIDValues = {WPILibAutonConstants.kPRotationPIDConstant,
+            WPILibAutonConstants.kIRotationPIDConstant,
+            WPILibAutonConstants.kDRotationPIDConstant};
+        intitalConfig(translationPIDValues, rotationPIDValues,
+        WPILibAutonConstants.kMaxRotationalSpeedInRadsPerSecond,
+        WPILibAutonConstants.kMaxRotationalAccelerationInRadsPerSecond);
         
         setUpTrajectoryFromPath(autonName, goalEndRotation);
 
         Logger.recordOutput("Auton/WPILibTrajectory/Trajectory", trajectory);
         addRequirements(this.driveSubsystem);
+    }
+
+    public WPILibTrajectoryCommandCreater(String autonName, AutonPoint[] points,
+        WPILIBTrajectoryConfig wpilibTrajectoryConfig,
+        DriveSubsystem driveSubsystem) {
+        this.driveSubsystem = driveSubsystem;
+        this.autonName = autonName;
+        
+        intitalConfig(wpilibTrajectoryConfig.translationPIDValues,
+            wpilibTrajectoryConfig.rotaitonPIDValues, 
+            wpilibTrajectoryConfig.maxRotationSpeedRadsPerSecond,
+            wpilibTrajectoryConfig.maxRotationAccelerationRadsPerSecond);
+
+        setUpTrajectoryFromPoints(points, wpilibTrajectoryConfig.maxTranslationSpeedMPS,
+            wpilibTrajectoryConfig.maxTranslationAccelerationMPS);
+
+        Logger.recordOutput("Auton/WPILibTrajectory/Trajectory", trajectory);
+        addRequirements(this.driveSubsystem);
+    }
+
+    public WPILibTrajectoryCommandCreater(String autonName, Rotation2d goalEndRotation,
+        WPILIBTrajectoryConfig wpilibTrajectoryConfig,
+        DriveSubsystem driveSubsystem) {
+        this.driveSubsystem = driveSubsystem;
+        this.autonName = autonName;
+        intitalConfig(wpilibTrajectoryConfig.translationPIDValues,
+            wpilibTrajectoryConfig.rotaitonPIDValues, 
+            wpilibTrajectoryConfig.maxRotationSpeedRadsPerSecond,
+            wpilibTrajectoryConfig.maxRotationAccelerationRadsPerSecond);
+        
+        setUpTrajectoryFromPath(autonName, goalEndRotation);
+
+        Logger.recordOutput("Auton/WPILibTrajectory/Trajectory", trajectory);
+        addRequirements(this.driveSubsystem);
+    }
+
+    private void intitalConfig(
+        double[] translationPIDValues,
+        double[] rotationPIDValues,
+        double maxRotationSpeedRadsPerSecond,
+        double maxRotationAccelerationRadsPerSecond) {
+        configurePIDs(
+            translationPIDValues,
+            rotationPIDValues,
+            new TrapezoidProfile.Constraints(
+                maxRotationSpeedRadsPerSecond,
+                maxRotationAccelerationRadsPerSecond));
+
+        configureWPILibDriveController();
+    }
+
+    public void configurePIDs(double[] translationPIDValues, double[] rotationPIDValues, TrapezoidProfile.Constraints rotationConstraints) {
+        this.translationXPIDController = new PIDController(
+            translationPIDValues[0],
+            translationPIDValues[1],
+            translationPIDValues[2]);
+
+        this.translationYPIDController = new PIDController(
+            translationPIDValues[0],
+            translationPIDValues[1],
+            translationPIDValues[2]);
+
+        this.rotationPIDController = new ProfiledPIDController(
+            rotationPIDValues[0],
+            rotationPIDValues[1],
+            rotationPIDValues[2],
+            rotationConstraints);
+
+        configurePIDTuners(translationPIDValues, rotationPIDValues);
+    }
+
+    public void configurePIDTuners(double[] translationPIDValues, double[] rotationPIDValues) {
+        this.wpiConstantsPIDLibTranslationPIDValueTuner = new NetworkTablesTunablePIDConstants("WPILib/" + this.autonName + "/TranslationPIDValues",
+            translationPIDValues[0],
+            translationPIDValues[1],
+            translationPIDValues[2], 0);
+
+        this.wpiLibRotationPIDValueTuner = new NetworkTablesTunablePIDConstants("WPILib/" + this.autonName + "/RotationPIDValues",
+            rotationPIDValues[0],
+            rotationPIDValues[1],
+            rotationPIDValues[2], 0);
+    }
+
+    public void configureWPILibDriveController() {
+        this.wpiLibDriveController = new HolonomicDriveController(
+            this.translationXPIDController, this.translationYPIDController,
+            this.rotationPIDController);
+        this.wpiLibDriveController.setTolerance(WPILibAutonConstants.kPositionTolorence);
     }
 
     private void setUpTrajectoryFromPath(String autonName, Rotation2d goalEndRotation) {
@@ -89,7 +191,9 @@ public class WPILibTrajectoryCommandCreater extends Command{
         this.desiredEndAngleRotation2d = goalEndRotation;
     }
 
-    private void setUpTrajectoryFromPoints(AutonPoint[] points) {
+    private void setUpTrajectoryFromPoints(AutonPoint[] points,
+        double maxTranslationSpeedMPS,
+        double maxTranslationalAccelerationInMPS) {
         ArrayList<Pose2d> mirroredPoints = new ArrayList<>();
         for(int i = 0; i < points.length; i++) {
             Pose2d mirroredPoint = points[i].getAutonPoint();
@@ -98,52 +202,17 @@ public class WPILibTrajectoryCommandCreater extends Command{
         }
         this.desiredEndAngleRotation2d = points[points.length-1].getAutonPoint().getRotation();
         
+        configureTrajectoryConfig(maxTranslationSpeedMPS,
+            maxTranslationalAccelerationInMPS);
         this.trajectory = TrajectoryGenerator.generateTrajectory(mirroredPoints, trajectoryConfig);
     }
 
-    private void configureTrajectoryConfig() {
+    
+    private void configureTrajectoryConfig(double maxTranslationSpeedMPS, double maxTranslationalAccelerationInMPS) {
         trajectoryConfig = 
-            new TrajectoryConfig(WPILibAutonConstants.kMaxTranslationalSpeedInMetersPerSecond,
-            WPILibAutonConstants.kMaxTranslationalAccelerationInMetersPerSecond);
+            new TrajectoryConfig(maxTranslationSpeedMPS,
+            maxTranslationalAccelerationInMPS);
         trajectoryConfig.setReversed(false);
-
-    }
-
-    public void configurePIDs() {
-        this.translationXPIDController = new PIDController(
-            WPILibAutonConstants.kPTranslationPIDConstant,
-            WPILibAutonConstants.kITranslationPIDConstant,
-            WPILibAutonConstants.kDTranslationPIDConstant);
-
-        this.translationYPIDController = new PIDController(
-            WPILibAutonConstants.kPTranslationPIDConstant,
-            WPILibAutonConstants.kITranslationPIDConstant,
-            WPILibAutonConstants.kDTranslationPIDConstant);
-
-        this.rotationPIDController = new ProfiledPIDController(
-            WPILibAutonConstants.kPRotationPIDConstant,
-            WPILibAutonConstants.kIRotationPIDConstant,
-            WPILibAutonConstants.kDRotationPIDConstant,
-            WPILibAutonConstants.kRotationPIDControllerConstraints);
-    }
-
-    public void configurePIDTuners() {
-        this.wpiConstantsPIDLibTranslationPIDValueTuner = new NetworkTablesTunablePIDConstants("WPILib/TranslationPIDValues",
-            WPILibAutonConstants.kPTranslationPIDConstant,
-            WPILibAutonConstants.kITranslationPIDConstant,
-            WPILibAutonConstants.kDTranslationPIDConstant, 0);
-
-        this.wpiLibRotationPIDValueTuner = new NetworkTablesTunablePIDConstants("WPILib/RotationPIDValues",
-            WPILibAutonConstants.kPRotationPIDConstant,
-            WPILibAutonConstants.kIRotationPIDConstant,
-            WPILibAutonConstants.kDRotationPIDConstant, 0);
-    }
-
-    public void configureWPILibDriveController() {
-        this.wpiLibDriveController = new HolonomicDriveController(
-            this.translationXPIDController, this.translationYPIDController,
-            this.rotationPIDController);
-        this.wpiLibDriveController.setTolerance(WPILibAutonConstants.kPositionTolorence);
     }
 
     /**

@@ -15,6 +15,7 @@ import frc.robot.Commands.AutonCommands.PathplannerAutonCommands.PathPlannerAuto
 import frc.robot.Commands.AutonCommands.PathplannerAutonCommands.PathPlannerAutonCreaterFromPoints;
 import frc.robot.Commands.AutonCommands.PathplannerAutonCommands.PathPlannerFollowPath;
 import frc.robot.Commands.AutonCommands.WPILibTrajectoryCommands.WPILibTrajectoryCommandCreater;
+import frc.robot.Constants.AutonConstants.WPILibAutonConstants;
 import frc.robot.Subsystems.SwerveDrive.DriveCommandFactory;
 import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.Utils.AutonUtils.GenerateAuto;
@@ -31,7 +32,11 @@ public class ExampleAuton{
         //autonCommands.add(new PIDGoToPose(autonPointManager.kExampleAutonPoint, driveSubsystem));
         //autonCommands.add(PathPlannerAutonCreaterFromFile.createAutonCommand(autonPointManager.kExampleAutonName,
         //   autonPointManager.kExampleAutonEndPoint, 10, driveSubsystem));
-        autonCommands.add(new WPILibTrajectoryCommandCreater("WPILIBExampleAuton", new Rotation2d(), driveSubsystem));
+        autonCommands.add(new WPILibTrajectoryCommandCreater("WPILIBExampleAuton",
+            Rotation2d.fromDegrees(130),
+            autonPointManager.kExampleWpilibTrajectoryConfig,
+            driveSubsystem));
+       
 
         SequentialGroupCommand auton = GenerateAuto.generateAuto(autonCommands);
         return auton;

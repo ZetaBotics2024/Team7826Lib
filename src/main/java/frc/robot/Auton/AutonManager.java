@@ -1,20 +1,14 @@
 package frc.robot.Auton;
 
-import java.util.HashMap;
-
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Auton.Autons.ExampleAuton;
 import frc.robot.Subsystems.SwerveDrive.DriveCommandFactory;
 import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
-import frc.robot.Utils.AutonUtils.AutonPointUtils.FudgeFactor;
 import frc.robot.Utils.CommandUtils.CustomWaitCommand;
 
 public class AutonManager {

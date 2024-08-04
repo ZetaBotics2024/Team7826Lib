@@ -1,5 +1,6 @@
 package frc.robot.Auton;
 
+import frc.robot.Utils.AutonUtils.WPILIBTrajectoryConfig;
 import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
 
 public class AutonPointManager {
@@ -18,6 +19,9 @@ public class AutonPointManager {
     public final String kExampleAutonName;
     public final AutonPoint kExampleAutonEndPoint = new AutonPoint(4.7, 4, 0);
 
+    // Decloration of all WPILIB Trajectory names and configs
+    public WPILIBTrajectoryConfig kExampleWpilibTrajectoryConfig;
+
     public AutonPointManager() {
         this.kExampleStartPoint = new AutonPoint(1.5134, 7, 0);
 
@@ -26,16 +30,24 @@ public class AutonPointManager {
         this.kExampleAutonPoint3 = new AutonPoint(5, 7, 0);
         this.kExampleAutonPoint4 = new AutonPoint(7, 8 , 90);
         this.kExampleAutonPoint = new AutonPoint(3, 3, 180);
-        
+
+
         configExampleAutonPointArray();
+        configExampleWpilibTrajectoryConfig();
 
         this.kExampleAutonName = "ExampleAuton";
     }
 
-    public void configExampleAutonPointArray() {
+    private void configExampleAutonPointArray() {
         this.kExampleAutonPointArray[0] = this.kExampleAutonPoint1;
         this.kExampleAutonPointArray[1] = this.kExampleAutonPoint2;
         this.kExampleAutonPointArray[2] = this.kExampleAutonPoint3;
         this.kExampleAutonPointArray[3] = this.kExampleAutonPoint4;
+    }
+
+    private void configExampleWpilibTrajectoryConfig() {
+        this.kExampleWpilibTrajectoryConfig = new WPILIBTrajectoryConfig(new double[]{1, 0, 0},
+        new double[]{1, 0, 0},
+        4.22, 1.2, 1, 1);
     }
 }

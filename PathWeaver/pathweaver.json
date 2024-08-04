@@ -1,5 +1,5 @@
 {
-  "lengthUnit": "Inch",
+  "lengthUnit": "Meter",
   "exportUnit": "Always Meters",
   "maxVelocity": 4.22,
   "maxAcceleration": 1.087,

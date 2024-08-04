@@ -9,7 +9,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.LoggerConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
 import frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 
@@ -114,7 +113,7 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
 
     
     public void setDesiredModuleVelocityRPM(double desiredRPM) {
-        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + "DesiredRPM", desiredRPM);
+        Logger.recordOutput(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName + "DesiredRPM", desiredRPM);
 
         this.desiredVelocityRPM = desiredRPM;
     }
@@ -123,8 +122,8 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
         double desiredModuleRotations = desiredModuleAngle.getRotations(); 
         double desiredMotorRotation = desiredModuleRotations * SwerveModuleConstants.kTurningGearRatio;
 
-        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + "DesiredModuleRotations" , desiredModuleRotations);
-        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + "DesiredMotorRotations" , desiredMotorRotation);
+        Logger.recordOutput(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName + "DesiredModuleRotations" , desiredModuleRotations);
+        Logger.recordOutput(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName + "DesiredMotorRotations" , desiredMotorRotation);
 
         this.desiredPositionRotations = desiredModuleRotations * SwerveModuleConstants.kTurningGearRatio;
     }

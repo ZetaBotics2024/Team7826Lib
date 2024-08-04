@@ -83,6 +83,10 @@ public final class DrivetrainConstants {
             kDistanceBetweenCentersOfRightAndLeftWheels / 2),
         new Translation2d(-kDistanceBetweenCentersOfFrontAndBackWheels / 2,
             -kDistanceBetweenCentersOfRightAndLeftWheels / 2));
+        
+        public static final String kSwerveDriveModuleStatesLoggerBase = "SwerveDrive/ModuleStates/";
+        public static final String kSwerveDriveChassisSpeedLoggerBase = "SwerveDrive/ChassisSpeeds/";
+        public static final String kSwerveDriveDesiredChassisSpeedLoggerBase = "SwerveDrive/DesiredChassisSpeeds/";
     }
 
     /**
@@ -138,5 +142,6 @@ public final class DrivetrainConstants {
         public static final double kDriveConversionPositionFactor = kWheelDistancePerRotation / kDriveGearRatio;
         public static final double kDriveConversionVelocityFactor = kDriveConversionPositionFactor / 60.0; /* Figure why this sixty is here. It was last seasion
             on it work so it does not need to change but why is it here. */
+        public static final String kSwerveModuleOutputLoggerBase = "SwerveDrive/Modules/";
     }
 }

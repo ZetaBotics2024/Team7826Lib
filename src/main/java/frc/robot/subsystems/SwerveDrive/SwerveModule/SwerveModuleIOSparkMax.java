@@ -18,7 +18,6 @@ import com.revrobotics.SparkPIDController.AccelStrategy;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.Constants.LoggerConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
 import frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
@@ -202,7 +201,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
      * Adds Swerve Module logs that never need to be updated to the dashboard.
      */
     private void addInitLogs() {
-        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + "TurningAbsoluteEncoderOffset", this.turningAbsoluteEncoderOffset);
+        Logger.recordOutput(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName + "TurningAbsoluteEncoderOffset", this.turningAbsoluteEncoderOffset);
     }
 
     @Override
@@ -253,7 +252,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
 
     @Override
     public void setDesiredModuleVelocityRPM(double desiredRPM) {
-        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + "DesiredRPM", desiredRPM);
+        Logger.recordOutput(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName + "DesiredRPM", desiredRPM);
         this.drivePIDController.setReference(desiredRPM, CANSparkMax.ControlType.kVelocity);
     }
 
@@ -262,8 +261,8 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
         double desiredModuleRotations = desiredModuleAngle.getRotations(); 
         double desiredMotorRotation = desiredModuleRotations * SwerveModuleConstants.kTurningGearRatio;
 
-        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + "DesiredModuleRotations" , desiredModuleRotations);
-        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + "DesiredMotorRotations" , desiredMotorRotation);
+        Logger.recordOutput(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName + "DesiredModuleRotations" , desiredModuleRotations);
+        Logger.recordOutput(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName + "DesiredMotorRotations" , desiredMotorRotation);
 
         turnPIDController.setReference(desiredMotorRotation, CANSparkMax.ControlType.kPosition); 
     }

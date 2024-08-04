@@ -4,7 +4,6 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.Constants.LoggerConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
 import frc.robot.Utils.SwerveDriveUtils.SwerveModuleAngleOptimizer;
 import frc.robot.Subsystems.SwerveDrive.SwerveModule.SwerveModuleIOInputsAutoLogged;
@@ -39,7 +38,7 @@ public class SwerveModule {
      */
     public void periodic() {
         updateInputs();
-        Logger.processInputs("SwerveDrive/" + swerveModuleName, swerveModuleInputs);
+        Logger.processInputs(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName, swerveModuleInputs);
     }
 
     /**
@@ -48,7 +47,7 @@ public class SwerveModule {
      */
     public void setDesiredModuleState(SwerveModuleState desiredState) {
         SwerveModuleState optimizedState = SwerveModuleAngleOptimizer.optimize(desiredState, getModuleState().angle); 
-        Logger.recordOutput(LoggerConstants.kModuleOutputLoggingMenu + swerveModuleName + "DesiredMetersPerSecond", optimizedState.speedMetersPerSecond);
+        Logger.recordOutput(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName + "DesiredMetersPerSecond", optimizedState.speedMetersPerSecond);
 
         double desiredRPM = optimizedState.speedMetersPerSecond / SwerveModuleConstants.kDriveConversionVelocityFactor; 
         

@@ -1,6 +1,9 @@
+
 package frc.robot.Subsystems.PoseEstimation;
 
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonPoseEstimator;
@@ -27,6 +30,7 @@ public class OdometryUpdaterThread extends Thread{
     private SwerveDrivePoseEstimator swerveDrivePoseEstimator;
     private PhotonPoseEstimator[] photonPoseEstimators;
     private Alliance lastAlliance = Alliance.Blue;
+    private boolean setRobotPose = false;
 
     public OdometryUpdaterThread(DriveSubsystem driveSubsystem, PhotonPoseEstimator... photonPoseEstimators) {
         this.driveSubsystem = driveSubsystem;
@@ -41,8 +45,12 @@ public class OdometryUpdaterThread extends Thread{
     public void run() {
         while(true) {
             setAlliance();
-            this.swerveDrivePoseEstimator.update(this.driveSubsystem.getGyroAngleRotation2d(),
-                this.driveSubsystem.getModulePositions());
+        
+            if(!this.setRobotPose) {
+                this.swerveDrivePoseEstimator.update(this.driveSubsystem.getGyroAngleRotation2d(),
+                    this.driveSubsystem.getModulePositions());
+            }
+            
             if(VisionConstants.updateVision) {
                 try {
                     for(PhotonPoseEstimator photonPoseEstimator : this.photonPoseEstimators) {
@@ -81,8 +89,10 @@ public class OdometryUpdaterThread extends Thread{
     }
 
     public void setRobotPose(Pose2d newRobotPose) {
+        this.setRobotPose = true;
         this.swerveDrivePoseEstimator.resetPosition(this.driveSubsystem.getGyroAngleRotation2d(),
         this.driveSubsystem.getModulePositions(), newRobotPose);
+        this.setRobotPose = false;
     }
 
     public void resetRobotPose() {
@@ -115,8 +125,8 @@ public class OdometryUpdaterThread extends Thread{
                 photonPoseEstimator.getFieldTags().setOrigin(VisionConstants.originPosition);
             }
             Logger.recordOutput("Vision/OrginPosition", photonPoseEstimators[0].getFieldTags().getOrigin());
+        }
 
-        }   
     }
             
     private Pose2d flipAlliance(Pose2d poseToFlip) {

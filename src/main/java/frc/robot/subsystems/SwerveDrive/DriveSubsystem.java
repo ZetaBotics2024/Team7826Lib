@@ -114,7 +114,7 @@ public class DriveSubsystem extends SubsystemBase{
             }
             // Positive angles should be counter clockwise.
             setModuleStates(desiredStates);
-            Logger.recordOutput("SwerveDrive/ModuleStates/DesiredModuleStates", desiredStates);
+            Logger.recordOutput(SwerveDriveConstants.kSwerveDriveModuleStatesLoggerBase + "DesiredModuleStates", desiredStates);
         }
         
         logSwerveDrive();
@@ -149,17 +149,17 @@ public class DriveSubsystem extends SubsystemBase{
         this.gyroIO.updateInputs(gyroInputs, currentChassisSpeeds.omegaRadiansPerSecond);
         Logger.processInputs("SwerveDrive/Gyro", gyroInputs);
 
-        Logger.recordOutput("SwerveDrive/ChassisSpeeds/CurrentXVelocityMPS", currentChassisSpeeds.vxMetersPerSecond);
-        Logger.recordOutput("SwerveDrive/ChassisSpeeds/CurrentYVelocityMPS", currentChassisSpeeds.vyMetersPerSecond);
-        Logger.recordOutput("SwerveDrive/ChassisSpeeds/CurrentRotationVelocityRadiansPerSecond", currentChassisSpeeds.omegaRadiansPerSecond);
+        Logger.recordOutput(SwerveDriveConstants.kSwerveDriveChassisSpeedLoggerBase + "CurrentXVelocityMPS", currentChassisSpeeds.vxMetersPerSecond);
+        Logger.recordOutput(SwerveDriveConstants.kSwerveDriveChassisSpeedLoggerBase + "CurrentYVelocityMPS", currentChassisSpeeds.vyMetersPerSecond);
+        Logger.recordOutput(SwerveDriveConstants.kSwerveDriveChassisSpeedLoggerBase + "CurrentRotationVelocityRadiansPerSecond", currentChassisSpeeds.omegaRadiansPerSecond);
 
         if(desiredChassisSpeeds != null) {
-            Logger.recordOutput("SwerveDrive/DesiredChassisSpeeds/DesiredXVelocityMPS", this.desiredChassisSpeeds.vxMetersPerSecond);
-            Logger.recordOutput("SwerveDrive/DesiredChassisSpeeds/DesiredYVelocityMPS", this.desiredChassisSpeeds.vyMetersPerSecond);
-            Logger.recordOutput("SwerveDrive/DesiredChassisSpeeds/DesiredRotationVelocityRadiansPerSecond", this.desiredChassisSpeeds.omegaRadiansPerSecond);
+            Logger.recordOutput(SwerveDriveConstants.kSwerveDriveDesiredChassisSpeedLoggerBase + "DesiredXVelocityMPS", this.desiredChassisSpeeds.vxMetersPerSecond);
+            Logger.recordOutput(SwerveDriveConstants.kSwerveDriveDesiredChassisSpeedLoggerBase + "DesiredYVelocityMPS", this.desiredChassisSpeeds.vyMetersPerSecond);
+            Logger.recordOutput(SwerveDriveConstants.kSwerveDriveDesiredChassisSpeedLoggerBase + "DesiredRotationVelocityRadiansPerSecond", this.desiredChassisSpeeds.omegaRadiansPerSecond);
         }
     
-        Logger.recordOutput("SwerveDrive/ModuleStates/ActualModuleStates", getModuleStates());
+        Logger.recordOutput(SwerveDriveConstants.kSwerveDriveModuleStatesLoggerBase + "ActualModuleStates", getModuleStates());
     }
 
     /**

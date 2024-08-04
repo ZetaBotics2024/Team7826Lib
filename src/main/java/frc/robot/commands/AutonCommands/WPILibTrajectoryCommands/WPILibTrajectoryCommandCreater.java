@@ -1,5 +1,7 @@
 package frc.robot.Commands.AutonCommands.WPILibTrajectoryCommands;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonConstants.WPILibAutonConstants;
@@ -41,6 +46,8 @@ public class WPILibTrajectoryCommandCreater extends Command{
     private NetworkTablesTunablePIDConstants wpiConstantsPIDLibTranslationPIDValueTuner;
     private NetworkTablesTunablePIDConstants wpiLibRotationPIDValueTuner;
 
+    private TrajectoryConfig trajectoryConfig;
+
     private boolean hasSetGoal = false;
 
     public WPILibTrajectoryCommandCreater(AutonPoint[] points, DriveSubsystem driveSubsystem) {
@@ -49,7 +56,40 @@ public class WPILibTrajectoryCommandCreater extends Command{
         configurePIDs();
         configurePIDTuners();
         configureWPILibDriveController();
+        configureTrajectoryConfig();
         
+        setUpTrajectoryFromPoints(points);
+
+        Logger.recordOutput("Auton/WPILibTrajectory/Trajectory", trajectory);
+        addRequirements(this.driveSubsystem);
+    }
+
+    public WPILibTrajectoryCommandCreater(String autonName, Rotation2d goalEndRotation, DriveSubsystem driveSubsystem) {
+        this.driveSubsystem = driveSubsystem;
+
+        configurePIDs();
+        configurePIDTuners();
+        configureWPILibDriveController();
+        configureTrajectoryConfig();
+        
+        setUpTrajectoryFromPath(autonName, goalEndRotation);
+
+        Logger.recordOutput("Auton/WPILibTrajectory/Trajectory", trajectory);
+        addRequirements(this.driveSubsystem);
+    }
+
+    private void setUpTrajectoryFromPath(String autonName, Rotation2d goalEndRotation) {
+        try {
+            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("output/" + autonName + ".wpilib.json"); 
+            this.trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+        } catch(IOException exception) {
+            this.trajectory = new Trajectory();
+            Logger.recordOutput("ValidWPILIBTrajectoryLoaded", false);
+        }
+        this.desiredEndAngleRotation2d = goalEndRotation;
+    }
+
+    private void setUpTrajectoryFromPoints(AutonPoint[] points) {
         ArrayList<Pose2d> mirroredPoints = new ArrayList<>();
         for(int i = 0; i < points.length; i++) {
             Pose2d mirroredPoint = points[i].getAutonPoint();
@@ -57,15 +97,16 @@ public class WPILibTrajectoryCommandCreater extends Command{
             mirroredPoints.add(modifedPoint);
         }
         this.desiredEndAngleRotation2d = points[points.length-1].getAutonPoint().getRotation();
-    
-        TrajectoryConfig trajectoryConfig = 
+        
+        this.trajectory = TrajectoryGenerator.generateTrajectory(mirroredPoints, trajectoryConfig);
+    }
+
+    private void configureTrajectoryConfig() {
+        trajectoryConfig = 
             new TrajectoryConfig(WPILibAutonConstants.kMaxTranslationalSpeedInMetersPerSecond,
             WPILibAutonConstants.kMaxTranslationalAccelerationInMetersPerSecond);
         trajectoryConfig.setReversed(false);
 
-        this.trajectory = TrajectoryGenerator.generateTrajectory(mirroredPoints, trajectoryConfig);
-        Logger.recordOutput("Auton/WPILibTrajectory/Traj", trajectory);
-        addRequirements(this.driveSubsystem);
     }
 
     public void configurePIDs() {

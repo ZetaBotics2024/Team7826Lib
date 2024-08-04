@@ -37,8 +37,10 @@ public class RobotContainer {
     private DriveCommandFactory driveCommandFactory;
 
     // Decloration of Commands
+    // SwerveDrive Commands
     private FieldOrientedDriveCommand fieldOrientedDriveCommand;
     private LockSwerves lockSwerves;
+    private Command resetOdometry;
 
     /** 
      * Initalized all Subsystem and Commands 
@@ -52,6 +54,7 @@ public class RobotContainer {
         this.fieldOrientedDriveCommand = this.driveCommandFactory.createFieldOrientedDriveCommand();
         this.driveSubsystem.setDefaultCommand(this.fieldOrientedDriveCommand);
         this.lockSwerves = this.driveCommandFactory.createLockSwervesCommand();
+        this.resetOdometry = this.driveCommandFactory.createResetOdometryCommand();
 
         configureBindings();
 
@@ -62,7 +65,8 @@ public class RobotContainer {
      * Used to configure button binding
      */
     private void configureBindings() {
-        this.driverController.bindToButton(lockSwerves, XboxController.Button.kY.value);
+        this.driverController.bindToButton(this.lockSwerves, XboxController.Button.kRightBumper.value);
+        this.driverController.bindToButton(this.resetOdometry, XboxController.Button.kY.value);
         this.driverController.bindToButton(this.driveCommandFactory.createSwerveDriveTranslationProfiler(), XboxController.Button.kX.value);
         this.driverController.bindToButton(this.driveCommandFactory.createSwerveDriveRotationProfiler(), XboxController.Button.kB.value);
     }

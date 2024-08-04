@@ -205,6 +205,7 @@ public class WPILibTrajectoryCommandCreater extends Command{
     @Override
     public void end(boolean interrupted) {
         System.out.println("TrajectoryTook: " + (Timer.getFPGATimestamp()-startTime));
+        this.driveSubsystem.stop();
         LEDManager.setSolidColor(new int[] {0, 0, 255});        
     }
 

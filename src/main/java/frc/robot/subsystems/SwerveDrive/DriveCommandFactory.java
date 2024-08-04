@@ -1,5 +1,8 @@
 package frc.robot.Subsystems.SwerveDrive;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Commands.SwerveDriveCommands.FieldOrientedDriveCommand;
 import frc.robot.Commands.SwerveDriveCommands.LockSwerves;
 import frc.robot.Utils.JoystickUtils.ControllerInterface;
@@ -36,6 +39,10 @@ public class DriveCommandFactory {
 
     public SwerveDriveRotationProfiler createSwerveDriveRotationProfiler() {
         return new SwerveDriveRotationProfiler(driveSubsystem, 9.892);
+    }
+
+    public Command createResetOdometryCommand() {
+        return Commands.runOnce(() -> this.driveSubsystem.resetRobotPose());
     }
 
 }

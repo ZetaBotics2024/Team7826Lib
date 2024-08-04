@@ -150,9 +150,8 @@ public class PIDGoToPose extends Command{
 
     @Override
     public void end(boolean interrupted) {
-    
+        this.driveSubsystem.stop();
         LEDManager.setSolidColor(new int[] {0, 0, 255});
-        
         ControlConstants.kIsDriverControlled = true;
     }
 

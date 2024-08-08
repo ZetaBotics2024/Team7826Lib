@@ -11,7 +11,7 @@ B. Add basics untill
         a. XBoxControlers(Done)
         b. Button Moneky Controller(Done)
 C.
-    a. Impliment Cadle LEDs with Advantage Kit(Done)
+    a. Impliment Candle LEDs with Advantage Kit(Done)
 D. Set up swerve with Advantage Kit(Done)
     a. Refactor Swerve for Advantage Kit(Done)
         a. Set up SwerveModuleIO(Done)

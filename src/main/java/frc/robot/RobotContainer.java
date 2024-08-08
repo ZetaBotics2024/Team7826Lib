@@ -78,5 +78,9 @@ public class RobotContainer {
     public Command getAutonomousCommand() {    
         return this.autonManager.getSelectedAuton();
     }
+
+    public void updateAlliance() {
+        this.driveSubsystem.getPoseEstimatorSubsystem().updateAlliance();
+    }
         
 }

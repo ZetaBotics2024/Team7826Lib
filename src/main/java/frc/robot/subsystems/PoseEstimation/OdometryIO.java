@@ -14,7 +14,6 @@
 package frc.robot.Subsystems.PoseEstimation;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
 
 import org.littletonrobotics.junction.AutoLog;
@@ -54,10 +53,8 @@ public interface OdometryIO {
     public default void resetRobotPose() {}
 
     /**
-     * Updates the estimated position of the robot based on april tag vison data
-     * @param estimatedVisionPose Pose2d: The position that vision thinks the robot is at
-     * @param timestamp Double: The time that the estimated position was calculated
+     * Sets the orgin position for april tags based on the current alliance
      */
-    public default void updatedPoseEstimationWithVisionData(Pose2d estimatedVisionPose, double timestamp) {}
+    public default void updateAlliance() {}
 
 }

@@ -36,6 +36,7 @@ public class ExampleAuton{
             Rotation2d.fromDegrees(130),
             autonPointManager.kExampleWpilibTrajectoryConfig,
             driveSubsystem));
+        //autonCommands.add(new WPILibTrajectoryCommandCreater("ExampleAuton", autonPointManager.kExampleAutonPointArray, driveSubsystem));
        
 
         SequentialGroupCommand auton = GenerateAuto.generateAuto(autonCommands);

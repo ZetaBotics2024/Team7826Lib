@@ -35,9 +35,9 @@ import frc.robot.Utils.LEDUtils.LEDManager;
  * project.
  */
 public class Robot extends LoggedRobot {
-    private Command m_autonomousCommand;
+    private Command autonomousCommand;
 
-    private RobotContainer m_robotContainer;
+    private RobotContainer robotContainer;
 
     private NetworkTablesChangableValue autonDebugMode = new NetworkTablesChangableValue("RobotMode/AutonDebugMode", RobotModeConstants.kAutonDebugMode);
 
@@ -97,7 +97,7 @@ public class Robot extends LoggedRobot {
 
             // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
             // autonomous chooser on the dashboard.
-            m_robotContainer = new RobotContainer();
+            robotContainer = new RobotContainer();
             checkDriverStationUpdate();
             FollowPathCommand.warmupCommand().schedule();
         }
@@ -124,10 +124,10 @@ public class Robot extends LoggedRobot {
     @Override
     public void disabledInit() {    
         if(RobotModeConstants.kAutonDebugMode) {
-            this.m_robotContainer = new RobotContainer();
+            this.robotContainer = new RobotContainer();
         }
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.cancel();
+        if (autonomousCommand != null) {
+            autonomousCommand.cancel();
         }
     }
 
@@ -138,11 +138,11 @@ public class Robot extends LoggedRobot {
     @Override
     public void autonomousInit() {
         checkDriverStationUpdate();
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+        autonomousCommand = robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
-        if (m_autonomousCommand != null) {
-        m_autonomousCommand.schedule();
+        if (autonomousCommand != null) {
+        autonomousCommand.schedule();
         }
     }
 
@@ -158,8 +158,8 @@ public class Robot extends LoggedRobot {
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        if (m_autonomousCommand != null) {
-        m_autonomousCommand.cancel();
+        if (autonomousCommand != null) {
+        autonomousCommand.cancel();
         }
   
     }
@@ -196,6 +196,8 @@ public class Robot extends LoggedRobot {
         if (DriverStation.isDSAttached() && currentAlliance != FieldConstants.alliance) {
             FieldConstants.alliance = currentAlliance;
             RobotModeConstants.isBlueAlliance = currentAlliance == Alliance.Blue;
+            RobotModeConstants.hasAllianceChanged = true;
+            this.robotContainer.updateAlliance();
         }
     }
 }

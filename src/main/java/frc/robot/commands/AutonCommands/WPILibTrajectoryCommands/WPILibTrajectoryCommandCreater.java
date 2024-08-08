@@ -14,6 +14,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
@@ -25,6 +27,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonConstants.WPILibAutonConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.Utils.AutonUtils.WPILIBTrajectoryConfig;
 import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
@@ -189,6 +192,11 @@ public class WPILibTrajectoryCommandCreater extends Command{
             Logger.recordOutput("ValidWPILIBTrajectoryLoaded", false);
         }
         this.desiredEndAngleRotation2d = goalEndRotation;
+        this.trajectory = this.trajectory.transformBy(new Transform2d(
+            new Translation2d(0, FieldConstants.kFieldWidthMeters * -1),
+            new Rotation2d()));
+        
+        this.desiredEndAngleRotation2d = this.desiredEndAngleRotation2d.times(-1);
     }
 
     private void setUpTrajectoryFromPoints(AutonPoint[] points,
@@ -255,6 +263,7 @@ public class WPILibTrajectoryCommandCreater extends Command{
     
     @Override 
     public void initialize() {
+        Logger.recordOutput("Auton/Started", true);
         this.startTime = Timer.getFPGATimestamp();
         LEDManager.setSolidColor(new int[] {255, 0, 0});
     }
@@ -273,6 +282,7 @@ public class WPILibTrajectoryCommandCreater extends Command{
 
     @Override
     public void end(boolean interrupted) {
+        Logger.recordOutput("Auton/Started", false);
         System.out.println("TrajectoryTook: " + (Timer.getFPGATimestamp()-startTime));
         this.driveSubsystem.stop();
         LEDManager.setSolidColor(new int[] {0, 0, 255});        

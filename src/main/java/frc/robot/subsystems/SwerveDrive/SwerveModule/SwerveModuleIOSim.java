@@ -9,6 +9,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.RobotModeConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
 import frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 
@@ -51,7 +52,7 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
     private void configDirvePID() {
         this.drivePIDController = new PIDController(SwerveModuleConstants.kPModuleSIMDrivePIDValue,
             SwerveModuleConstants.kIModuleSIMDrivePIDValue,
-            SwerveModuleConstants.kDModuleSIMDrivePIDValue, .02);
+            SwerveModuleConstants.kDModuleSIMDrivePIDValue, RobotModeConstants.kLoopPeriod);
     }
     
     /**
@@ -60,7 +61,7 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
     private void configTurnPID() {
         this.turnPIDController = new PIDController(SwerveModuleConstants.kPModuleSIMTurnPIDValue,
             SwerveModuleConstants.kIModuleSIMTurnPIDValue,
-            SwerveModuleConstants.kDModuleSIMTurnPIDValue);
+            SwerveModuleConstants.kDModuleSIMTurnPIDValue, RobotModeConstants.kLoopPeriod);
     }
 
     /**
@@ -73,13 +74,13 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
         double[] currentDrivePIDValues = this.driveMotorPIDConstantTuner.getUpdatedPIDConstants();
         if(this.driveMotorPIDConstantTuner.hasAnyPIDValueChanged()) {
             this.drivePIDController = new PIDController(currentDrivePIDValues[0],
-                currentDrivePIDValues[1], currentDrivePIDValues[2], .02);
+                currentDrivePIDValues[1], currentDrivePIDValues[2], RobotModeConstants.kLoopPeriod);
         }
 
         double[] currentTurnPIDValues = this.turnMotorPIDConstantTuner.getUpdatedPIDConstants();
         if(this.turnMotorPIDConstantTuner.hasAnyPIDValueChanged()) {
             this.turnPIDController = new PIDController(currentTurnPIDValues[0],
-                currentTurnPIDValues[1], currentTurnPIDValues[2], .02);
+                currentTurnPIDValues[1], currentTurnPIDValues[2], RobotModeConstants.kLoopPeriod);
         }
     }
 

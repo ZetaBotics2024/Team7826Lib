@@ -6,7 +6,7 @@ import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.Subsystems.SwerveDrive.DriveSubsystemCreater;
 
 public class RobotCreater {
-    // Decloration of subsystem creatoin
+    // Decloration of subsystem creaters
     private final DriveSubsystemCreater driveSubsystemCreater;
 
     public RobotCreater() {

@@ -4,10 +4,6 @@
 
 package frc.robot;
 
-import java.util.Optional;
-
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Auton.AutonManager;

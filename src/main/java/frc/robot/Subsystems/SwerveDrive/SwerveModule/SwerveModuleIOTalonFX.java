@@ -125,22 +125,22 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO{
      * @param turnMotorInverted Boolean: Wether or not the turn motor is inverted
      */
     private void configTurnMotor(int turnMotorID, boolean turnMotorInverted) {
-        this.turnMotor = new TalonFX(turnMotorID, SwerveDriveConstants.kCANLoopName);
+        //this.turnMotor = new TalonFX(turnMotorID, SwerveDriveConstants.kCANLoopName);
         TalonFXConfiguration turnMotorConfig = new TalonFXConfiguration();
         turnMotorConfig.MotorOutput.Inverted = turnMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
         turnMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         // May need to set more fields becuase optimize useage 
-        this.turnMotor.getVelocity().setUpdateFrequency(20);
-        this.turnMotor.getAcceleration().setUpdateFrequency(20);
-        this.turnMotor.getPosition().setUpdateFrequency(20);
-        this.turnMotor.getTorqueCurrent().setUpdateFrequency(50);
+        //this.turnMotor.getVelocity().setUpdateFrequency(20);
+        //this.turnMotor.getAcceleration().setUpdateFrequency(20);
+        //this.turnMotor.getPosition().setUpdateFrequency(20);
+        //this.turnMotor.getTorqueCurrent().setUpdateFrequency(50);
 
         turnMotorConfig.Voltage.PeakForwardVoltage = SwerveModuleConstants.kTurnMotorMaxVoltageSparkMaxTalonFX;
         turnMotorConfig.Voltage.PeakReverseVoltage = -SwerveModuleConstants.kTurnMotorMaxVoltageSparkMaxTalonFX;
 
-        this.turnMotor.optimizeBusUtilization();
-        this.turnMotor.getConfigurator().apply(turnMotorConfig);
+        //this.turnMotor.optimizeBusUtilization();
+        //this.turnMotor.getConfigurator().apply(turnMotorConfig);
     }
     
     /**
@@ -186,9 +186,9 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO{
      * Resets the relitive built in encoder of the turn motor to be equal to the offsetted absolute angle reading from the absolute encoder.
      */
     public void resetTurningMotorToAbsolute() {
-        this.turnMotor.setPosition((
-            this.turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble() 
-            - this.turningAbsoluteEncoderOffset) * SwerveModuleConstants.kTurningGearRatio);
+        //this.turnMotor.setPosition((
+        //    this.turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble() 
+        //    - this.turningAbsoluteEncoderOffset) * SwerveModuleConstants.kTurningGearRatio);
       }
     
     /**
@@ -209,13 +209,13 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO{
         inputs.driveMotorCurrentAmps = new double[] {this.driveMotor.getSupplyCurrent().getValueAsDouble()};
 
         inputs.turnMotorAbsolutePositionRotations = this.turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble();
-        inputs.turnMotorRelitivePositionRotations = this.turnMotor.getPosition().getValueAsDouble();
+        inputs.turnMotorRelitivePositionRotations = 0;//this.turnMotor.getPosition().getValueAsDouble();
         inputs.wheelAngleRelitivePositionRotations = inputs.turnMotorRelitivePositionRotations / SwerveModuleConstants.kTurningGearRatio;
-        inputs.turnMotorRPM = this.turnMotor.getVelocity().getValueAsDouble() * 60; // 60 For number of seconds in a minute.
+        inputs.turnMotorRPM = 0;//this.turnMotor.getVelocity().getValueAsDouble() * 60; // 60 For number of seconds in a minute.
         // This is done because TalonFX uses RPS instead of RMP
-        inputs.turnMotorAppliedVolts = this.turnMotor.getMotorVoltage().getValueAsDouble();
-        inputs.turnMotorCurrentAmps = new double[] {this.turnMotor.getSupplyCurrent().getValueAsDouble()};
-
+        inputs.turnMotorAppliedVolts = 0;//this.turnMotor.getMotorVoltage().getValueAsDouble();
+        inputs.turnMotorCurrentAmps = new double[] {};//this.turnMotor.getSupplyCurrent().getValueAsDouble()};
+        
         updatePIDValuesFromNetworkTables();
     }
 
@@ -236,7 +236,6 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO{
             this.driveMotor.getConfigurator().apply(newDrivePIDConfigs);
         }
         
-
         double[] currentTurnPIDValues = this.turnMotorPIDConstantTuner.getUpdatedPIDConstants();
         if(this.turnMotorPIDConstantTuner.hasAnyPIDValueChanged()) {
             Slot0Configs newTurnPIDConfigs = new Slot0Configs();
@@ -244,7 +243,7 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO{
             newTurnPIDConfigs.kI = currentTurnPIDValues[1];
             newTurnPIDConfigs.kD = currentTurnPIDValues[2];
             newTurnPIDConfigs.kS = currentTurnPIDValues[3];
-            this.turnMotor.getConfigurator().apply(newTurnPIDConfigs);
+            //this.turnMotor.getConfigurator().apply(newTurnPIDConfigs);
         }
     }
 
@@ -261,10 +260,10 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO{
         double desiredModuleRotations = desiredModuleAngle.getRotations(); 
         double desiredMotorRotation = desiredModuleRotations * SwerveModuleConstants.kTurningGearRatio;
 
-        Logger.recordOutput(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName + "DesiredModuleRotations" , desiredModuleRotations);
-        Logger.recordOutput(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName + "DesiredMotorRotations" , desiredMotorRotation);
+        Logger.recordOutput(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName + "DesiredWheelAngleRelitivePositionRotations" , desiredModuleRotations);
+        Logger.recordOutput(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName + "DesiredTurnMotorRelitivePositionRotations" , desiredMotorRotation);
 
         this.turnControlRequest.Position = desiredMotorRotation;
-        this.turnMotor.setControl(this.turnControlRequest);
+        //this.turnMotor.setControl(this.turnControlRequest);
     }
 }

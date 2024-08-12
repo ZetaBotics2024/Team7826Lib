@@ -97,8 +97,8 @@ public final class DrivetrainConstants {
         public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 4 * 2 * Math.PI;
 
         // Motor Control Configuration Values
-        public static final double kPModuleDrivePIDValue = 0.0001;
-        public static final double kIModuleDrivePIDValue = .00000125;
+        public static final double kPModuleDrivePIDValue = 0.2;
+        public static final double kIModuleDrivePIDValue = .5;
         public static final double kDModuleDrivePIDValue = 0;
         public static final double kFFModuleDrivePIDValue = 0;
         public static final double kIZoneModuleDrivePIDValue = 0.0;
@@ -111,7 +111,7 @@ public final class DrivetrainConstants {
         public static final double kDriveMotorMinPercentOutput = -1;
         public static final double kDriveMotorMaxPercentOutput = 1;
 
-        public static final double kPModuleTurnPIDValue = .1001;
+        public static final double kPModuleTurnPIDValue = .03;
         public static final double kIModuleTurnPIDValue = 0;
         public static final double kDModuleTurnPIDValue = 0;
         public static final double kFFModuleTurnPIDValue = 0;
@@ -134,7 +134,7 @@ public final class DrivetrainConstants {
         public static final int kTurnMotorMaxVoltageSparkMaxTalonFX = 12; 
 
         // Swerve Module Configuration Values
-        public static final double kWheelDiameterMeters = Units.inchesToMeters(3.733428923);// 3.83931974);//0.1016;
+        public static final double kWheelDiameterMeters = Units.inchesToMeters(3.733428923);// 3.83931974016;
         public static final double kDriveGearRatio = (50.0 * 17.0 * 45.0) / (14.0 * 27.0 * 15.0);// 6.75/1.0;
         public static final double kTurningGearRatio = 150.0 / 7.0;
 

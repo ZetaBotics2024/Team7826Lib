@@ -119,6 +119,12 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
         this.desiredVelocityRPM = desiredRPM;
     }
 
+    @Override
+    public void setDesiredModuleDriveVoltage(double desiredVoltage) {
+        this.driveMotor.setInputVoltage(desiredVoltage);
+    }
+
+
     public void setDesiredModuleAngle(Rotation2d desiredModuleAngle) {
         double desiredModuleRotations = desiredModuleAngle.getRotations(); 
         double desiredMotorRotation = desiredModuleRotations * SwerveModuleConstants.kTurningGearRatio;

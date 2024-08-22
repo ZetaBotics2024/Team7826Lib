@@ -257,6 +257,11 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
     }
 
     @Override
+    public void setDesiredModuleDriveVoltage(double desiredVoltage) {
+        this.driveMotor.setVoltage(desiredVoltage);
+    }
+
+    @Override
     public void setDesiredModuleAngle(Rotation2d desiredModuleAngle) {
         double desiredModuleRotations = desiredModuleAngle.getRotations(); 
         double desiredMotorRotation = desiredModuleRotations * SwerveModuleConstants.kTurningGearRatio;

@@ -46,6 +46,14 @@ public interface SwerveModuleIO {
     public default void updateInputs(SwerveModuleIOInputs inputs) {}
 
     /**
+     * Sets the desired voltage of the module
+     * @param desiredVoltage Double: The desired module voltage
+     */
+    public default void setDesiredModuleDriveVoltage(double desiredVoltage) {
+
+    }
+
+    /**
      * Sets the desired RPM of the module
      * @param desiredRPM Double: The desired RPM for the module
      */

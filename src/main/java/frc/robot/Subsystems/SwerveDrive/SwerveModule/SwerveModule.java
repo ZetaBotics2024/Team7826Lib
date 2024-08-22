@@ -1,9 +1,13 @@
 package frc.robot.Subsystems.SwerveDrive.SwerveModule;
 
 import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
 import frc.robot.Utils.SwerveDriveUtils.SwerveModuleAngleOptimizer;
 import frc.robot.Subsystems.SwerveDrive.SwerveModule.SwerveModuleIOInputsAutoLogged;
@@ -48,10 +52,16 @@ public class SwerveModule {
     public void setDesiredModuleState(SwerveModuleState desiredState) {
         SwerveModuleState optimizedState = SwerveModuleAngleOptimizer.optimize(desiredState, getModuleState().angle); 
         Logger.recordOutput(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName + "DesiredMetersPerSecond", optimizedState.speedMetersPerSecond);
-
-        double desiredRPM = optimizedState.speedMetersPerSecond / SwerveModuleConstants.kDriveConversionVelocityFactor; 
         
+        /* Better system we made at the fair does not work well with sim. Need to try with actual swerve mods latter
+         *  double driveVoltage = optimizedState.speedMetersPerSecond == 0 ? 0 : 
+            MathUtil.clamp((((optimizedState.speedMetersPerSecond/SwerveDriveConstants.kMaxSpeedMetersPerSecond) * 13)
+            + (SwerveDriveConstants.kDriveFeedForward * Math.signum(optimizedState.speedMetersPerSecond))), -13, 13);
+         */
+         
+        double desiredRPM = optimizedState.speedMetersPerSecond / SwerveModuleConstants.kDriveConversionVelocityFactor;
         this.swerveModuleIO.setDesiredModuleVelocityRPM(desiredRPM);
+        //this.swerveModuleIO.setDesiredModuleDriveVoltage(driveVoltage);
         this.swerveModuleIO.setDesiredModuleAngle(optimizedState.angle);
     }
     

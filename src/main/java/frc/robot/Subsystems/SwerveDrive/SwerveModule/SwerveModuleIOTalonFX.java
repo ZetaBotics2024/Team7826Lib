@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
@@ -32,6 +33,9 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO{
     private double turningAbsoluteEncoderOffset;
 
     private VelocityVoltage driveControlRequest = new VelocityVoltage(0);
+    // If this works and we have a CTRE subscripting try enablign FOC
+    private VoltageOut driveControlVoltageRequest = new VoltageOut(0);
+
     private PositionDutyCycle turnControlRequest = new PositionDutyCycle(0);
 
     private NetworkTablesTunablePIDConstants driveMotorPIDConstantTuner;
@@ -253,6 +257,12 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO{
         this.driveControlRequest.Velocity = desiredRPM / 60; // 60 For number of seconds in a minute.
         // This is done because TalonFX uses RPS instead of RMP
         this.driveMotor.setControl(this.driveControlRequest);
+    }
+
+    @Override
+    public void setDesiredModuleDriveVoltage(double desiredVoltage) {
+        this.driveControlVoltageRequest.Output = desiredVoltage;
+        this.driveMotor.setControl(this.driveControlVoltageRequest);
     }
 
     @Override

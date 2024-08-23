@@ -9,6 +9,9 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
 import frc.robot.Constants.VisionConstants;
@@ -20,7 +23,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     private OdometryIOInputsAutoLogged odometryInputs = new OdometryIOInputsAutoLogged();
 
 
-    private PhotonCamera exampleCamera = new PhotonCamera("RightCamera");
+    private PhotonCamera exampleCamera = new PhotonCamera("SPCA2688_AV_Camera");
     private PhotonPoseEstimator exampleEstimator;
 
     public PoseEstimatorSubsystem(DriveSubsystem driveSubsystem) {
@@ -33,7 +36,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
         driveSubsystem, exampleEstimator);
     }
 
-    public void periodic() {        
+    public void periodic() {     
+        Logger.recordOutput("ObjectTracking/ObjectDistence", getTargetDistance());
         this.odometryIO.updateInputs(this.odometryInputs);
         Logger.processInputs("Odometry/", odometryInputs);
     }
@@ -63,5 +67,27 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
             PoseStrategy.LOWEST_AMBIGUITY, exampleCamera,
             VisionConstants.kExampleCameraToRobotCenter);
     }
+
+    public double getTargetDistance() {
+        double targetDistance = 0;
+        double x, y, targetHeading;
+        var result = this.exampleCamera.getLatestResult();
+        
+        if (result.hasTargets()) {
+            targetDistance = PhotonUtils.calculateDistanceToTargetMeters(Units.inchesToMeters(16.875), Units.inchesToMeters(2.0), Math.toRadians(20),
+                Units.degreesToRadians(result.getBestTarget().getPitch()));
+
+            x = targetDistance * Math.sin(Units.degreesToRadians(result.getBestTarget().getYaw()));
+            y = targetDistance * Math.cos(Units.degreesToRadians(result.getBestTarget().getYaw())) + 0.5842;
+            targetHeading = (Math.atan(x / y));
+            Logger.recordOutput("ObjectTracking/bjectHeading", Units.radiansToDegrees(targetHeading));
+            
+        }
+
+        
+        
+        return targetDistance;
+      }
+    
     
 }

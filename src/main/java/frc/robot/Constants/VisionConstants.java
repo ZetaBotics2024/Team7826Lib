@@ -9,12 +9,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Utils.AutonUtils.AutonPointUtils.FudgeFactor;
 
 // Do not create an instants of a constant class
 
 public final class VisionConstants {
     public static final Transform3d kExampleCameraToRobotCenter =  new Transform3d(0, 0, 0, new Rotation3d());
+    public static final Transform3d kExampleVisionCameraToRobotCenter =  new Transform3d(0, 0, 0, new Rotation3d());
+    public static final double kGameObjectHeight = Units.inchesToMeters(2);
+
     public static final AprilTagFieldLayout kAprilTagLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();  
     public static final int[] kExcludedTags = {};
     public static OriginPosition originPosition = OriginPosition.kBlueAllianceWallRightSide;

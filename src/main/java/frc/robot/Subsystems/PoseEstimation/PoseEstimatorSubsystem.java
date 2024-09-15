@@ -37,7 +37,6 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     }
 
     public void periodic() {     
-        Logger.recordOutput("ObjectTracking/ObjectDistence", getTargetDistance());
         this.odometryIO.updateInputs(this.odometryInputs);
         Logger.processInputs("Odometry/", odometryInputs);
     }
@@ -68,26 +67,4 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
             VisionConstants.kExampleCameraToRobotCenter);
     }
 
-    public double getTargetDistance() {
-        double targetDistance = 0;
-        double x, y, targetHeading;
-        var result = this.exampleCamera.getLatestResult();
-        
-        if (result.hasTargets()) {
-            targetDistance = PhotonUtils.calculateDistanceToTargetMeters(Units.inchesToMeters(16.875), Units.inchesToMeters(2.0), Math.toRadians(20),
-                Units.degreesToRadians(result.getBestTarget().getPitch()));
-
-            x = targetDistance * Math.sin(Units.degreesToRadians(result.getBestTarget().getYaw()));
-            y = targetDistance * Math.cos(Units.degreesToRadians(result.getBestTarget().getYaw())) + 0.5842;
-            targetHeading = (Math.atan(x / y));
-            Logger.recordOutput("ObjectTracking/bjectHeading", Units.radiansToDegrees(targetHeading));
-            
-        }
-
-        
-        
-        return targetDistance;
-      }
-    
-    
 }

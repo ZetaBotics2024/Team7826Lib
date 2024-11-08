@@ -10,16 +10,16 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public final class AutonConstants {
     public final class PIDPositioningAutonConstants {
-        public static double kPTranslationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : 3;
+        public static double kPTranslationPIDConstant = RobotModeConstants.kIsNotSim ? .93 : 3;
         public static double kITranslationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : 0;
         public static double kDTranslationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : 0;
-        public static final double kMaxTranslationalSpeedInMetersPerSecond = RobotModeConstants.kIsNotSim ? 4.3 : 4.22;
-        public static final double kMaxTranslationalAccelerationInMetersPerSecond = RobotModeConstants.kIsNotSim ? 1.4184 * 5 : 1.4184 * 5;
+        public static final double kMaxTranslationalSpeedInMetersPerSecond = RobotModeConstants.kIsNotSim ? 20 : 4.22;
+        public static final double kMaxTranslationalAccelerationInMetersPerSecond = RobotModeConstants.kIsNotSim ? 10 : 1.4184 * 5;
 
         public static final TrapezoidProfile.Constraints kTranslationPIDControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxTranslationalSpeedInMetersPerSecond, kMaxTranslationalAccelerationInMetersPerSecond);
 
-        public static double kPRotationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : .35;
+        public static double kPRotationPIDConstant = RobotModeConstants.kIsNotSim ? 0.0586 : .35;
         public static double kIRotationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : 0;
         public static double kDRotationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : 0;
         public static final double kMaxRotationalSpeedInRadsPerSecond = RobotModeConstants.kIsNotSim ? 9.89199998351 * 5 : 9.89199998351 * 5;

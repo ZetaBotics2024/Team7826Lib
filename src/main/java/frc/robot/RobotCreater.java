@@ -15,8 +15,8 @@ public class RobotCreater {
         switch (RobotModeConstants.currentMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-                this.driveSubsystemCreater.createTalonFXSwerve();
-                //this.driveSubsystemCreater.createSparkMaxSwerve();
+                //this.driveSubsystemCreater.createTalonFXSwerve();
+                this.driveSubsystemCreater.createSparkMaxSwerve();
                 break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementation

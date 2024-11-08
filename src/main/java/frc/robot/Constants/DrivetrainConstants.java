@@ -30,10 +30,10 @@ public final class DrivetrainConstants {
         public static final String kBackRightModuleName = "BackRightModule";
 
         // Drive Motor CANIDs
-        public static final int kFrontLeftDriveMotorCANID = 2;
-        public static final int kFrontRightDriveMotorCANID = 3;
-        public static final int kBackLeftDriveMotorCANID = 4;
-        public static final int kBackRightDriveMotorCANID = 5;
+        public static final int kFrontLeftDriveMotorCANID = 24;
+        public static final int kFrontRightDriveMotorCANID = 2;
+        public static final int kBackLeftDriveMotorCANID = 3;
+        public static final int kBackRightDriveMotorCANID = 4;
 
         public static final boolean kFrontLeftDriveMotorInverted =  RobotModeConstants.kIsNotSim ? false : false;
         public static final boolean kFrontRightDriveMotorInverted = RobotModeConstants.kIsNotSim ? false : false;
@@ -41,10 +41,10 @@ public final class DrivetrainConstants {
         public static final boolean kBackRightDriveMotorInverted = RobotModeConstants.kIsNotSim ? false : false;
 
         // Turn Motor CANIDs
-        public static final int kFrontLeftTurnMotorCANID = 6;
-        public static final int kFrontRightTurnMotorCANID = 7;
-        public static final int kBackLeftTurnMotorCANID = 8;
-        public static final int kBackRightTurnMotorCANID = 9;
+        public static final int kFrontLeftTurnMotorCANID = 5;
+        public static final int kFrontRightTurnMotorCANID = 6;
+        public static final int kBackLeftTurnMotorCANID = 7;
+        public static final int kBackRightTurnMotorCANID = 8;
 
         public static final boolean kFrontLeftTurnMotorInverted = RobotModeConstants.kIsNotSim ? true : true;
         public static final boolean kFrontRightTurnMotorInverted = RobotModeConstants.kIsNotSim ? true : true;
@@ -52,20 +52,20 @@ public final class DrivetrainConstants {
         public static final boolean kBackRightTurnMotorInverted = RobotModeConstants.kIsNotSim ? true : true;
 
         // Turning Absolute Encoder CANIDs
-        public static final int kFrontLeftTurningAbsoluteEncoderCANID = 10;
-        public static final int kFrontRightTurningAbsoluteEncoderCANID = 11;
-        public static final int kBackLeftTurningAbsoluteEncoderCANID = 12;
-        public static final int kBackRightTurningAbsoluteEncoderCANID = 13;
+        public static final int kFrontLeftTurningAbsoluteEncoderCANID = 9;
+        public static final int kFrontRightTurningAbsoluteEncoderCANID = 10;
+        public static final int kBackLeftTurningAbsoluteEncoderCANID = 11;
+        public static final int kBackRightTurningAbsoluteEncoderCANID = 12;
 
         // Turning Absolute Encoder Offsets in rotations
-        public static final double kFrontLeftTurningAbsoluteEncoderOffsetRotations = 10;
-        public static final double kFrontRightTurningAbsoluteEncoderOffsetRotations= 11;
-        public static final double kBackLeftTurningAbsoluteEncoderOffsetRotations = 12;
-        public static final double kBackRightTurningAbsoluteEncoderOffsetRotations = 13;
+        public static final double kFrontLeftTurningAbsoluteEncoderOffsetRotations = 0.712646;
+        public static final double kFrontRightTurningAbsoluteEncoderOffsetRotations= 0.433838;
+        public static final double kBackLeftTurningAbsoluteEncoderOffsetRotations = 0.894043;
+        public static final double kBackRightTurningAbsoluteEncoderOffsetRotations = 0.440674;
     
         // End of Swerve Module Configuration Constants
 
-        public static final int kGyroCANID = 14; 
+        public static final int kGyroCANID = 13; 
 
         // Kinematic Configuration
 
@@ -98,8 +98,8 @@ public final class DrivetrainConstants {
         public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 4 * 2 * Math.PI;
 
         // Motor Control Configuration Values
-        public static final double kPModuleDrivePIDValue = 0.2;
-        public static final double kIModuleDrivePIDValue = .5;
+        public static final double kPModuleDrivePIDValue = 0.0001;
+        public static final double kIModuleDrivePIDValue = 0.00000125;
         public static final double kDModuleDrivePIDValue = 0;
         public static final double kFFModuleDrivePIDValue = 0;
         public static final double kIZoneModuleDrivePIDValue = 0.0;
@@ -112,7 +112,7 @@ public final class DrivetrainConstants {
         public static final double kDriveMotorMinPercentOutput = -1;
         public static final double kDriveMotorMaxPercentOutput = 1;
 
-        public static final double kPModuleTurnPIDValue = .03;
+        public static final double kPModuleTurnPIDValue = .1001;
         public static final double kIModuleTurnPIDValue = 0;
         public static final double kDModuleTurnPIDValue = 0;
         public static final double kFFModuleTurnPIDValue = 0;

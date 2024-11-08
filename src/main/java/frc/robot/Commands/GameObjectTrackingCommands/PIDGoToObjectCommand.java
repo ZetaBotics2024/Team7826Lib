@@ -1,4 +1,4 @@
-package frc.robot.Commands.AutonCommands.ObjectCommands;
+package frc.robot.Commands.GameObjectTrackingCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;

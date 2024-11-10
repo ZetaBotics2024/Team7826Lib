@@ -28,8 +28,8 @@ public class AutonPointManager {
         this.kExampleAutonPoint1 = new AutonPoint(1.5134, 7, 0);
         this.kExampleAutonPoint2 = new AutonPoint(3, 6, 0);
         this.kExampleAutonPoint3 = new AutonPoint(5, 7, 0);
-        this.kExampleAutonPoint4 = new AutonPoint(7, 8 , 90);
-        this.kExampleAutonPoint = new AutonPoint(3, 3, 180);
+        this.kExampleAutonPoint4 = new AutonPoint(7, 8 , 0);
+        this.kExampleAutonPoint = new AutonPoint(3, 3, 0);
 
 
         configExampleAutonPointArray();

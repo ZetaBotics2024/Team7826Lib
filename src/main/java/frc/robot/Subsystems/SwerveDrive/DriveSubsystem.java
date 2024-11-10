@@ -112,8 +112,8 @@ public class DriveSubsystem extends SubsystemBase{
                 }
             }
             // Positive angles should be counter clockwise.
-            setModuleStates(desiredStates);
             Logger.recordOutput(SwerveDriveConstants.kSwerveDriveModuleStatesLoggerBase + "DesiredModuleStates", desiredStates);
+            setModuleStates(desiredStates);
         }
         
         logSwerveDrive();

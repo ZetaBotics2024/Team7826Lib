@@ -1,8 +1,11 @@
 package frc.robot.Commands.AutonCommands.ObjectCommands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Commands.AutonCommands.PIDPositioningAutonCommands.PIDGoToPose;
 import frc.robot.Subsystems.GameObjectTracking.GameObjectTracker;
@@ -18,12 +21,38 @@ public class PIDGoToObjectCommand extends Command {
     private double[] targetPoseAndHeading;
     private boolean foundTarget = false;
 
-    public PIDGoToObjectCommand(DriveSubsystem driveSubsystem) {
+    private Supplier<Boolean> isFinishedSupplier;
+
+    private Command finishedCommand = null;
+    private double startTime;
+
+    public PIDGoToObjectCommand(DriveSubsystem driveSubsystem, Supplier<Boolean> isFinishedSupplier) {
         this.driveSubsystem = driveSubsystem;
+
+        this.isFinishedSupplier = isFinishedSupplier;
+
+        addRequirements(this.driveSubsystem);
+    }
+
+    public PIDGoToObjectCommand(DriveSubsystem driveSubsystem, Command finishedCommand, double timeout) {
+        this(driveSubsystem, null);
+
+        this.finishedCommand = finishedCommand;
+
+        this.startTime = Timer.getFPGATimestamp();
+        
+        this.isFinishedSupplier = new Supplier<Boolean>() {
+            public Boolean get() {
+                return finishedCommand.isFinished() || startTime + timeout > Timer.getFPGATimestamp();
+            }
+        };
     }
 
     @Override
     public void initialize() {
+        if (finishedCommand != null) {
+            finishedCommand.schedule();
+        }
         // Find target position
         this.targetPoseAndHeading = GameObjectTracker.getTargetDistanceAndHeading(); // Returns hypotenuse, heading, x distance and y distance
         // Check that the pose isn't just zeroes
@@ -70,10 +99,7 @@ public class PIDGoToObjectCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        if (foundTarget) {
-            return this.goToPoseCommand.isFinished();
-        }
-        return true; // If no pose was made, exit
+        return isFinishedSupplier.get();
     }
 
 }

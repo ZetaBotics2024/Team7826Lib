@@ -91,9 +91,7 @@ public class SimpleGoToObjectCommand extends Command {
         );
         // Create position command
         if (foundTarget) {
-            finalPose = new Pose2d(new Translation2d(this.targetPoseAndHeading[2],
-                this.targetPoseAndHeading[3]),
-                Rotation2d.fromRadians(this.targetPoseAndHeading[1]));
+            finalPose = new Pose2d(new Translation2d(this.targetPoseAndHeading[2], this.targetPoseAndHeading[3]), Rotation2d.fromRadians(this.targetPoseAndHeading[1]));
             if (finalPose.getX() > finalPose.getY()) { // If X > Y
                 xVelocity = 1;
                 yVelocity = finalPose.getY() / finalPose.getX(); // Y = Y/X
@@ -142,7 +140,6 @@ public class SimpleGoToObjectCommand extends Command {
 
     public double getTargetRotationalVelocity() {
         Pose2d robotPose = driveSubsystem.getRobotPose();
-        //TODO: Swich To a Profiled PID Controller
         // Slow down as the difference between the target and final rotations gets smaller
         // This does assume that we're within 180 degrees, but that should be reasonable
         return (robotPose.getRotation().getRadians() - finalPose.getRotation().getRadians()) / Math.PI;
@@ -168,11 +165,6 @@ public class SimpleGoToObjectCommand extends Command {
 
     /*private boolean isWithinTolerance() {
         Pose2d robotPose = driveSubsystem.getRobotPose();
-        /* TODO: If we are assuming that the x and y parts of the object trcking data are
-         than we cant use it to see if we are done. Instead the common should take have to constructors
-         One that is the same as it is now(For use in deadline race common groups) and one that takes in
-         a boolean supplier that when it is true ends the commond
-        */ 
         return (
             Math.abs(robotPose.getX() - finalPose.getX()) <= VisionConstants.kGoToObjectPositionTolerance.getX() &&
             Math.abs(robotPose.getY() - finalPose.getY()) <= VisionConstants.kGoToObjectPositionTolerance.getY()

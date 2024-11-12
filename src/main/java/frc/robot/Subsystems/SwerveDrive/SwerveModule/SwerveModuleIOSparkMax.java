@@ -24,10 +24,10 @@ import frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTable
 
 public class SwerveModuleIOSparkMax implements SwerveModuleIO{
 
-    private String swerveModuleName; 
+    private final String swerveModuleName; 
 
-    private CANSparkMax driveMotor;
-    private CANSparkMax turnMotor;
+    private final CANSparkMax driveMotor;
+    private final CANSparkMax turnMotor;
 
     private SparkPIDController drivePIDController;
     private SparkPIDController turnPIDController;
@@ -48,40 +48,65 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
      */
     public SwerveModuleIOSparkMax(String swerveModuleName) {
         this.swerveModuleName = swerveModuleName;
-
+        int driveMotorID = -1;
+        int turnMotorID = -1;
+        int turningAbsoluteEncoderID = -1;
+        boolean driveMotorInverted;
+        boolean turnMotorInverted;
         switch (this.swerveModuleName) {
             case SwerveDriveConstants.kFrontLeftModuleName:
-                configDriveMotor(SwerveDriveConstants.kFrontLeftDriveMotorCANID, SwerveDriveConstants.kFrontLeftDriveMotorInverted);
-                configTurnMotor(SwerveDriveConstants.kFrontLeftTurnMotorCANID, SwerveDriveConstants.kFrontLeftTurnMotorInverted);
-                configTurningAbsoluteEncoder(SwerveDriveConstants.kFrontLeftTurningAbsoluteEncoderCANID, SwerveDriveConstants.kFrontLeftTurningAbsoluteEncoderOffsetRotations);
+                driveMotorID = SwerveDriveConstants.kFrontLeftDriveMotorCANID;
+                turnMotorID = SwerveDriveConstants.kFrontLeftTurnMotorCANID;
+                turningAbsoluteEncoderID = SwerveDriveConstants.kFrontLeftTurningAbsoluteEncoderCANID;
+                this.turningAbsoluteEncoderOffset = SwerveDriveConstants.kFrontLeftTurningAbsoluteEncoderOffsetRotations;
+                driveMotorInverted = SwerveDriveConstants.kFrontLeftDriveMotorInverted;
+                turnMotorInverted = SwerveDriveConstants.kFrontLeftTurnMotorInverted;
                 break;
             case SwerveDriveConstants.kFrontRightModuleName:
-                configDriveMotor(SwerveDriveConstants.kFrontRightDriveMotorCANID, SwerveDriveConstants.kFrontRightDriveMotorInverted);
-                configTurnMotor(SwerveDriveConstants.kFrontRightTurnMotorCANID, SwerveDriveConstants.kFrontRightTurnMotorInverted);
-                configTurningAbsoluteEncoder(SwerveDriveConstants.kFrontRightTurningAbsoluteEncoderCANID, SwerveDriveConstants.kFrontRightTurningAbsoluteEncoderOffsetRotations);
+                driveMotorID = SwerveDriveConstants.kFrontRightDriveMotorCANID;
+                turnMotorID = SwerveDriveConstants.kFrontRightTurnMotorCANID;
+                turningAbsoluteEncoderID = SwerveDriveConstants.kFrontRightTurningAbsoluteEncoderCANID;
+                this.turningAbsoluteEncoderOffset = SwerveDriveConstants.kFrontRightTurningAbsoluteEncoderOffsetRotations;
+                driveMotorInverted = SwerveDriveConstants.kFrontRightDriveMotorInverted;
+                turnMotorInverted = SwerveDriveConstants.kFrontRightTurnMotorInverted;
                 break;
             case SwerveDriveConstants.kBackLeftModuleName:
-                configDriveMotor(SwerveDriveConstants.kBackLeftDriveMotorCANID, SwerveDriveConstants.kBackLeftDriveMotorInverted);
-                configTurnMotor(SwerveDriveConstants.kBackLeftTurnMotorCANID, SwerveDriveConstants.kBackLeftTurnMotorInverted);
-                configTurningAbsoluteEncoder(SwerveDriveConstants.kBackLeftTurningAbsoluteEncoderCANID, SwerveDriveConstants.kBackLeftTurningAbsoluteEncoderOffsetRotations);
+                driveMotorID = SwerveDriveConstants.kBackLeftDriveMotorCANID;
+                turnMotorID = SwerveDriveConstants.kBackLeftTurnMotorCANID;
+                turningAbsoluteEncoderID = SwerveDriveConstants.kBackLeftTurningAbsoluteEncoderCANID;
+                this.turningAbsoluteEncoderOffset = SwerveDriveConstants.kBackLeftTurningAbsoluteEncoderOffsetRotations;
+                driveMotorInverted = SwerveDriveConstants.kBackLeftDriveMotorInverted;
+                turnMotorInverted = SwerveDriveConstants.kBackLeftTurnMotorInverted;
                 break;
             case SwerveDriveConstants.kBackRightModuleName:
-                configDriveMotor(SwerveDriveConstants.kBackRightDriveMotorCANID, SwerveDriveConstants.kBackRightDriveMotorInverted);
-                configTurnMotor(SwerveDriveConstants.kBackRightTurnMotorCANID, SwerveDriveConstants.kBackRightTurnMotorInverted);
-                configTurningAbsoluteEncoder(SwerveDriveConstants.kBackRightTurningAbsoluteEncoderCANID, SwerveDriveConstants.kBackRightTurningAbsoluteEncoderOffsetRotations);
+                driveMotorID = SwerveDriveConstants.kBackRightDriveMotorCANID;
+                turnMotorID = SwerveDriveConstants.kBackRightTurnMotorCANID;
+                turningAbsoluteEncoderID = SwerveDriveConstants.kBackRightTurningAbsoluteEncoderCANID;
+                this.turningAbsoluteEncoderOffset = SwerveDriveConstants.kBackRightTurningAbsoluteEncoderOffsetRotations;
+                driveMotorInverted = SwerveDriveConstants.kBackRightDriveMotorInverted;
+                turnMotorInverted = SwerveDriveConstants.kBackRightTurnMotorInverted;
                 break;
             default:
                 throw new RuntimeException("Invalid Module Name: " + swerveModuleName + ", Please change to a valid name. List of valid names can be found in SwerveModuleConstants");
         }
 
+        this.driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
+        this.turnMotor = new CANSparkMax(turnMotorID, MotorType.kBrushless);
+        this.turnAbsoluteEncoder = new CANcoder(turningAbsoluteEncoderID, SwerveDriveConstants.kCANLoopName);
+        
         this.driveRelativeEncoder = this.driveMotor.getEncoder();
         this.turnRelativeEncoder = this.turnMotor.getEncoder();
-
+        this.driveMotor.restoreFactoryDefaults();
+        this.turnMotor.restoreFactoryDefaults();
+        configDriveMotor(driveMotorInverted);
+        configTurnMotor(turnMotorInverted);
         configDirvePID();
         configTurnPID();
-
         this.driveMotor.burnFlash();
         this.turnMotor.burnFlash();
+
+        this.turnAbsoluteEncoder = new CANcoder(turningAbsoluteEncoderID);
+        configTurningAbsoluteEncoder();
 
         Timer.delay(1); // We should see if we can reduce this to dramaticly increase robot boot time. 
         resetTurningMotorToAbsolute();
@@ -91,13 +116,9 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
 
     /**
      * Configures the drive motor.
-     * @param driveMotorID Integer: The CANID for the drive motor
      * @param driveMotorInverted Boolean: Wether or not the drive motor is inverted
      */
-    private void configDriveMotor(int driveMotorID, boolean driveMotorInverted) {
-        this.driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
-        this.driveMotor.restoreFactoryDefaults();
-
+    private void configDriveMotor(boolean driveMotorInverted) {
         this.driveMotor.setInverted(driveMotorInverted);
         this.driveMotor.setIdleMode(IdleMode.kBrake);
 
@@ -116,7 +137,6 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
         this.drivePIDController = this.driveMotor.getPIDController();
         
         this.drivePIDController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
-
         this.drivePIDController.setP(SwerveModuleConstants.kPModuleDrivePIDValue, 0);
         this.drivePIDController.setI(SwerveModuleConstants.kIModuleDrivePIDValue, 0);
         this.drivePIDController.setD(SwerveModuleConstants.kDModuleDrivePIDValue, 0);
@@ -124,7 +144,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
         this.drivePIDController.setIZone(SwerveModuleConstants.kIZoneModuleDrivePIDValue, 0);
         this.drivePIDController.setOutputRange(SwerveModuleConstants.kDriveMotorMinPercentOutput, SwerveModuleConstants.kDriveMotorMaxPercentOutput);
 
-         this.driveMotorPIDConstantTuner = new NetworkTablesTunablePIDConstants("SwerveModule/DrivePIDValues",
+        this.driveMotorPIDConstantTuner = new NetworkTablesTunablePIDConstants("SwerveModule/DrivePIDValues",
             SwerveModuleConstants.kPModuleDrivePIDValue,
             SwerveModuleConstants.kIModuleDrivePIDValue,
             SwerveModuleConstants.kDModuleDrivePIDValue, 0);
@@ -132,13 +152,9 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
 
     /**
      * Configures the turn motor.
-     * @param turnMotorID Integer: The CANID for the turn motor
      * @param turnMotorInverted Boolean: Wether or not the turn motor is inverted
      */
-    private void configTurnMotor(int turnMotorID, boolean turnMotorInverted) {
-        this.turnMotor = new CANSparkMax(turnMotorID, MotorType.kBrushless);
-        this.turnMotor.restoreFactoryDefaults();
-
+    private void configTurnMotor(boolean turnMotorInverted) {
         this.turnMotor.setInverted(turnMotorInverted);
         this.turnMotor.setIdleMode(IdleMode.kBrake);
 
@@ -170,13 +186,9 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
 
     /**
      * Configures the turnAbsoluteEncoder
-     * @param turnAbsoluteEncoderID Integer: The CANID of the turnAbsoluteEncoder
-     * @param turningAbsoluteEncoderOffset Double: The offset of the turning absolute encoder. i.e the difforence between the encoders value and whare the wheel is straight.
-     * Should be calucluted by useing a straight edge to make all wheels perfectly straight forward(Make sure all wheels are in the same orientation). 
-     * From there the value can be gotton from Pheonix Tuner. 
+
      */
-    private void configTurningAbsoluteEncoder(int turnAbsoluteEncoderID, double turningAbsoluteEncoderOffset) {
-        this.turnAbsoluteEncoder = new CANcoder(turnAbsoluteEncoderID, SwerveDriveConstants.kCANLoopName);
+    private void configTurningAbsoluteEncoder() {
         CANcoderConfiguration turningAbsoluteEncoderConfig = new CANcoderConfiguration();
         MagnetSensorConfigs magnetConfigs = new MagnetSensorConfigs();
         magnetConfigs.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
@@ -184,8 +196,6 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
         magnetConfigs.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         turningAbsoluteEncoderConfig.MagnetSensor = magnetConfigs;
         this.turnAbsoluteEncoder.getConfigurator().apply(turningAbsoluteEncoderConfig);
-
-        this.turningAbsoluteEncoderOffset = turningAbsoluteEncoderOffset;
     }
 
     /**

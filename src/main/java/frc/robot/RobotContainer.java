@@ -21,7 +21,7 @@ import frc.robot.Utils.JoystickUtils.ControllerInterface;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {  
-    private RobotCreater robotCreater;
+    private RobotCreator robotCreator;
     private AutonManager autonManager;
 
     // Controller Decloration and Instantiation
@@ -43,9 +43,9 @@ public class RobotContainer {
      */
     public RobotContainer() {
         // Creates all subsystems. Must be first call. 
-        this.robotCreater = new RobotCreater();
+        this.robotCreator = new RobotCreator();
 
-        this.driveSubsystem = this.robotCreater.getDriveSubsystem();
+        this.driveSubsystem = this.robotCreator.getDriveSubsystem();
         this.driveCommandFactory = new DriveCommandFactory(this.driveSubsystem, this.driverController);   
         this.fieldOrientedDriveCommand = this.driveCommandFactory.createFieldOrientedDriveCommand();
         this.driveSubsystem.setDefaultCommand(this.fieldOrientedDriveCommand);

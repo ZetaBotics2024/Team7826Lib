@@ -183,7 +183,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
      /**
       * Configures the drive motor PID Controller. 
       */
-    private void configDirvePID() {
+    private void configDrivePID() {
         this.drivePIDController.setP(SwerveModuleConstants.kPModuleDrivePIDValue, 0);
         this.drivePIDController.setI(SwerveModuleConstants.kIModuleDrivePIDValue, 0);
         this.drivePIDController.setD(SwerveModuleConstants.kDModuleDrivePIDValue, 0);

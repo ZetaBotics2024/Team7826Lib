@@ -92,25 +92,75 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
 
         this.driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
         this.turnMotor = new CANSparkMax(turnMotorID, MotorType.kBrushless);
-        this.turnAbsoluteEncoder = new CANcoder(turningAbsoluteEncoderID, SwerveDriveConstants.kCANLoopName);
         
         this.driveRelativeEncoder = this.driveMotor.getEncoder();
+        this.turnAbsoluteEncoder = new CANcoder(turningAbsoluteEncoderID, SwerveDriveConstants.kCANLoopName);
         this.turnRelativeEncoder = this.turnMotor.getEncoder();
+    
+        this.drivePIDController = this.driveMotor.getPIDController();
+        this.turnPIDController = this.turnMotor.getPIDController();
+
+        this.drivePIDController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
+
         this.driveMotor.restoreFactoryDefaults();
         this.turnMotor.restoreFactoryDefaults();
-        configDriveMotor(driveMotorInverted);
-        configTurnMotor(turnMotorInverted);
-        configDirvePID();
-        configTurnPID();
+
+        this.driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+        this.driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+        this.driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
+
+        this.turnMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+        this.turnMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
+        this.turnMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
+        
+        this.driveMotor.setIdleMode(IdleMode.kBrake);
+        this.turnMotor.setIdleMode(IdleMode.kBrake);
+
+        this.driveMotor.setInverted(driveMotorInverted);
+        this.turnMotor.setInverted(turnMotorInverted);
+
+        this.driveMotor.setSmartCurrentLimit(SwerveModuleConstants.kDriveMotorMaxAmpsSparkMax);
+        this.turnMotor.setSmartCurrentLimit(SwerveModuleConstants.kTurnMotorMaxAmpsSparkMax);
+
+        this.drivePIDController.setP(SwerveModuleConstants.kPModuleDrivePIDValue, 0);
+        this.drivePIDController.setI(SwerveModuleConstants.kIModuleDrivePIDValue, 0);
+        this.drivePIDController.setD(SwerveModuleConstants.kDModuleDrivePIDValue, 0);
+        this.drivePIDController.setFF(SwerveModuleConstants.kFFModuleDrivePIDValue, 0);
+        this.drivePIDController.setIZone(SwerveModuleConstants.kIZoneModuleDrivePIDValue, 0);
+        this.drivePIDController.setOutputRange(SwerveModuleConstants.kDriveMotorMinPercentOutput, SwerveModuleConstants.kDriveMotorMaxPercentOutput);
+
+        this.driveMotorPIDConstantTuner = new NetworkTablesTunablePIDConstants("SwerveModule/DrivePIDValues",
+            SwerveModuleConstants.kPModuleDrivePIDValue,
+            SwerveModuleConstants.kIModuleDrivePIDValue,
+            SwerveModuleConstants.kDModuleDrivePIDValue, 0);
+
+        this.turnPIDController.setP(SwerveModuleConstants.kPModuleTurnPIDValue, 0);
+        this.turnPIDController.setI(SwerveModuleConstants.kIModuleTurnPIDValue, 0);
+        this.turnPIDController.setD(SwerveModuleConstants.kDModuleTurnPIDValue, 0);
+        this.turnPIDController.setFF(SwerveModuleConstants.kFFModuleTurnPIDValue, 0);
+        this.turnPIDController.setIZone(SwerveModuleConstants.kIZoneModuleTurnPIDValue, 0);
+        this.turnPIDController.setOutputRange(SwerveModuleConstants.kTurnMotorMinPercentOutput, SwerveModuleConstants.kTurnMotorMaxPercentOutput);
+
+        this.turnMotorPIDConstantTuner = new NetworkTablesTunablePIDConstants("SwerveModule/TurnPIDValues",
+            SwerveModuleConstants.kPModuleTurnPIDValue,
+            SwerveModuleConstants.kIModuleTurnPIDValue,
+            SwerveModuleConstants.kDModuleTurnPIDValue, 0);
+
+        this.driveMotor.enableVoltageCompensation(12);
+            
         this.driveMotor.burnFlash();
         this.turnMotor.burnFlash();
 
-        this.turnAbsoluteEncoder = new CANcoder(turningAbsoluteEncoderID);
-        configTurningAbsoluteEncoder();
+        CANcoderConfiguration turningAbsoluteEncoderConfig = new CANcoderConfiguration();
+        MagnetSensorConfigs magnetConfigs = new MagnetSensorConfigs();
+        magnetConfigs.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+        magnetConfigs.MagnetOffset = 0.0f;
+        magnetConfigs.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        turningAbsoluteEncoderConfig.MagnetSensor = magnetConfigs;
+        this.turnAbsoluteEncoder.getConfigurator().apply(turningAbsoluteEncoderConfig);
 
         Timer.delay(1); // We should see if we can reduce this to dramaticly increase robot boot time. 
         resetTurningMotorToAbsolute();
-
         addInitLogs();
     }
 
@@ -134,9 +184,6 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
       * Configures the drive motor PID Controller. 
       */
     private void configDirvePID() {
-        this.drivePIDController = this.driveMotor.getPIDController();
-        
-        this.drivePIDController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
         this.drivePIDController.setP(SwerveModuleConstants.kPModuleDrivePIDValue, 0);
         this.drivePIDController.setI(SwerveModuleConstants.kIModuleDrivePIDValue, 0);
         this.drivePIDController.setD(SwerveModuleConstants.kDModuleDrivePIDValue, 0);
@@ -158,10 +205,6 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
         this.turnMotor.setInverted(turnMotorInverted);
         this.turnMotor.setIdleMode(IdleMode.kBrake);
 
-        this.turnMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-        this.turnMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
-        this.turnMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
-
         this.driveMotor.setSmartCurrentLimit(SwerveModuleConstants.kTurnMotorMaxAmpsSparkMax);
     }
     
@@ -169,8 +212,6 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO{
       * Configures the turn motor PID Controller. 
       */
     private void configTurnPID() {
-        this.turnPIDController = this.turnMotor.getPIDController();
-
         this.turnPIDController.setP(SwerveModuleConstants.kPModuleTurnPIDValue, 0);
         this.turnPIDController.setI(SwerveModuleConstants.kIModuleTurnPIDValue, 0);
         this.turnPIDController.setD(SwerveModuleConstants.kDModuleTurnPIDValue, 0);

@@ -88,6 +88,8 @@ public final class DrivetrainConstants {
         public static final String kSwerveDriveModuleStatesLoggerBase = "SwerveDrive/ModuleStates/";
         public static final String kSwerveDriveChassisSpeedLoggerBase = "SwerveDrive/ChassisSpeeds/";
         public static final String kSwerveDriveDesiredChassisSpeedLoggerBase = "SwerveDrive/DesiredChassisSpeeds/";
+        public static final double kVoltageForMaxSpeed = 12;
+        public static final double kVoltageFeedforward = 0.1;
     }
 
     /**

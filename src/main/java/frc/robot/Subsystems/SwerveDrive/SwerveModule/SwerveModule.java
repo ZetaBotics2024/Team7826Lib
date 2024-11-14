@@ -2,6 +2,8 @@ package frc.robot.Subsystems.SwerveDrive.SwerveModule;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -61,8 +63,19 @@ public class SwerveModule {
          
         double desiredRPM = optimizedState.speedMetersPerSecond / SwerveModuleConstants.kDriveConversionVelocityFactor;
         this.swerveModuleIO.setDesiredModuleVelocityRPM(desiredRPM);
-        //this.swerveModuleIO.setDesiredModuleDriveVoltage(driveVoltage);
+        //this.swerveModuleIO.setDesiredModuleDriveVoltage(metersPerSecondToVoltage(optimizedState.speedMetersPerSecond));
         this.swerveModuleIO.setDesiredModuleAngle(optimizedState.angle);
+    }
+
+    public double metersPerSecondToVoltage(double desiredMetersPerSecond) {
+        double percentOfMaxSpeed = desiredMetersPerSecond / SwerveDriveConstants.kMaxSpeedMetersPerSecond;
+        double appliedFeedforwardVoltage = (desiredMetersPerSecond != 0 ? SwerveDriveConstants.kVoltageFeedforward : 0) *
+            Math.signum(desiredMetersPerSecond);
+        double unclampedVoltage = percentOfMaxSpeed *
+            SwerveDriveConstants.kVoltageForMaxSpeed +
+            appliedFeedforwardVoltage;
+        double clampedVoltage = MathUtil.clamp(unclampedVoltage, -SwerveDriveConstants.kVoltageForMaxSpeed, SwerveDriveConstants.kVoltageForMaxSpeed);
+        return clampedVoltage;
     }
     
     /**

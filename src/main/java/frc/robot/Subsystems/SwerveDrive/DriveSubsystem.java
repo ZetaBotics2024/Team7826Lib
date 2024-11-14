@@ -69,9 +69,20 @@ public class DriveSubsystem extends SubsystemBase{
     }
 
     public void drive(double desiredXVelocity, double desiredYVelocity, double desiredRotationalVelocity) {
-        this.desiredChassisSpeeds =
-            ChassisSpeeds.fromFieldRelativeSpeeds(desiredXVelocity, desiredYVelocity,
-                desiredRotationalVelocity, this.gyroInputs.yawAngle);   
+        this.drive(desiredXVelocity, desiredYVelocity, desiredRotationalVelocity, true);
+    }
+
+    public void drive(double desiredXVelocity, double desiredYVelocity, double desiredRotationalVelocity, boolean isFieldRelative) {
+        if (isFieldRelative) {
+            this.desiredChassisSpeeds =
+                ChassisSpeeds.fromFieldRelativeSpeeds(desiredXVelocity, desiredYVelocity,
+                    desiredRotationalVelocity, this.gyroInputs.yawAngle);   
+        }
+        else {
+            this.desiredChassisSpeeds =
+                new ChassisSpeeds(desiredXVelocity, desiredYVelocity,
+                    desiredRotationalVelocity);   
+        }
     }
 
     public void drive(ChassisSpeeds desiredChassisSpeeds) {

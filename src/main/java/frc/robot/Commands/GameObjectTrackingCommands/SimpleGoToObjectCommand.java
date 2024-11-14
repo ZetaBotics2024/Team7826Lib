@@ -151,16 +151,14 @@ public class SimpleGoToObjectCommand extends Command {
         double rotationVelocity = this.rotationPIDController.calculate(this.driveSubsystem.getRobotPose().getRotation().getRadians(),
             finalPose.getRotation().getRadians());
         if (foundTarget) {
-            this.driveSubsystem.drive(xVelocity, yVelocity, rotationVelocity);
+            this.driveSubsystem.drive(xVelocity, yVelocity, rotationVelocity, false);
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        if (foundTarget) {
-            // Stop the robot
-            this.driveSubsystem.drive(0, 0, 0);
-        }
+        // Stop the robot
+        this.driveSubsystem.drive(0, 0, 0);
     }
 
     /*private boolean isWithinTolerance() {

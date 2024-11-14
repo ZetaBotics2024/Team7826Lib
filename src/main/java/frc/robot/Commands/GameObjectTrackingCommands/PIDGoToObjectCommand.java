@@ -92,9 +92,7 @@ public class PIDGoToObjectCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        if (foundTarget) {
             this.goToPoseCommand.end(interrupted);
-        }
     }
 
     @Override

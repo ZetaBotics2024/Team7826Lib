@@ -14,11 +14,12 @@ public class DesiredMetersPerSecondToVoltage {
     //public static final double voltageAtMaxSpeed = 12.12027;
 
     public static double metersPerSecondToVoltageRegression(double mps) {
-        return 2.734 * mps + 0.1679;
+        return Math.abs(2.734 * mps + 0.1679);
     }
 
     public static double metersPerSecondToVoltage(double desiredMetersPerSecond) {
-        return (
+
+        return Math.signum(desiredMetersPerSecond) * ( // Apply correct velocity direction. This is needed since the function is not even.
             (desiredMetersPerSecond < minSpeedMPS) ? // If speed is less than the minimum (governed by static friction)...
             voltageAtMinSpeed : // ...return voltage at minimum speed
             /*(desiredMetersPerSecond > maxSpeedMPS) ? // If speed is greater than the maximum (governed by motor quality)...

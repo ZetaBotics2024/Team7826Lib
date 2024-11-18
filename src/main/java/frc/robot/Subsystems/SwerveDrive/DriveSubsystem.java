@@ -76,7 +76,7 @@ public class DriveSubsystem extends SubsystemBase{
         if (isFieldRelative) {
             this.desiredChassisSpeeds =
                 ChassisSpeeds.fromFieldRelativeSpeeds(desiredXVelocity, desiredYVelocity,
-                    desiredRotationalVelocity, this.gyroInputs.yawAngle);   
+                    desiredRotationalVelocity, this.poseEstimatorSubsystem.getRobotPose().getRotation());   
         }
         else {
             this.desiredChassisSpeeds =

@@ -33,10 +33,10 @@ public final class AutonConstants {
     public final class PathPlannerAutonConstants {
         public static PIDConstants kTranslationPIDConstants = RobotModeConstants.kIsNotSim ? new PIDConstants(2, 0, 0) : new PIDConstants(2, 0, 0);
         public static PIDConstants kRotationPIDConstants = RobotModeConstants.kIsNotSim ? new PIDConstants(3.5, 0, 0) : new PIDConstants(3.5, 0, 0);
-        public static final double kMaxModuleSpeedMetersPerSecond = RobotModeConstants.kIsNotSim ? 4.22 : 4.22;
-        public static final double kMaxTranslationalAccelerationInMetersPerSecond = RobotModeConstants.kIsNotSim ? 1.4184 : 1.4184;
-        public static final double kMaxRotationalSpeedInDegrees = RobotModeConstants.kIsNotSim ? 566.76985 : 566.76985;
-        public static final double kMaxRotationalAccelerationInDegrees = RobotModeConstants.kIsNotSim ? 131.83759 : 131.83759;
+        public static final double kMaxModuleSpeedMetersPerSecond = RobotModeConstants.kIsNotSim ? 3.4 : 4.22;
+        public static final double kMaxTranslationalAccelerationInMetersPerSecond = RobotModeConstants.kIsNotSim ? 2.881 : 1.4184;//9.261
+        public static final double kMaxRotationalSpeedInDegrees = RobotModeConstants.kIsNotSim ? Math.toDegrees(7.5) : 566.76985;
+        public static final double kMaxRotationalAccelerationInDegrees = RobotModeConstants.kIsNotSim ? Math.toDegrees(9.146) : 131.83759;
         public static final double kTranslationToleranceMeters = RobotModeConstants.kIsNotSim ? 0.03 : 0.03; 
         public static final double kRotationToleranceDegrees = RobotModeConstants.kIsNotSim ? 3 : 3; 
     }
@@ -45,14 +45,14 @@ public final class AutonConstants {
         public static double kPTranslationPIDConstant = RobotModeConstants.kIsNotSim ? 3 : 3;
         public static double kITranslationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : 0;
         public static double kDTranslationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : 0;
-        public static final double kMaxTranslationalSpeedInMetersPerSecond = RobotModeConstants.kIsNotSim ? 4.22 : 4.22;
-        public static final double kMaxTranslationalAccelerationInMetersPerSecond = RobotModeConstants.kIsNotSim ? 1.087 : 1.087;
+        public static final double kMaxTranslationalSpeedInMetersPerSecond = RobotModeConstants.kIsNotSim ? 3.4 : 4.22;
+        public static final double kMaxTranslationalAccelerationInMetersPerSecond = RobotModeConstants.kIsNotSim ? 2.881 : 1.087;
 
         public static double kPRotationPIDConstant = RobotModeConstants.kIsNotSim ? .59 : .59;
         public static double kIRotationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : 0;
         public static double kDRotationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : 0;
-        public static final double kMaxRotationalSpeedInRadsPerSecond = RobotModeConstants.kIsNotSim ? 9.89199998351 : 9.89199998351;
-        public static final double kMaxRotationalAccelerationInRadsPerSecond = RobotModeConstants.kIsNotSim ? 2.30100002339 : 2.30100002339;
+        public static final double kMaxRotationalSpeedInRadsPerSecond = RobotModeConstants.kIsNotSim ? 7.5 : 9.89199998351;
+        public static final double kMaxRotationalAccelerationInRadsPerSecond = RobotModeConstants.kIsNotSim ? 9.146 : 2.30100002339;
         public static final TrapezoidProfile.Constraints kRotationPIDControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxRotationalSpeedInRadsPerSecond, kMaxRotationalAccelerationInRadsPerSecond);
 

@@ -265,6 +265,7 @@ public class WPILibTrajectoryCommandCreator extends Command{
     public void initialize() {
         Logger.recordOutput("Auton/Started", true);
         this.startTime = Timer.getFPGATimestamp();
+        configureWPILibDriveController();
         LEDManager.setSolidColor(new int[] {255, 0, 0});
     }
 

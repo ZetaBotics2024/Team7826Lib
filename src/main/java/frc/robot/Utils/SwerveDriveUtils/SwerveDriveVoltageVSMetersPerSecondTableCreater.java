@@ -27,8 +27,9 @@ public class SwerveDriveVoltageVSMetersPerSecondTableCreater {
         } else {
             if(currentIndex < voltageVSMetersPerSecondTable[0].length) {
                 if(waitForNextVoltageTableCheck.hasTimePassed()) {
-                    voltageVSMetersPerSecondTable[0][currentIndex] = moduleSpeedMetersPerSecond;
-                    voltageVSMetersPerSecondTable[1][currentIndex] = voltageTableCurrentVoltage;
+                    voltageVSMetersPerSecondTable[0][currentIndex] = voltageTableCurrentVoltage;
+                    voltageVSMetersPerSecondTable[1][currentIndex] = moduleSpeedMetersPerSecond;
+
                     currentIndex++;
                     setVoltageMethod.accept(voltageTableCurrentVoltage);
                     voltageTableCurrentVoltage += voltageSpacing;

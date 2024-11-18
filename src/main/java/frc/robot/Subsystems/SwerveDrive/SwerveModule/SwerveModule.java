@@ -8,9 +8,12 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
+import frc.robot.Utils.CommandUtils.Wait;
+import frc.robot.Utils.SwerveDriveUtils.SwerveDriveVoltageVSMetersPerSecondTableCreater;
 import frc.robot.Utils.SwerveDriveUtils.SwerveModuleAngleOptimizer;
 import frc.robot.Subsystems.SwerveDrive.SwerveModule.SwerveModuleIOInputsAutoLogged;
 
@@ -18,8 +21,8 @@ public class SwerveModule {
     
     private final SwerveModuleIO swerveModuleIO;
     private final SwerveModuleIOInputsAutoLogged swerveModuleInputs = new SwerveModuleIOInputsAutoLogged();
-
     private String swerveModuleName = "NoModuleNameSet";
+    private SwerveDriveVoltageVSMetersPerSecondTableCreater voltageTableCreator;
 
     /**
      * Creates a Swerve Module Object and compleates all initialization
@@ -29,6 +32,7 @@ public class SwerveModule {
     public SwerveModule(SwerveModuleIO swerveModuleIO, String swerveModuleName) {
         this.swerveModuleIO = swerveModuleIO;
         this.swerveModuleName = swerveModuleName;
+        this.voltageTableCreator = new SwerveDriveVoltageVSMetersPerSecondTableCreater();
     }
 
     /**
@@ -44,6 +48,12 @@ public class SwerveModule {
      */
     public void periodic() {
         updateInputs();
+        //if(DriverStation.isEnabled()) {
+        //    voltageTableCreator.createVoltageVSMetersPerSecondTable(swerveModuleName,
+        //    13, .1, 1, getDriveMotorSpeedInMetersPerSecond(),
+        //    this.swerveModuleIO::setDesiredModuleDriveVoltage);
+        //}
+        
         Logger.processInputs(SwerveModuleConstants.kSwerveModuleOutputLoggerBase + swerveModuleName, swerveModuleInputs);
     }
 
@@ -62,8 +72,8 @@ public class SwerveModule {
          */
          
         double desiredRPM = optimizedState.speedMetersPerSecond / SwerveModuleConstants.kDriveConversionVelocityFactor;
-        this.swerveModuleIO.setDesiredModuleVelocityRPM(desiredRPM);
-        //this.swerveModuleIO.setDesiredModuleDriveVoltage(metersPerSecondToVoltage(optimizedState.speedMetersPerSecond));
+        //this.swerveModuleIO.setDesiredModuleVelocityRPM(desiredRPM);
+        this.swerveModuleIO.setDesiredModuleDriveVoltage(metersPerSecondToVoltage(optimizedState.speedMetersPerSecond));
         this.swerveModuleIO.setDesiredModuleAngle(optimizedState.angle);
     }
 

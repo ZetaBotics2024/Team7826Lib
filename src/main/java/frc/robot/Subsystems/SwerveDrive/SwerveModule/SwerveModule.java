@@ -13,6 +13,7 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveModuleConstants;
 import frc.robot.Utils.CommandUtils.Wait;
+import frc.robot.Utils.SwerveDriveUtils.DesiredMetersPerSecondToVoltage;
 import frc.robot.Utils.SwerveDriveUtils.SwerveDriveVoltageVSMetersPerSecondTableCreater;
 import frc.robot.Utils.SwerveDriveUtils.SwerveModuleAngleOptimizer;
 import frc.robot.Subsystems.SwerveDrive.SwerveModule.SwerveModuleIOInputsAutoLogged;
@@ -74,6 +75,7 @@ public class SwerveModule {
         double desiredRPM = optimizedState.speedMetersPerSecond / SwerveModuleConstants.kDriveConversionVelocityFactor;
         //this.swerveModuleIO.setDesiredModuleVelocityRPM(desiredRPM);
         this.swerveModuleIO.setDesiredModuleDriveVoltage(metersPerSecondToVoltage(optimizedState.speedMetersPerSecond));
+        //this.swerveModuleIO.setDesiredModuleDriveVoltage(DesiredMetersPerSecondToVoltage.metersPerSecondToVoltage(optimizedState.speedMetersPerSecond));//metersPerSecondToVoltage(optimizedState.speedMetersPerSecond));
         this.swerveModuleIO.setDesiredModuleAngle(optimizedState.angle);
     }
 

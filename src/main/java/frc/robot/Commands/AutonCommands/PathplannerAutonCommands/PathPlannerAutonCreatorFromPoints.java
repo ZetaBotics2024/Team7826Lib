@@ -21,7 +21,7 @@ public class PathPlannerAutonCreatorFromPoints {
         AutonPoint endPoint = points[points.length-1];
         Pose2d realStartPoint = new Pose2d(startPoint.getAutonPoint().getTranslation(), new Rotation2d());
         Pose2d realEndPoint = new Pose2d(endPoint.getAutonPoint().getTranslation(), new Rotation2d());
-   
+        
         ArrayList<Pose2d> pointsAsPose2d = new ArrayList<>();
         pointsAsPose2d.add(realStartPoint);
         for(int i = 1; i < points.length-1; i++) {

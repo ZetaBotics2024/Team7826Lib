@@ -27,15 +27,15 @@ public class ExampleAuton{
         driveSubsystem.setRobotPose(autonPointManager.kExampleStartPoint);
         
         ArrayList<Command> autonCommands = new ArrayList<>();
-        autonCommands.add(ChoreoTrajectoryCommandCreator.createChoreoTrajectoryCommand("ExampleAutonChoreo", driveSubsystem));
-        autonCommands.add(PathPlannerAutonCreatorFromPoints.createAutonCommand(autonPointManager.kExampleAutonPointArray, 10, driveSubsystem));
-        autonCommands.add(new PIDGoToPose(autonPointManager.kExampleAutonPoint, driveSubsystem));
-        autonCommands.add(PathPlannerAutonCreatorFromFile.createAutonCommand(autonPointManager.kExampleAutonName,
-           autonPointManager.kExampleAutonEndPoint, 10, driveSubsystem));
-        autonCommands.add(new WPILibTrajectoryCommandCreator("WPILIBExampleAuton",
-            Rotation2d.fromDegrees(130),
-            autonPointManager.kExampleWpilibTrajectoryConfig,
-            driveSubsystem));
+        //autonCommands.add(ChoreoTrajectoryCommandCreator.createChoreoTrajectoryCommand("ExampleAutonChoreo", driveSubsystem));
+        //autonCommands.add(PathPlannerAutonCreatorFromPoints.createAutonCommand(autonPointManager.kExampleAutonPointArray, 10, driveSubsystem));
+        //autonCommands.add(new PIDGoToPose(autonPointManager.kExampleAutonPoint, driveSubsystem));
+        //autonCommands.add(PathPlannerAutonCreatorFromFile.createAutonCommand(autonPointManager.kExampleAutonName,
+        //   autonPointManager.kExampleAutonEndPoint, 10, driveSubsystem));
+        //autonCommands.add(new WPILibTrajectoryCommandCreator("WPILIBExampleAuton",
+        //    Rotation2d.fromDegrees(130),
+        //    autonPointManager.kExampleWpilibTrajectoryConfig,
+        //    driveSubsystem));
         autonCommands.add(new WPILibTrajectoryCommandCreator("ExampleAuton", autonPointManager.kExampleAutonPointArray, driveSubsystem));
        
 

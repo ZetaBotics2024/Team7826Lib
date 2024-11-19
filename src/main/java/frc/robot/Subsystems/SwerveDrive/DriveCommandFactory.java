@@ -34,11 +34,11 @@ public class DriveCommandFactory {
     }
 
     public SwerveDriveTranslationProfiler createSwerveDriveTranslationProfiler() {
-        return new SwerveDriveTranslationProfiler(this.driveSubsystem, 4.22);
+        return new SwerveDriveTranslationProfiler(this.driveSubsystem, 3.4);
     }
 
     public SwerveDriveRotationProfiler createSwerveDriveRotationProfiler() {
-        return new SwerveDriveRotationProfiler(driveSubsystem, 9.892);
+        return new SwerveDriveRotationProfiler(driveSubsystem, 7.5);//9.892);
     }
 
     public Command createResetOdometryCommand() {

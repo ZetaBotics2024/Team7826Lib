@@ -1,5 +1,7 @@
 package frc.robot.Commands.AutonCommands.PathplannerAutonCommands;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
@@ -29,12 +31,14 @@ public class PathPlannerFollowPath extends Command{
         this.followPathCommand = followPathCommand;
         this.hardCutOffTimer = new Wait(maxTime);
         this.driveSubsystem = driveSubsystem;
+        
     }
     
     @Override
     public void initialize() {
         this.followPathCommand.schedule();
         this.hardCutOffTimer.startTimer();
+        Logger.recordOutput("PathPlanenrGoalPosition", this.endPoint);
     }
 
     @Override

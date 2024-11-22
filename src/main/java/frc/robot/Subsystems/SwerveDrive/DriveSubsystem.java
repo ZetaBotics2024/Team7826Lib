@@ -91,6 +91,10 @@ public class DriveSubsystem extends SubsystemBase{
   
     public void stop() {
         this.drive(0, 0, 0);
+        this.frontLeftSwerveModule.stopModuleDrive();
+        this.frontRightSwerveModule.stopModuleDrive();
+        this.backLeftSwerveModule.stopModuleDrive();
+        this.backRightSwerveModule.stopModuleDrive();
     }
 
     /**

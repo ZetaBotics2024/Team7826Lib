@@ -6,6 +6,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Auton.Autons.AutonNewWPILIbSystem;
 import frc.robot.Auton.Autons.ExampleAuton;
 import frc.robot.Subsystems.SwerveDrive.DriveCommandFactory;
 import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
@@ -14,6 +15,7 @@ import frc.robot.Utils.CommandUtils.CustomWaitCommand;
 public class AutonManager {
     // Decloration of auton names
     private final String exampleAutonName = "ExampleAuton";
+    private final String autonNewWPILibSystemName = "TestAuton";
 
     // Decloration of auton chooser
     private LoggedDashboardChooser<String> autonChooser;
@@ -36,7 +38,8 @@ public class AutonManager {
 
     private void addAllAutons() {
         addAuton(exampleAutonName);
-        this.autonChooser.addDefaultOption(exampleAutonName, exampleAutonName);
+        addAuton(autonNewWPILibSystemName);
+        //this.autonChooser.addDefaultOption(exampleAutonName, exampleAutonName);
     }
 
     private void addAuton(String autonName) {
@@ -51,9 +54,13 @@ public class AutonManager {
         // This system allows for auton to be run multable times in one robot init.
         // If this results in a noticable wait before the start of motion this can be swaped out before comp
         Command selectedAuton;
+        Logger.recordOutput("Selected Auto", autonChooser.get());
         switch (autonChooser.get()) {
             case exampleAutonName:
-                selectedAuton = ExampleAuton.getExampleAuton(this.autonPointManager, this.driveCommandFactory, this.driveSubsystem);
+                selectedAuton = ExampleAuton.getAuton(this.autonPointManager, this.driveCommandFactory, this.driveSubsystem);
+                break;
+            case autonNewWPILibSystemName:
+                selectedAuton = AutonNewWPILIbSystem.getAuton(this.autonPointManager, this.driveCommandFactory, this.driveSubsystem);
                 break;
             default:
                 selectedAuton = new Command() {};

@@ -89,6 +89,10 @@ public class SwerveModule {
         double clampedVoltage = MathUtil.clamp(unclampedVoltage, -SwerveDriveConstants.kVoltageForMaxSpeed, SwerveDriveConstants.kVoltageForMaxSpeed);
         return clampedVoltage;
     }
+
+    public void stopModuleDrive() {
+        this.swerveModuleIO.setDesiredModuleDriveVoltage(0);
+    }
     
     /**
      * Gets the position of the module

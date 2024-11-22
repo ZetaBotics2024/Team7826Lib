@@ -14,8 +14,8 @@ import frc.robot.Commands.AutonCommands.PIDPositioningAutonCommands.PIDGoToPoseA
 import frc.robot.Commands.AutonCommands.PathplannerAutonCommands.PathPlannerAutonCreatorFromFile;
 import frc.robot.Commands.AutonCommands.PathplannerAutonCommands.PathPlannerAutonCreatorFromPoints;
 import frc.robot.Commands.AutonCommands.PathplannerAutonCommands.PathPlannerFollowPath;
-import frc.robot.Commands.AutonCommands.WPILibTrajectoryCommands.WPILibTrajectoryCommandCreator;
 import frc.robot.Constants.AutonConstants.WPILibAutonConstants;
+import frc.robot.Deprecated.WPILibTrajectoryCommandCreator;
 import frc.robot.Subsystems.SwerveDrive.DriveCommandFactory;
 import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.Utils.AutonUtils.GenerateAuto;
@@ -23,20 +23,20 @@ import frc.robot.Utils.CommandUtils.SequentialGroupCommand;
 
 public class ExampleAuton{
 
-    public static Command getExampleAuton(AutonPointManager autonPointManager, DriveCommandFactory driveCommandFactory, DriveSubsystem driveSubsystem) {
+    public static Command getAuton(AutonPointManager autonPointManager, DriveCommandFactory driveCommandFactory, DriveSubsystem driveSubsystem) {
         driveSubsystem.setRobotPose(autonPointManager.kExampleStartPoint);
         
         ArrayList<Command> autonCommands = new ArrayList<>();
         //autonCommands.add(ChoreoTrajectoryCommandCreator.createChoreoTrajectoryCommand("ExampleAutonChoreo", driveSubsystem));
         //autonCommands.add(PathPlannerAutonCreatorFromPoints.createAutonCommand(autonPointManager.kExampleAutonPointArray, 10, driveSubsystem));
-        //autonCommands.add(new PIDGoToPose(autonPointManager.kExampleAutonPoint, driveSubsystem));
+        //autonCommands.add(new PIDGoToPose(autonPointMan ager.kExampleAutonPoint, driveSubsystem));
         //autonCommands.add(PathPlannerAutonCreatorFromFile.createAutonCommand(autonPointManager.kExampleAutonName,
         //   autonPointManager.kExampleAutonEndPoint, 10, driveSubsystem));
         //autonCommands.add(new WPILibTrajectoryCommandCreator("WPILIBExampleAuton",
         //    Rotation2d.fromDegrees(130),
         //    autonPointManager.kExampleWpilibTrajectoryConfig,
         //    driveSubsystem));
-        autonCommands.add(new WPILibTrajectoryCommandCreator("ExampleAuton", autonPointManager.kExampleAutonPointArray, driveSubsystem));
+        //autonCommands.add(new WPILibTrajectoryCommandCreator("ExampleAuton", autonPointManager.kExampleAutonPointArray, driveSubsystem));
        
 
         SequentialGroupCommand auton = GenerateAuto.generateAuto(autonCommands);

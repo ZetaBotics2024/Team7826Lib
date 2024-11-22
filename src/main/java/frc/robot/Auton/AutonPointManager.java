@@ -14,6 +14,7 @@ public class AutonPointManager {
     public final AutonPoint kExampleAutonPoint3;
     public final AutonPoint kExampleAutonPoint4;
     public final AutonPoint[] kExampleAutonPointArray = new AutonPoint[3];
+    public final AutonPoint[] kExampleAutonPointArray2 = new AutonPoint[4];
 
     // Decloration of PathPlanner PathNames
     public final String kExampleAutonName;
@@ -25,10 +26,10 @@ public class AutonPointManager {
     public AutonPointManager() {
         this.kExampleStartPoint = new AutonPoint(1.5134, 7, 0);
 
-        this.kExampleAutonPoint1 = new AutonPoint(1.5134, 7, 90);
-        this.kExampleAutonPoint2 = new AutonPoint(3, 7, 90);
-        this.kExampleAutonPoint3 = new AutonPoint(4.5, 7.5, 90);
-        this.kExampleAutonPoint4 = new AutonPoint(4.5, 7.5 , 90);
+        this.kExampleAutonPoint1 = new AutonPoint(1.5134, 7, 0);
+        this.kExampleAutonPoint2 = new AutonPoint(3, 7, 0);
+        this.kExampleAutonPoint3 = new AutonPoint(4.5, 7.5, 0);
+        this.kExampleAutonPoint4 = new AutonPoint(4.5, 7.5 , 0);
         this.kExampleAutonPoint = new AutonPoint(3, 3, 0);
 
 
@@ -42,8 +43,12 @@ public class AutonPointManager {
         this.kExampleAutonPointArray[0] = this.kExampleAutonPoint1;
         this.kExampleAutonPointArray[1] = this.kExampleAutonPoint2;
         this.kExampleAutonPointArray[2] = this.kExampleAutonPoint3;
+        this.kExampleAutonPointArray2[0] = this.kExampleAutonPoint1;
+        this.kExampleAutonPointArray2[1] = new AutonPoint(7.5, 7.6, 0);
+        this.kExampleAutonPointArray2[2] = new AutonPoint(7.0, 7.6, 0);
+        this.kExampleAutonPointArray2[3] = new AutonPoint(7.0, 7.1, 0);
         //this.kExampleAutonPointArray[3] = this.kExampleAutonPoint4;
-    }
+    } 
 
     private void configExampleWpilibTrajectoryConfig() {
         this.kExampleWpilibTrajectoryConfig = new WPILIBTrajectoryConfig(new double[]{1, 0, 0},

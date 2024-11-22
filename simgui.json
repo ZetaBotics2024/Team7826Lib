@@ -4,16 +4,26 @@
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/AutonChooser": "String Chooser",
       "/SmartDashboard/AutonTestLog": "String Chooser"
-    },
-    "windows": {
-      "/FMSInfo": {
-        "window": {
-          "visible": true
-        }
-      }
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "Retained Values": {
+      "open": false
+    },
+    "Transitory Values": {
+      "open": false
+    },
+    "retained": {
+      "SmartDashboard": {
+        "AutonChooser": {
+          "open": true
+        },
+        "open": true
+      }
+    },
     "transitory": {
       "AdvantageKit": {
         "SwerveDrive": {
@@ -29,9 +39,6 @@
     }
   },
   "NetworkTables Info": {
-    "Clients": {
-      "open": true
-    },
     "Connections": {
       "open": true
     },

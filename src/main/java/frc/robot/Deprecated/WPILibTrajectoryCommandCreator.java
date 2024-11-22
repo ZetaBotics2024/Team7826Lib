@@ -1,4 +1,4 @@
-package frc.robot.Commands.AutonCommands.WPILibTrajectoryCommands;
+package frc.robot.Deprecated;
 
 import java.io.IOException;
 import java.nio.file.Path;

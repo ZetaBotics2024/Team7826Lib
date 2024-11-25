@@ -41,20 +41,21 @@ public class AutonNewWPILIbSystem{
         9.1,
         3.5,
         new Pose2d(20, 20, new Rotation2d(.2)),
-        driveSubsystem));
+        driveSubsystem));*/
         
             
-        autonCommands.add(new WPILibFollowTrajectoryFromPointsCommand("ExampleWPILibPath2", autonPointManager.kExampleAutonPointArray2, 7,
+        autonCommands.add(new WPILibFollowTrajectoryFromPointsCommand("ExampleWPILibPath2", autonPointManager.kExampleAutonPointArray2, 2,
         (new double[] {1.0, 0.0, 0.0}),
         (new double[] {1.0, 0.0, 0.0}),
         (new double[] {1.0, 0.0, 0.0}),
-        4.3,
-        2.3,
-        9.1,
-        3.5,
-        WPILibAutonConstants.kPositionTolorence,
+        1,
+        2.5,
+        2,
+        3.7,
+        new Pose2d(0.01, 0.01, Rotation2d.fromDegrees(1)),
         driveSubsystem));
-        */
+        
+        //autonCommands.add(new PIDGoToPose(autonPointManager.kExampleAutonPointArray2[1], driveSubsystem));
         SequentialGroupCommand auton = GenerateAuto.generateAuto(autonCommands);
         return auton;
     } 

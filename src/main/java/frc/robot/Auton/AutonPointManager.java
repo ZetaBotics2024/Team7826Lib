@@ -14,7 +14,7 @@ public class AutonPointManager {
     public final AutonPoint kExampleAutonPoint3;
     public final AutonPoint kExampleAutonPoint4;
     public final AutonPoint[] kExampleAutonPointArray = new AutonPoint[3];
-    public final AutonPoint[] kExampleAutonPointArray2 = new AutonPoint[4];
+    public final AutonPoint[] kExampleAutonPointArray2 = new AutonPoint[2];
 
     // Decloration of PathPlanner PathNames
     public final String kExampleAutonName;
@@ -44,9 +44,9 @@ public class AutonPointManager {
         this.kExampleAutonPointArray[1] = this.kExampleAutonPoint2;
         this.kExampleAutonPointArray[2] = this.kExampleAutonPoint3;
         this.kExampleAutonPointArray2[0] = this.kExampleAutonPoint1;
-        this.kExampleAutonPointArray2[1] = new AutonPoint(7.5, 7.6, 0);
-        this.kExampleAutonPointArray2[2] = new AutonPoint(7.0, 7.6, 0);
-        this.kExampleAutonPointArray2[3] = new AutonPoint(7.0, 7.1, 0);
+        this.kExampleAutonPointArray2[1] = new AutonPoint(1.03, 7.05, 10);
+        //this.kExampleAutonPointArray2[2] = new AutonPoint(5, 8, 0);
+        //this.kExampleAutonPointArray2[3] = new AutonPoint(3, 7.2, 0);
         //this.kExampleAutonPointArray[3] = this.kExampleAutonPoint4;
     } 
 

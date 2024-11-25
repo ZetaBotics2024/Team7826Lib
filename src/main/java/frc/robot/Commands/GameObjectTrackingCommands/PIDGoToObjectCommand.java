@@ -12,6 +12,7 @@ import frc.robot.Subsystems.GameObjectTracking.GameObjectTracker;
 import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
 import frc.robot.Utils.AutonUtils.AutonPointUtils.FudgeFactor;
+import frc.robot.Utils.CommandUtils.Wait;
 
 public class PIDGoToObjectCommand extends Command {
 
@@ -20,39 +21,22 @@ public class PIDGoToObjectCommand extends Command {
     private PIDGoToPose goToPoseCommand;
     private double[] targetPoseAndHeading;
     private boolean foundTarget = false;
+    private Wait hardCutOffTimer;
 
-    private Supplier<Boolean> isFinishedSupplier;
-
-    private Command finishedCommand = null;
-    private double startTime;
-
-    public PIDGoToObjectCommand(DriveSubsystem driveSubsystem, Supplier<Boolean> isFinishedSupplier) {
+     public PIDGoToObjectCommand(DriveSubsystem driveSubsystem, double maxTime) {
         this.driveSubsystem = driveSubsystem;
-
-        this.isFinishedSupplier = isFinishedSupplier;
-
+        this.hardCutOffTimer = new Wait(maxTime);
         addRequirements(this.driveSubsystem);
     }
 
-    public PIDGoToObjectCommand(DriveSubsystem driveSubsystem, Command finishedCommand, double timeout) {
-        this(driveSubsystem, null);
-
-        this.finishedCommand = finishedCommand;
-
-        this.startTime = Timer.getFPGATimestamp();
-        
-        this.isFinishedSupplier = new Supplier<Boolean>() {
-            public Boolean get() {
-                return finishedCommand.isFinished() || startTime + timeout > Timer.getFPGATimestamp();
-            }
-        };
+    public PIDGoToObjectCommand(DriveSubsystem driveSubsystem) {
+        this(driveSubsystem, 120);
     }
+
+   
 
     @Override
     public void initialize() {
-        if (finishedCommand != null) {
-            finishedCommand.schedule();
-        }
         // Find target position
         this.targetPoseAndHeading = GameObjectTracker.getTargetDistanceAndHeading(); // Returns hypotenuse, heading, x distance and y distance
         // Check that the pose isn't just zeroes
@@ -80,7 +64,7 @@ public class PIDGoToObjectCommand extends Command {
                 this.driveSubsystem);
                 this.goToPoseCommand.initialize();
         }
-        
+        this.hardCutOffTimer.startTimer();
     }
 
     @Override
@@ -92,12 +76,12 @@ public class PIDGoToObjectCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-            this.goToPoseCommand.end(interrupted);
+        this.goToPoseCommand.end(interrupted);
     }
 
     @Override
     public boolean isFinished() {
-        return isFinishedSupplier.get();
+        return this.hardCutOffTimer.hasTimePassed();
     }
 
 }

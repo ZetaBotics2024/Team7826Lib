@@ -16,6 +16,8 @@ import frc.robot.Commands.AutonCommands.PathplannerAutonCommands.PathPlannerAuto
 import frc.robot.Commands.AutonCommands.PathplannerAutonCommands.PathPlannerAutonCreatorFromPoints;
 import frc.robot.Commands.AutonCommands.PathplannerAutonCommands.PathPlannerFollowPath;
 import frc.robot.Commands.AutonCommands.WPILibTrajectoryCommands.WPILibFollowTrajectoryFromPointsCommand;
+import frc.robot.Commands.GameObjectTrackingCommands.PIDGoToObjectCommand;
+import frc.robot.Commands.GameObjectTrackingCommands.SimpleGoToObjectCommand;
 import frc.robot.Constants.AutonConstants.WPILibAutonConstants;
 import frc.robot.Deprecated.WPILibTrajectoryCommandCreator;
 import frc.robot.Subsystems.SwerveDrive.DriveCommandFactory;
@@ -29,8 +31,8 @@ public class AutonNewWPILIbSystem{
         driveSubsystem.setRobotPose(autonPointManager.kExampleStartPoint);
         
         ArrayList<Command> autonCommands = new ArrayList<>();
-         
-        autonCommands.add(new WPILibFollowTrajectoryFromPointsCommand("ExampleWPILibPath", autonPointManager.kExampleAutonPointArray, 10,
+        
+        /*autonCommands.add(new WPILibFollowTrajectoryFromPointsCommand("ExampleWPILibPath", autonPointManager.kExampleAutonPointArray, 10,
         (new double[] {3.0, 0.0, 0.0}),
         (new double[] {3.0, 0.0, 0.0}),
         (new double[] {1.0, 0.0, 0.0}),
@@ -42,7 +44,7 @@ public class AutonNewWPILIbSystem{
         driveSubsystem));
         
             
-        autonCommands.add(new WPILibFollowTrajectoryFromPointsCommand("ExampleWPILibPath2", autonPointManager.kExampleAutonPointArray2, 10,
+        autonCommands.add(new WPILibFollowTrajectoryFromPointsCommand("ExampleWPILibPath2", autonPointManager.kExampleAutonPointArray2, 7,
         (new double[] {1.0, 0.0, 0.0}),
         (new double[] {1.0, 0.0, 0.0}),
         (new double[] {1.0, 0.0, 0.0}),
@@ -52,7 +54,7 @@ public class AutonNewWPILIbSystem{
         3.5,
         WPILibAutonConstants.kPositionTolorence,
         driveSubsystem));
-        
+        */
         SequentialGroupCommand auton = GenerateAuto.generateAuto(autonCommands);
         return auton;
     } 

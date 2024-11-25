@@ -39,7 +39,7 @@ public class AutonManager {
     private void addAllAutons() {
         addAuton(exampleAutonName);
         addAuton(autonNewWPILibSystemName);
-        //this.autonChooser.addDefaultOption(exampleAutonName, exampleAutonName);
+        this.autonChooser.addDefaultOption(autonNewWPILibSystemName, autonNewWPILibSystemName);
     }
 
     private void addAuton(String autonName) {

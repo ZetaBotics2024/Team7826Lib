@@ -15,6 +15,7 @@ import frc.robot.Subsystems.GameObjectTracking.GameObjectTracker;
 import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
 import frc.robot.Utils.AutonUtils.AutonPointUtils.FudgeFactor;
+import frc.robot.Utils.CommandUtils.Wait;
 import frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 
 public class SimpleGoToObjectCommand extends Command {
@@ -29,38 +30,21 @@ public class SimpleGoToObjectCommand extends Command {
     private double yVelocity;
     private double[] targetPoseAndHeading;
     private boolean foundTarget = false;
-
     private Pose2d finalPose;
+    private Wait hardCutOffTimer;
 
-    private Supplier<Boolean> isFinishedSupplier;
 
-    private Command finishedCommand = null;
-    private double startTime;
-
-    public SimpleGoToObjectCommand(DriveSubsystem driveSubsystem, Supplier<Boolean> isFinishedSupplier) {
+    public SimpleGoToObjectCommand(DriveSubsystem driveSubsystem, double maxTime) {
         this.driveSubsystem = driveSubsystem;
-
-        this.isFinishedSupplier = isFinishedSupplier;
-
+        this.hardCutOffTimer = new Wait(maxTime);
+        
         configurePIDs();
         configurePIDTuners();
         addRequirements(this.driveSubsystem);
-    }
+    }   
 
-    public SimpleGoToObjectCommand(DriveSubsystem driveSubsystem, Command finishedCommand, double timeout) {
-        this(driveSubsystem, null);
-
-        this.finishedCommand = finishedCommand;
-
-        this.startTime = Timer.getFPGATimestamp();
-        
-        this.isFinishedSupplier = new Supplier<Boolean>() {
-            public Boolean get() {
-                return finishedCommand.isFinished() || startTime + timeout > Timer.getFPGATimestamp();
-            }
-        };
-
-        
+    public SimpleGoToObjectCommand(DriveSubsystem driveSubsystem) {
+        this(driveSubsystem, 120);
     }
 
     public void configurePIDs() {
@@ -77,9 +61,6 @@ public class SimpleGoToObjectCommand extends Command {
 
     @Override
     public void initialize() {
-        if (finishedCommand != null) {
-            finishedCommand.schedule();
-        }
         // Find target position
         this.targetPoseAndHeading = GameObjectTracker.getTargetDistanceAndHeading(); // Returns hypotenuse, heading, x distance and y distance
         // Check that the pose isn't just zeroes
@@ -104,12 +85,10 @@ public class SimpleGoToObjectCommand extends Command {
 
         
         this.rotationPIDController.reset(this.driveSubsystem.getRobotPose().getRotation().getDegrees());
-        
+        this.hardCutOffTimer.startTimer();
     }
 
     public void configurePIDTuners() {
-        
-
         this.rotationPIDTuner = new NetworkTablesTunablePIDConstants(
             "PIDGoToPose/Rotation",
             PIDPositioningAutonConstants.kPRotationPIDConstant,
@@ -125,7 +104,6 @@ public class SimpleGoToObjectCommand extends Command {
      * Must be called periodicly.
      */
     private void updatePIDValuesFromNetworkTables() {
-
         double[] currentRotationPIDValues = this.rotationPIDTuner.getUpdatedPIDConstants();
         if(this.rotationPIDTuner.hasAnyPIDValueChanged()) {
             this.rotationPIDController = new ProfiledPIDController(
@@ -138,7 +116,7 @@ public class SimpleGoToObjectCommand extends Command {
         }
     }
 
-    public double getTargetRotationalVelocity() {
+    private double getTargetRotationalVelocity() {
         Pose2d robotPose = driveSubsystem.getRobotPose();
         // Slow down as the difference between the target and final rotations gets smaller
         // This does assume that we're within 180 degrees, but that should be reasonable
@@ -147,7 +125,7 @@ public class SimpleGoToObjectCommand extends Command {
 
     @Override
     public void execute() {
-
+        updatePIDValuesFromNetworkTables();
         double rotationVelocity = this.rotationPIDController.calculate(this.driveSubsystem.getRobotPose().getRotation().getRadians(),
             finalPose.getRotation().getRadians());
         if (foundTarget) {
@@ -158,7 +136,7 @@ public class SimpleGoToObjectCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         // Stop the robot
-        this.driveSubsystem.drive(0, 0, 0);
+        this.driveSubsystem.stop();
     }
 
     /*private boolean isWithinTolerance() {
@@ -171,7 +149,7 @@ public class SimpleGoToObjectCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return isFinishedSupplier.get();
+        return this.hardCutOffTimer.hasTimePassed();
     }
 
 }

@@ -24,6 +24,7 @@ import frc.robot.Constants.AutonConstants.WPILibAutonConstants;
 import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.Utils.AutonUtils.WPILIBTrajectoryConfig;
 import frc.robot.Utils.AutonUtils.AutonPointUtils.AutonPoint;
+import frc.robot.Utils.CommandUtils.Wait;
 import frc.robot.Utils.GeneralUtils.Tolerance;
 import frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 import frc.robot.Utils.LEDUtils.LEDManager;
@@ -44,7 +45,7 @@ public class WPILibFollowTrajectoryFromPointsCommand extends Command{
     private NetworkTablesTunablePIDConstants wpiLibRotationPIDValueTuner;
     private Pose2d positionTolorance;
     private TrapezoidProfile.Constraints rotationPIDConstraints;
-
+    private Wait hardCutOffTimer;
     private double startTime = 0;
 
     /**
@@ -57,6 +58,7 @@ public class WPILibFollowTrajectoryFromPointsCommand extends Command{
         this.driveSubsystem = driveSubsystem;
         this.pathName = pathName;
         this.positionTolorance = WPILibAutonConstants.kPositionTolorence;
+        this.hardCutOffTimer = new Wait(maxTime);
 
         double[] translationPIDValues = {WPILibAutonConstants.kPTranslationPIDConstant,
             WPILibAutonConstants.kITranslationPIDConstant,
@@ -90,6 +92,8 @@ public class WPILibFollowTrajectoryFromPointsCommand extends Command{
         this.driveSubsystem = driveSubsystem;
         this.pathName = pathName;
         this.positionTolorance = positionTolorance;
+        this.hardCutOffTimer = new Wait(maxTime);
+
         this.rotationPIDConstraints = new TrapezoidProfile.Constraints(
             maxRotationalSpeed, maxRotationalAcceleration);
         configurePIDs(translationXPIDValues, translationYPIDValues, rotationPIDValues);
@@ -210,6 +214,7 @@ public class WPILibFollowTrajectoryFromPointsCommand extends Command{
     public void initialize() {
         Logger.recordOutput("Auton/" + pathName + "/Started", true);
         this.startTime = Timer.getFPGATimestamp();
+        this.hardCutOffTimer.startTimer();
         configureWPILibDriveController();
         LEDManager.setSolidColor(new int[] {255, 0, 0});
     }
@@ -235,12 +240,12 @@ public class WPILibFollowTrajectoryFromPointsCommand extends Command{
     public boolean isFinished() {
         Pose2d robotPose = this.driveSubsystem.getRobotPose();
         boolean translationXInTolorence = Tolerance.inTolorance(this.desiredEndPoint.getX(),  robotPose.getX(),
-            WPILibAutonConstants.kPositionTolorence.getX());
+            this.positionTolorance.getX());
         boolean translationYInTolorence = Tolerance.inTolorance(this.desiredEndPoint.getY(),  robotPose.getY(),
-            WPILibAutonConstants.kPositionTolorence.getY());
+            this.positionTolorance.getY());
         boolean rotationalInTolorence = Tolerance.inTolorance(this.desiredEndPoint.getRotation().getRadians(),
             robotPose.getRotation().getRadians(),
-            WPILibAutonConstants.kPositionTolorence.getRotation().getRadians());
-        return translationXInTolorence && translationYInTolorence && rotationalInTolorence;
+            this.positionTolorance.getRotation().getRadians());
+        return (translationXInTolorence && translationYInTolorence && rotationalInTolorence) || this.hardCutOffTimer.hasTimePassed();
     }
 }

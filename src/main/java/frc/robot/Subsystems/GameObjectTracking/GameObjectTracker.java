@@ -10,7 +10,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.VisionConstants;
 
 public class GameObjectTracker  {
-    private static PhotonCamera exampleCamera = new PhotonCamera("SPCA2688_AV_Camera");
+    private static PhotonCamera exampleCamera = new PhotonCamera(VisionConstants.kObjectCameraName);
     
     /**
      * Returns the game object position
@@ -37,7 +37,7 @@ public class GameObjectTracker  {
             Logger.recordOutput("ObjectTracking/TargetDistanceMeters", gameObjectDistanceMeters);
             return new double[] {gameObjectDistanceMeters, headingToAddToFaceGameObject, xDistanceToGameObjectMeters, yDistanceToGameObjectMeters};
         }
-        return new double[] {0, 0, 0, 0};//1.5, 20, 1.41, .513};   
+        return new double[] {0, 0, 0, 0};   
     }
 
     

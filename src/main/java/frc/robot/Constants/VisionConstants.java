@@ -20,6 +20,9 @@ public final class VisionConstants {
     public static final Transform3d kExampleCameraToRobotCenter =  new Transform3d(0, 0, 0, new Rotation3d());
     public static final Transform3d kExampleVisionCameraToRobotCenter =  new Transform3d(0, 0, 0, new Rotation3d());
     public static final double kGameObjectHeight = Units.inchesToMeters(2);
+    public static final String kObjectCameraName = "GameObjectCamera";
+
+    
 
     public static final AprilTagFieldLayout kAprilTagLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();  
     public static final int[] kExcludedTags = {};

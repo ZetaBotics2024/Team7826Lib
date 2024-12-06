@@ -17,6 +17,7 @@ import frc.robot.Commands.AutonCommands.PathplannerAutonCommands.PathPlannerAuto
 import frc.robot.Commands.AutonCommands.PathplannerAutonCommands.PathPlannerFollowPath;
 import frc.robot.Commands.AutonCommands.WPILibTrajectoryCommands.WPILibFollowTrajectoryFromPointsCommand;
 import frc.robot.Commands.GameObjectTrackingCommands.PIDGoToObjectCommand;
+import frc.robot.Commands.GameObjectTrackingCommands.RotateToFaceGameObject;
 import frc.robot.Commands.GameObjectTrackingCommands.SimpleGoToObjectCommand;
 import frc.robot.Constants.AutonConstants.WPILibAutonConstants;
 import frc.robot.Deprecated.WPILibTrajectoryCommandCreator;
@@ -31,7 +32,7 @@ public class AutonNewWPILIbSystem{
         driveSubsystem.setRobotPose(autonPointManager.kExampleStartPoint);
         
         ArrayList<Command> autonCommands = new ArrayList<>();
-        
+        autonCommands.add(new RotateToFaceGameObject(driveSubsystem));
         /*autonCommands.add(new WPILibFollowTrajectoryFromPointsCommand("ExampleWPILibPath", autonPointManager.kExampleAutonPointArray, 10,
         (new double[] {3.0, 0.0, 0.0}),
         (new double[] {3.0, 0.0, 0.0}),
@@ -44,16 +45,16 @@ public class AutonNewWPILIbSystem{
         driveSubsystem));*/
         
             
-        autonCommands.add(new WPILibFollowTrajectoryFromPointsCommand("ExampleWPILibPath2", autonPointManager.kExampleAutonPointArray2, 2,
-        (new double[] {1.0, 0.0, 0.0}),
-        (new double[] {1.0, 0.0, 0.0}),
-        (new double[] {1.0, 0.0, 0.0}),
-        1,
-        2.5,
-        2,
-        3.7,
-        new Pose2d(0.01, 0.01, Rotation2d.fromDegrees(1)),
-        driveSubsystem));
+        //autonCommands.add(new WPILibFollowTrajectoryFromPointsCommand("ExampleWPILibPath2", autonPointManager.kExampleAutonPointArray2, 2,
+        //(new double[] {1.0, 0.0, 0.0}),
+        //(new double[] {1.0, 0.0, 0.0}),
+        //(new double[] {1.0, 0.0, 0.0}),
+        //1,
+        //2.5,
+        //2,
+        //3.7,
+        //new Pose2d(0.01, 0.01, Rotation2d.fromDegrees(1)),
+        //driveSubsystem));
         
         //autonCommands.add(new PIDGoToPose(autonPointManager.kExampleAutonPointArray2[1], driveSubsystem));
         SequentialGroupCommand auton = GenerateAuto.generateAuto(autonCommands);

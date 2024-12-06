@@ -48,13 +48,14 @@ public class PIDGoToObjectCommand extends Command {
         );
         // Create position command
         if (foundTarget) {
+            Pose2d robotPose = this.driveSubsystem.getRobotPose();
             this.goToPoseCommand = new PIDGoToPose(
                 new AutonPoint(new Pose2d(
                     new Translation2d(
-                        this.targetPoseAndHeading[2],
-                        this.targetPoseAndHeading[3]
+                        targetPoseAndHeading[2] + robotPose.getX(),
+                        targetPoseAndHeading[3] + robotPose.getY()
                     ),
-                    Rotation2d.fromRadians(this.targetPoseAndHeading[1])
+                    Rotation2d.fromRadians(this.targetPoseAndHeading[1]).plus(robotPose.getRotation())
                 ), 
                 new FudgeFactor(
                     0, 

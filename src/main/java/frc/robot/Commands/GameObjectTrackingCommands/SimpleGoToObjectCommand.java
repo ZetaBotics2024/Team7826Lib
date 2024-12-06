@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Commands.AutonCommands.PIDPositioningAutonCommands.PIDGoToPose;
 import frc.robot.Constants.AutonConstants.PIDPositioningAutonConstants;
+import frc.robot.Constants.GameObjectTrackingConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Subsystems.GameObjectTracking.GameObjectTracker;
 import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
@@ -116,13 +117,6 @@ public class SimpleGoToObjectCommand extends Command {
         }
     }
 
-    private double getTargetRotationalVelocity() {
-        Pose2d robotPose = driveSubsystem.getRobotPose();
-        // Slow down as the difference between the target and final rotations gets smaller
-        // This does assume that we're within 180 degrees, but that should be reasonable
-        return (robotPose.getRotation().getRadians() - finalPose.getRotation().getRadians()) / Math.PI;
-    }
-
     @Override
     public void execute() {
         updatePIDValuesFromNetworkTables();
@@ -139,17 +133,21 @@ public class SimpleGoToObjectCommand extends Command {
         this.driveSubsystem.stop();
     }
 
-    /*private boolean isWithinTolerance() {
+    private boolean isWithinTolerance() {
         Pose2d robotPose = driveSubsystem.getRobotPose();
         return (
-            Math.abs(robotPose.getX() - finalPose.getX()) <= VisionConstants.kGoToObjectPositionTolerance.getX() &&
-            Math.abs(robotPose.getY() - finalPose.getY()) <= VisionConstants.kGoToObjectPositionTolerance.getY()
+            Math.abs(robotPose.getX() - finalPose.getX()) <= GameObjectTrackingConstants.kGoToObjectPositionTolerance.getX() &&
+            Math.abs(robotPose.getY() - finalPose.getY()) <= GameObjectTrackingConstants.kGoToObjectPositionTolerance.getY()
         );
-    }*/
+    }
 
     @Override
     public boolean isFinished() {
-        return this.hardCutOffTimer.hasTimePassed();
+        if(this.finalPose != null) {
+            return isWithinTolerance();
+        } else {
+            return false;
+        }
     }
 
 }

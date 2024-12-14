@@ -42,4 +42,6 @@ public final class VisionConstants {
     public static final FudgeFactor kFudgeFactor = new FudgeFactor(
     0, 0, 0,
     0, 0, 0);
+
+    public static final double kMaxAmbiguity = .1;
 }

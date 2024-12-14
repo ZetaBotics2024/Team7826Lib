@@ -44,15 +44,8 @@ public class AutonNewWPILIbSystem{
         driveSubsystem));*/
         
             
-        autonCommands.add(new WPILibFollowTrajectoryFromPointsCommand("ExampleWPILibPath2", autonPointManager.kExampleAutonPointArray2, 2,
-        (new double[] {1.0, 0.0, 0.0}),
-        (new double[] {1.0, 0.0, 0.0}),
-        (new double[] {1.0, 0.0, 0.0}),
-        1,
-        2.5,
-        2,
-        3.7,
-        new Pose2d(0.01, 0.01, Rotation2d.fromDegrees(1)),
+        autonCommands.add(new WPILibFollowTrajectoryFromPointsCommand("ExampleWPILibPath2",
+        autonPointManager.kExampleAutonPointArray2, 5,
         driveSubsystem));
         
         //autonCommands.add(new PIDGoToPose(autonPointManager.kExampleAutonPointArray2[1], driveSubsystem));

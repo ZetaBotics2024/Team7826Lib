@@ -34,15 +34,17 @@ public class OdometryUpdaterThread extends Thread{
                     for(PhotonPoseEstimator photonPoseEstimator : this.photonPoseEstimators) {
                         photonPoseEstimator.update().ifPresent(visionReading -> {
                             boolean usedExcludedTag = false;
+                            boolean highPoseAmbiguity = false;;
                             for(PhotonTrackedTarget target : visionReading.targetsUsed) {
                                 for(int i = 0; i < VisionConstants.kExcludedTags.length; i++) {
                                     usedExcludedTag = target.getFiducialId() == VisionConstants.kExcludedTags[i];
+                                    highPoseAmbiguity = target.getPoseAmbiguity() > VisionConstants.kMaxAmbiguity;
                                 }
-                                if(usedExcludedTag) {
+                                if(usedExcludedTag || highPoseAmbiguity) {
                                         break;
                                 }
                             }
-                            if(visionReading != null) {
+                            if(visionReading != null && usedExcludedTag && !highPoseAmbiguity) {
                                 Pose2d estimatedPosition = visionReading.estimatedPose.toPose2d();
                                 Pose2d estimatedPositionWithGyroAngle = new Pose2d(estimatedPosition.getTranslation(),
                                     this.driveSubsystem.getGyroAngleRotation2d());

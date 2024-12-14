@@ -17,15 +17,10 @@ import frc.robot.Utils.AutonUtils.AutonPointUtils.FudgeFactor;
 // Do not create an instants of a constant class
 
 public final class VisionConstants {
-    public static final Transform3d kExampleCameraToRobotCenter = new Transform3d(-0.342425, .072, .49935, new Rotation3d(0, Math.toRadians(-20), (Math.toRadians(180))));
-    public static final Transform3d kExampleVisionCameraToRobotCenter =  new Transform3d(0, 0, 0, new Rotation3d());
-    public static final double kGameObjectHeight = Units.inchesToMeters(2);
-    public static final String kObjectCameraName = "GameObjectCamera";
-
-    
+    public static final Transform3d kExampleCameraToRobotCenter =  new Transform3d(0, 0, 0, new Rotation3d());
 
     public static final AprilTagFieldLayout kAprilTagLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();  
-    public static final int[] kExcludedTags = {4, 8};
+    public static final int[] kExcludedTags = {};
     public static OriginPosition originPosition = OriginPosition.kBlueAllianceWallRightSide;
     public static boolean updateVision = true; 
 
@@ -47,7 +42,4 @@ public final class VisionConstants {
     public static final FudgeFactor kFudgeFactor = new FudgeFactor(
     0, 0, 0,
     0, 0, 0);
-
-    public static final Translation2d kGoToObjectPositionTolerance = new Translation2d(0.1, 0.1); // TODO: Hone in on these
-    
 }

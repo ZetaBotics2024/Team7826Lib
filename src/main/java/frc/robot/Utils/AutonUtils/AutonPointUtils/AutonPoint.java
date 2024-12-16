@@ -9,6 +9,7 @@ public class AutonPoint {
     
     private Pose2d autonPoint;
     private FudgeFactor fudgeFactor;
+    private boolean allowMirroring = true;
     
     /**
      * Current Mirring assumes assumes mirred standered mirred field rather than a rotated or fliped.
@@ -34,6 +35,15 @@ public class AutonPoint {
 
     /**
      * Current Mirring assumes assumes mirred standered mirred field rather than a rotated or fliped.
+     * @param pose Pose2d: The x, y and rotaiton value of the point
+     */
+    public AutonPoint(Pose2d pose) {
+        this.autonPoint = pose;
+        this.fudgeFactor = new FudgeFactor(0, 0, 0);
+    }
+
+    /**
+     * Current Mirring assumes assumes mirred standered mirred field rather than a rotated or fliped.
      * @param xPointMeters The x coordnet in meters
      * @param yPointMeters The y coordnet in meters
      * @param rotationAngleDegrees The rotation angle in degrees
@@ -44,12 +54,26 @@ public class AutonPoint {
     }
 
     /**
+     * Current Mirring assumes assumes mirred standered mirred field rather than a rotated or fliped.
+     * @param xPointMeters The x coordnet in meters
+     * @param yPointMeters The y coordnet in meters
+     * @param rotationAngleDegrees The rotation angle in degrees
+     * @param allowMirroring Should the point be able to mirror
+     */
+    public AutonPoint(double xPointMeters, double yPointMeters, double rotationAngleDegrees, boolean allowMirroring) {
+        this.autonPoint = new Pose2d(xPointMeters, yPointMeters, Rotation2d.fromDegrees(rotationAngleDegrees));
+        this.fudgeFactor = new FudgeFactor(0, 0, 0);
+        this.allowMirroring = allowMirroring;
+    }
+
+    /**
      * Gets the auton point. Auto mirred depending on alliance.
      * @return Pose2d: The auton point which is mirred for the current alliance.
      */
     public Pose2d getAutonPoint()
-    {
-        if(!RobotModeConstants.isBlueAlliance) {
+    {   
+        
+        if(!RobotModeConstants.isBlueAlliance && allowMirroring) {
             return new Pose2d(this.autonPoint.getX() + fudgeFactor.getRedFudgeFactors().getX(),
                 (FieldConstants.kFieldWidthMeters - this.autonPoint.getY()) +
                 fudgeFactor.getRedFudgeFactors().getY(),

@@ -1,4 +1,4 @@
-package frc.robot.Commands.GameObjectTrackingCommands;
+package frc.robot.Deprecated;
 
 import java.util.function.Supplier;
 

@@ -138,7 +138,7 @@ public final class DrivetrainConstants {
 
         // Swerve Module Configuration Values
         public static final double kWheelDiameterMeters = Units.inchesToMeters(3.733428923);// 3.83931974016;
-        public static final double kDriveGearRatio = (50.0 * 17.0 * 45.0) / (14.0 * 27.0 * 15.0);// 6.75/1.0;
+        public static final double kDriveGearRatio = (50.0 * 17.0 * 45.0) / (14.0 * 27.0 * 15.0);// 6.75/1.0; //(50/16) * (19/25) * (45/15)
         public static final double kTurningGearRatio = 150.0 / 7.0;
 
         public static final double kWheelDistancePerRotation = kWheelDiameterMeters * Math.PI;

@@ -38,9 +38,9 @@ public class GameObjectTracker  {
             Logger.recordOutput("ObjectTracking/TargetDistanceMeters", gameObjectDistanceMeters);
             return new double[] {gameObjectDistanceMeters, headingToAddToFaceGameObject, xDistanceToGameObjectMeters, yDistanceToGameObjectMeters};
         }
-        return new double[] {1.5, .34,
-            1.5*Math.sin(.34),
-            1.5*Math.cos(.34) + 0.5842,
+        return new double[] {1.5, Units.degreesToRadians(32),
+            .9,
+            7-6.591,
         };   
     }
 

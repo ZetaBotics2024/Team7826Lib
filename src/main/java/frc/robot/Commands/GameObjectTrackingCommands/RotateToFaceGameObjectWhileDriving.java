@@ -3,6 +3,8 @@ package frc.robot.Commands.GameObjectTrackingCommands;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Angle;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonConstants.PIDPositioningAutonConstants;
@@ -13,13 +15,16 @@ import frc.robot.Utils.CommandUtils.Wait;
 import frc.robot.Utils.GeneralUtils.Tolerance;
 import frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTablesTunablePIDConstants;
 
-public class RotateToFaceGameObject extends Command {
+public class RotateToFaceGameObjectWhileDriving extends Command {
     private DriveSubsystem driveSubsystem;
     private NetworkTablesTunablePIDConstants rotationPIDTuner;
     private ProfiledPIDController rotationPIDController;
     private double goalRotation = 30000;
+    private Wait hardCutOffTimer;
+    private double velocityMPS;
+    private double anlgeOffsetDegrees;
 
-    public RotateToFaceGameObject(DriveSubsystem driveSubsystem) {
+    public RotateToFaceGameObjectWhileDriving(double velocityMPS, double maxTime, double anlgeOffsetDegrees, DriveSubsystem driveSubsystem) {
         this.driveSubsystem = driveSubsystem;
         this.rotationPIDController = new ProfiledPIDController(
             RotateToFaceGameObjectConstants.kPRotationConstant,
@@ -29,20 +34,16 @@ public class RotateToFaceGameObject extends Command {
         );
         this.rotationPIDController.enableContinuousInput(-Math.PI, Math.PI);
         this.rotationPIDController.setTolerance(RotateToFaceGameObjectConstants.kRotationTolorence);
-        this.rotationPIDTuner = new NetworkTablesTunablePIDConstants("RotateToFaceGameObject" + "/PID", PIDPositioningAutonConstants.kPRotationPIDConstant,
+        this.rotationPIDTuner = new NetworkTablesTunablePIDConstants("RotateToFaceGameObjectWhileDriving" + "/PID", PIDPositioningAutonConstants.kPRotationPIDConstant,
             PIDPositioningAutonConstants.kIRotationPIDConstant,
             PIDPositioningAutonConstants.kDRotationPIDConstant, 
             0.0);
-        addRequirements(this.driveSubsystem);
-    }
 
-    public void configurePIDTuners() {
-        this.rotationPIDTuner = new NetworkTablesTunablePIDConstants(
-            "PIDGoToPose/Rotation",
-            PIDPositioningAutonConstants.kPRotationPIDConstant,
-            PIDPositioningAutonConstants.kIRotationPIDConstant,
-            PIDPositioningAutonConstants.kDRotationPIDConstant,
-            0);
+        this.hardCutOffTimer = new Wait(maxTime);
+        this.velocityMPS = velocityMPS;
+        this.anlgeOffsetDegrees = anlgeOffsetDegrees;
+        
+        addRequirements(this.driveSubsystem);
     }
 
     /**
@@ -66,26 +67,26 @@ public class RotateToFaceGameObject extends Command {
 
     @Override
     public void initialize() {
-        Logger.recordOutput("RotateToFaceGameObject" + "/FacingGameObject", false);
-        this.goalRotation = driveSubsystem.getRobotPose().getRotation().getRadians() + GameObjectTracker.getTargetDistanceAndHeading()[1];
+        this.goalRotation = driveSubsystem.getRobotPose().getRotation().getRadians() + GameObjectTracker.getTargetDistanceAndHeading()[1] +
+            Units.degreesToRadians(anlgeOffsetDegrees);
+        this.hardCutOffTimer.startTimer();
     }
 
     @Override
     public void execute() {
         updatePIDValuesFromNetworkTables();
         double rotationSpeed = rotationPIDController.calculate(driveSubsystem.getRobotPose().getRotation().getRadians(), goalRotation);
-        this.driveSubsystem.drive(0.0, 0.0, rotationSpeed, true);
+        this.driveSubsystem.drive(this.velocityMPS, 0.0, rotationSpeed, false);
     }
 
     @Override 
     public void end(boolean interrupt) {
-        Logger.recordOutput("RotateToFaceGameObject" + "/FacingGameObject", true);
         this.driveSubsystem.stop();
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return this.hardCutOffTimer.hasTimePassed();
     }
 
 }

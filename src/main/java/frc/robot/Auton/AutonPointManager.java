@@ -24,9 +24,9 @@ public class AutonPointManager {
     public WPILIBTrajectoryConfig kExampleWpilibTrajectoryConfig;
 
     public AutonPointManager() {
-        this.kExampleStartPoint = new AutonPoint(2.151, 6.521, 0);
+        this.kExampleStartPoint = new AutonPoint(0, 0, 0);
 
-        this.kExampleAutonPoint1 = new AutonPoint(1.5134, 7, 0);
+        this.kExampleAutonPoint1 = new AutonPoint(0, 0, 0);
         this.kExampleAutonPoint2 = new AutonPoint(3, 7, 0);
         this.kExampleAutonPoint3 = new AutonPoint(4.5, 7.5, 0);
         this.kExampleAutonPoint4 = new AutonPoint(4.5, 7.5 , 0);
@@ -44,7 +44,7 @@ public class AutonPointManager {
         this.kExampleAutonPointArray[1] = this.kExampleAutonPoint2;
         this.kExampleAutonPointArray[2] = this.kExampleAutonPoint3;
         this.kExampleAutonPointArray2[0] = this.kExampleAutonPoint1;
-        this.kExampleAutonPointArray2[1] = new AutonPoint(22, 7.05, 10);
+        this.kExampleAutonPointArray2[1] = new AutonPoint(2, -1, 30);
         //this.kExampleAutonPointArray2[2] = new AutonPoint(5, 8, 0);
         //this.kExampleAutonPointArray2[3] = new AutonPoint(3, 7.2, 0);
         //this.kExampleAutonPointArray[3] = this.kExampleAutonPoint4;

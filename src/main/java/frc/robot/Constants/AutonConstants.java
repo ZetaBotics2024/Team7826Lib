@@ -42,13 +42,13 @@ public final class AutonConstants {
     }
 
     public final class WPILibAutonConstants {
-        public static double kPTranslationPIDConstant = RobotModeConstants.kIsNotSim ? 3 : 3;
+        public static double kPTranslationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : 3;
         public static double kITranslationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : 0;
         public static double kDTranslationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : 0;
-        public static final double kMaxTranslationalSpeedInMetersPerSecond = RobotModeConstants.kIsNotSim ? 3.4 : 4.22;
+        public static final double kMaxTranslationalSpeedInMetersPerSecond = RobotModeConstants.kIsNotSim ? 4.4 : 4.22;
         public static final double kMaxTranslationalAccelerationInMetersPerSecond = RobotModeConstants.kIsNotSim ? 2.881 : 1.087;
 
-        public static double kPRotationPIDConstant = RobotModeConstants.kIsNotSim ? .59 : .59;
+        public static double kPRotationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : .59;
         public static double kIRotationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : 0;
         public static double kDRotationPIDConstant = RobotModeConstants.kIsNotSim ? 0 : 0;
         public static final double kMaxRotationalSpeedInRadsPerSecond = RobotModeConstants.kIsNotSim ? 7.5 : 9.89199998351;

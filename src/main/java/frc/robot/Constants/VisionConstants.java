@@ -21,8 +21,6 @@ public final class VisionConstants {
 
     public static final AprilTagFieldLayout kAprilTagLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();  
     public static final int[] kExcludedTags = {};
-    public static final double kMaxAmbiguity = .2;    
-
     public static OriginPosition originPosition = OriginPosition.kBlueAllianceWallRightSide;
     public static boolean updateVision = true; 
 
@@ -44,4 +42,6 @@ public final class VisionConstants {
     public static final FudgeFactor kFudgeFactor = new FudgeFactor(
     0, 0, 0,
     0, 0, 0);
+
+    public static final double kMaxAmbiguity = .1;
 }

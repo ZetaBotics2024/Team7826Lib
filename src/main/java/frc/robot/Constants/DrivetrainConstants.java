@@ -30,10 +30,10 @@ public final class DrivetrainConstants {
         public static final String kBackRightModuleName = "BackRightModule";
 
         // Drive Motor CANIDs
-        public static final int kFrontLeftDriveMotorCANID = 24;
-        public static final int kFrontRightDriveMotorCANID = 2;
-        public static final int kBackLeftDriveMotorCANID = 3;
-        public static final int kBackRightDriveMotorCANID = 4;
+        public static final int kFrontLeftDriveMotorCANID = 5;
+        public static final int kFrontRightDriveMotorCANID = 6;
+        public static final int kBackLeftDriveMotorCANID = 7;
+        public static final int kBackRightDriveMotorCANID = 8;
 
         public static final boolean kFrontLeftDriveMotorInverted =  RobotModeConstants.kIsNotSim ? false : false;
         public static final boolean kFrontRightDriveMotorInverted = RobotModeConstants.kIsNotSim ? false : false;
@@ -41,36 +41,36 @@ public final class DrivetrainConstants {
         public static final boolean kBackRightDriveMotorInverted = RobotModeConstants.kIsNotSim ? false : false;
 
         // Turn Motor CANIDs
-        public static final int kFrontLeftTurnMotorCANID = 5;
-        public static final int kFrontRightTurnMotorCANID = 6;
-        public static final int kBackLeftTurnMotorCANID = 7;
-        public static final int kBackRightTurnMotorCANID = 8;
+        public static final int kFrontLeftTurnMotorCANID = 9;
+        public static final int kFrontRightTurnMotorCANID = 10;
+        public static final int kBackLeftTurnMotorCANID = 11;
+        public static final int kBackRightTurnMotorCANID = 12;
 
-        public static final boolean kFrontLeftTurnMotorInverted = RobotModeConstants.kIsNotSim ? true : true;
-        public static final boolean kFrontRightTurnMotorInverted = RobotModeConstants.kIsNotSim ? true : true;
-        public static final boolean kBackLeftTurnMotorInverted = RobotModeConstants.kIsNotSim ? true : true;
-        public static final boolean kBackRightTurnMotorInverted = RobotModeConstants.kIsNotSim ? true : true;
+        public static final boolean kFrontLeftTurnMotorInverted = RobotModeConstants.kIsNotSim ? false : true;
+        public static final boolean kFrontRightTurnMotorInverted = RobotModeConstants.kIsNotSim ? false : true;
+        public static final boolean kBackLeftTurnMotorInverted = RobotModeConstants.kIsNotSim ? false : true;
+        public static final boolean kBackRightTurnMotorInverted = RobotModeConstants.kIsNotSim ? false : true;
 
         // Turning Absolute Encoder CANIDs
-        public static final int kFrontLeftTurningAbsoluteEncoderCANID = 9;
-        public static final int kFrontRightTurningAbsoluteEncoderCANID = 10;
-        public static final int kBackLeftTurningAbsoluteEncoderCANID = 11;
-        public static final int kBackRightTurningAbsoluteEncoderCANID = 12;
+        public static final int kFrontLeftTurningAbsoluteEncoderCANID = 13;
+        public static final int kFrontRightTurningAbsoluteEncoderCANID = 14;
+        public static final int kBackLeftTurningAbsoluteEncoderCANID = 15;
+        public static final int kBackRightTurningAbsoluteEncoderCANID = 16;
 
         // Turning Absolute Encoder Offsets in rotations
-        public static final double kFrontLeftTurningAbsoluteEncoderOffsetRotations = 0.712646;
-        public static final double kFrontRightTurningAbsoluteEncoderOffsetRotations= 0.433838;
-        public static final double kBackLeftTurningAbsoluteEncoderOffsetRotations = 0.894043;
-        public static final double kBackRightTurningAbsoluteEncoderOffsetRotations = 0.440674;
+        public static final double kFrontLeftTurningAbsoluteEncoderOffsetRotations = 0.458008; //Done
+        public static final double kFrontRightTurningAbsoluteEncoderOffsetRotations= 0.963379; //
+        public static final double kBackLeftTurningAbsoluteEncoderOffsetRotations = 0.925537;
+        public static final double kBackRightTurningAbsoluteEncoderOffsetRotations = 0.749268;
     
         // End of Swerve Module Configuration Constants
 
-        public static final int kGyroCANID = 13; 
+        public static final int kGyroCANID = 17; 
 
         // Kinematic Configuration
 
-        public static final double kDistanceBetweenCentersOfRightAndLeftWheels = .60325;
-        public static final double kDistanceBetweenCentersOfFrontAndBackWheels = .60325;
+        public static final double kDistanceBetweenCentersOfRightAndLeftWheels = Units.inchesToMeters(23.75);
+        public static final double kDistanceBetweenCentersOfFrontAndBackWheels = Units.inchesToMeters(23.75);
         public static final double kRadiusFromCenterToFarthestSwerveModule = Math
         .sqrt(((kDistanceBetweenCentersOfRightAndLeftWheels * kDistanceBetweenCentersOfRightAndLeftWheels)
             + (kDistanceBetweenCentersOfFrontAndBackWheels * kDistanceBetweenCentersOfFrontAndBackWheels)));
@@ -114,7 +114,7 @@ public final class DrivetrainConstants {
         public static final double kDriveMotorMinPercentOutput = -1;
         public static final double kDriveMotorMaxPercentOutput = 1;
 
-        public static final double kPModuleTurnPIDValue = .1001;
+        public static final double kPModuleTurnPIDValue = .25;
         public static final double kIModuleTurnPIDValue = 0;
         public static final double kDModuleTurnPIDValue = 0;
         public static final double kFFModuleTurnPIDValue = 0;
@@ -134,12 +134,12 @@ public final class DrivetrainConstants {
         public static final int kDriveMotorMaxVoltageSparkMaxTalonFX = 12;
 
         //TODO: This can definetly be lowered
-        public static final int kTurnMotorMaxVoltageSparkMaxTalonFX = 12; 
+        public static final int kTurnMotorMaxVoltageSparkMaxTalonFX = 2; 
 
         // Swerve Module Configuration Values
-        public static final double kWheelDiameterMeters = Units.inchesToMeters(3.733428923);// 3.83931974016;
-        public static final double kDriveGearRatio = (50.0 * 17.0 * 45.0) / (14.0 * 27.0 * 15.0);// 6.75/1.0; //(50/16) * (19/25) * (45/15)
-        public static final double kTurningGearRatio = 150.0 / 7.0;
+        public static final double kWheelDiameterMeters = Units.inchesToMeters(3.9064);//Units.inchesToMeters(3.733428923);// 3.83931974016;
+        public static final double kDriveGearRatio = 7.125;// 6.75/1.0;
+        public static final double kTurningGearRatio = 12.8/1;
 
         public static final double kWheelDistancePerRotation = kWheelDiameterMeters * Math.PI;
         public static final double kDriveConversionPositionFactor = kWheelDistancePerRotation / kDriveGearRatio;

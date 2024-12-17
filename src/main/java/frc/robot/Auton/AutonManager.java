@@ -6,7 +6,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Auton.Autons.AutonNewWPILIbSystem;
+import frc.robot.Auton.Autons.RealRobotTestAuton;
+import frc.robot.Auton.Autons.DriveToGameObjectTestAuton;
 import frc.robot.Auton.Autons.ExampleAuton;
 import frc.robot.Subsystems.SwerveDrive.DriveCommandFactory;
 import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
@@ -15,7 +16,8 @@ import frc.robot.Utils.CommandUtils.CustomWaitCommand;
 public class AutonManager {
     // Decloration of auton names
     private final String exampleAutonName = "ExampleAuton";
-    private final String autonNewWPILibSystemName = "TestAuton";
+    private final String realRobotTestAutonName = "RealRobotTestAuton";
+    private final String driveToGameObjectTestAutonName = "DriveToGameObjectTestAuton";
 
     // Decloration of auton chooser
     private LoggedDashboardChooser<String> autonChooser;
@@ -38,8 +40,9 @@ public class AutonManager {
 
     private void addAllAutons() {
         addAuton(exampleAutonName);
-        addAuton(autonNewWPILibSystemName);
-        this.autonChooser.addDefaultOption(autonNewWPILibSystemName, autonNewWPILibSystemName);
+        addAuton(realRobotTestAutonName);
+        addAuton(driveToGameObjectTestAutonName);
+        this.autonChooser.addDefaultOption(realRobotTestAutonName, realRobotTestAutonName);
     }
 
     private void addAuton(String autonName) {
@@ -59,8 +62,11 @@ public class AutonManager {
             case exampleAutonName:
                 selectedAuton = ExampleAuton.getAuton(this.autonPointManager, this.driveCommandFactory, this.driveSubsystem);
                 break;
-            case autonNewWPILibSystemName:
-                selectedAuton = AutonNewWPILIbSystem.getAuton(this.autonPointManager, this.driveCommandFactory, this.driveSubsystem);
+            case realRobotTestAutonName:
+                selectedAuton = RealRobotTestAuton.getAuton(this.autonPointManager, this.driveCommandFactory, this.driveSubsystem);
+                break;
+            case driveToGameObjectTestAutonName:
+                selectedAuton = DriveToGameObjectTestAuton.getAuton(this.autonPointManager, this.driveCommandFactory, this.driveSubsystem);
                 break;
             default:
                 selectedAuton = new Command() {};

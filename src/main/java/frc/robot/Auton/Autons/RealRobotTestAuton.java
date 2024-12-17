@@ -16,32 +16,20 @@ import frc.robot.Utils.AutonUtils.GenerateAuto;
 import frc.robot.Utils.CommandUtils.ParallelGroupCommand;
 import frc.robot.Utils.CommandUtils.SequentialGroupCommand;
 
-public class AutonNewWPILIbSystem{
+public class RealRobotTestAuton{
 
     public static Command getAuton(AutonPointManager autonPointManager, DriveCommandFactory driveCommandFactory, DriveSubsystem driveSubsystem) {
         driveSubsystem.setRobotPose(autonPointManager.kExampleStartPoint);
         
         ArrayList<Command> autonCommands = new ArrayList<>();
-        autonCommands.add(new RotateToFaceGameObjectWhileDriving(3, 2, 12, driveSubsystem));
-        /* 
-        autonCommands.add(new WPILibFollowTrajectoryFromPointsCommand("ExampleWPILibPath", autonPointManager.kExampleAutonPointArray2, 10,
-        (new double[] {3.0, 0.0, 0.0}),
-        (new double[] {3.0, 0.0, 0.0}),
-        (new double[] {1.0, 0.0, 0.0}),
-        4.3,
-        2.3,
-        9.1,
-        3.5,
-        new Pose2d(.02, .02, new Rotation2d(.05)),
+        
+        
+        autonCommands.add(new WPILibFollowTrajectoryFromPointsCommand("RealRobotTestAutonTrajectory1",
+        autonPointManager.kRealRobotTestAutonPointArray1, 
+        10,
         driveSubsystem));
         
-            
-        autonCommands.add(new WPILibFollowTrajectoryFromPointsCommand("ExampleWPILibPath2",
-        autonPointManager.kExampleAutonPointArray2, 5,
-        driveSubsystem));
         
-        //autonCommands.add(new PIDGoToPose(autonPointManager.kExampleAutonPointArray2[1], driveSubsystem));
-        */
         SequentialGroupCommand auton = GenerateAuto.generateAuto(autonCommands);
         return auton;
         

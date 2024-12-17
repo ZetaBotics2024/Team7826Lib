@@ -16,8 +16,8 @@ import frc.robot.Utils.GeneralUtils.NetworkTableChangableValueUtils.NetworkTable
 public class SwerveModuleIOSim implements SwerveModuleIO{
     private static final double LOOP_PERIOD_SECS = 0.02;
 
-    private DCMotorSim driveMotor = new DCMotorSim(DCMotor.getNEO(1), 1, .025/SwerveModuleConstants.kDriveGearRatio);// 0.025);
-    private DCMotorSim turnMotor = new DCMotorSim(DCMotor.getNEO(1), 1, 0.004/SwerveModuleConstants.kTurningGearRatio);
+    private DCMotorSim driveMotor = new DCMotorSim(DCMotor.getKrakenX60(1), 1, .025/SwerveModuleConstants.kDriveGearRatio);// 0.025);
+    private DCMotorSim turnMotor = new DCMotorSim(DCMotor.getKrakenX60(1), 1, 0.004/SwerveModuleConstants.kTurningGearRatio);
 
     private PIDController drivePIDController; 
     private PIDController turnPIDController; 

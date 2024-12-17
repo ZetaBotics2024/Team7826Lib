@@ -39,8 +39,8 @@ public class GameObjectTracker  {
             return new double[] {gameObjectDistanceMeters, headingToAddToFaceGameObject, xDistanceToGameObjectMeters, yDistanceToGameObjectMeters};
         }
         return new double[] {1.5, Units.degreesToRadians(32),
-            .9,
-            7-6.591,
+            .8,
+            .6,
         };   
     }
 

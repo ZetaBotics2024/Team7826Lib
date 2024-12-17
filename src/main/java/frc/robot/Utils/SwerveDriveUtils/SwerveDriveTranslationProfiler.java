@@ -12,9 +12,9 @@ public class SwerveDriveTranslationProfiler extends Command{
     private double maxTranslationMPS;
     private boolean finishedBasedOnSpeed = false;
     private double startTime = 0;
-    public SwerveDriveTranslationProfiler(DriveSubsystem driveSubsystem, double maxRotatoinRadsPerSecond) {
+    public SwerveDriveTranslationProfiler(DriveSubsystem driveSubsystem, double maxMetersPerSecond) {
         this.driveSubsystem = driveSubsystem;
-        this.maxTranslationMPS = maxRotatoinRadsPerSecond;
+        this.maxTranslationMPS = maxMetersPerSecond;
 
         addRequirements(driveSubsystem);
     }

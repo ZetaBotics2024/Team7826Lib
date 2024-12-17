@@ -3,6 +3,7 @@ package frc.robot.Commands.GameObjectTrackingCommands;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
@@ -23,6 +24,7 @@ public class RotateToFaceGameObjectWhileDriving extends Command {
     private Wait hardCutOffTimer;
     private double velocityMPS;
     private double anlgeOffsetDegrees;
+    private Pose2d startPosition;
 
     public RotateToFaceGameObjectWhileDriving(double velocityMPS, double maxTime, double anlgeOffsetDegrees, DriveSubsystem driveSubsystem) {
         this.driveSubsystem = driveSubsystem;
@@ -67,14 +69,19 @@ public class RotateToFaceGameObjectWhileDriving extends Command {
 
     @Override
     public void initialize() {
-        this.goalRotation = driveSubsystem.getRobotPose().getRotation().getRadians() + GameObjectTracker.getTargetDistanceAndHeading()[1] +
-            Units.degreesToRadians(anlgeOffsetDegrees);
+        //this.goalRotation = driveSubsystem.getRobotPose().getRotation().getRadians() + GameObjectTracker.getTargetDistanceAndHeading()[1] +
+        //    Units.degreesToRadians(anlgeOffsetDegrees);
+        this.startPosition = this.driveSubsystem.getRobotPose();
         this.hardCutOffTimer.startTimer();
     }
 
     @Override
     public void execute() {
         updatePIDValuesFromNetworkTables();
+        double dX = GameObjectTracker.getTargetDistanceAndHeading()[2] - (this.startPosition.getX() - this.driveSubsystem.getRobotPose().getX());
+        double dY = GameObjectTracker.getTargetDistanceAndHeading()[3] - (this.startPosition.getY() - this.driveSubsystem.getRobotPose().getY());
+        this.goalRotation = Math.atan(dX/dY);
+        Logger.recordOutput("RotateToFaceGameObjectWhileDriving/GoalRotation", this.goalRotation);
         double rotationSpeed = rotationPIDController.calculate(driveSubsystem.getRobotPose().getRotation().getRadians(), goalRotation);
         this.driveSubsystem.drive(this.velocityMPS, 0.0, rotationSpeed, false);
     }

@@ -1,5 +1,6 @@
 package frc.robot.Commands.SwerveDriveCommands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import org.littletonrobotics.junction.Logger;
@@ -21,24 +22,23 @@ import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
  * away from the alliance wall is positive.
  */
 public class FieldOrientedDriveCommand extends Command {
-  private final DriveSubsystem m_driveSubsystem;
-  private final DoubleSupplier translationXSupplier;
-  private final DoubleSupplier translationYSupplier;
-  private final DoubleSupplier rotationSupplier;
-
-  /**
-   * Constructor
-   * 
-   * @param m_driveSubsystem     drivetrain
-   * @param robotAngleSupplier   supplier for the current angle of the robot
-   * @param translationXSupplier supplier for translation X component, in meters
-   *                             per second
-   * @param translationYSupplier supplier for translation Y component, in meters
-   *                             per second
-   * @param rotationSupplier     supplier for rotation component, in radians per
-   *                             second
-   */
-  public FieldOrientedDriveCommand(
+    private final DriveSubsystem m_driveSubsystem;
+    private final DoubleSupplier translationXSupplier;
+    private final DoubleSupplier translationYSupplier;
+    private final DoubleSupplier rotationSupplier;
+    /**
+     * Constructor
+     * 
+     * @param m_driveSubsystem     drivetrain
+     * @param robotAngleSupplier   supplier for the current angle of the robot
+     * @param translationXSupplier supplier for translation X component, in meters
+     *                             per second
+     * @param translationYSupplier supplier for translation Y component, in meters
+     *                             per second
+     * @param rotationSupplier     supplier for rotation component, in radians per
+     *                             second
+     */
+    public FieldOrientedDriveCommand(
         DriveSubsystem m_driveSubsystem, DoubleSupplier translationXSupplier,
         DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
 
@@ -57,9 +57,16 @@ public class FieldOrientedDriveCommand extends Command {
     @Override
     public void execute() {
         if(ControlConstants.kIsDriverControlled) {
-            double translationX = this.translationXSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond;
-            double translationY = this.translationYSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond;
-            double rotation = this.rotationSupplier.getAsDouble() * SwerveDriveConstants.kMaxRotationAnglePerSecond;
+            double translationX = ControlConstants.slowModeActive ? 
+            this.translationXSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond * ControlConstants.kTranslationXSlowModeMultipler :
+            this.translationXSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond;
+            double translationY = ControlConstants.slowModeActive ? 
+            this.translationYSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond * ControlConstants.kTranslationYSlowModeMultipler : 
+            this.translationYSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond; 
+            double rotation = ControlConstants.slowModeActive ? 
+            this.rotationSupplier.getAsDouble() * SwerveDriveConstants.kMaxRotationAnglePerSecond * ControlConstants.kRotationSlowModeMultipler : 
+            this.rotationSupplier.getAsDouble() * SwerveDriveConstants.kMaxRotationAnglePerSecond;
+
 
             Logger.recordOutput("SwerveDrive/Inputs/InputedXSpeedMPS", translationX);
             Logger.recordOutput("SwerveDrive/Inputs/InputedYSpeedMPS", translationY);

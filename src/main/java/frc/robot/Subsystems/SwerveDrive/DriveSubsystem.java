@@ -2,6 +2,7 @@ package frc.robot.Subsystems.SwerveDrive;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.controls.jni.ControlConfigJNI;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -14,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ControlConstants;
 import frc.robot.Constants.AutonConstants.PathPlannerAutonConstants;
 import frc.robot.Constants.DrivetrainConstants.SwerveDriveConstants;
 import frc.robot.Subsystems.PoseEstimation.PoseEstimatorSubsystem;
@@ -235,6 +237,14 @@ public class DriveSubsystem extends SubsystemBase{
 
     public PoseEstimatorSubsystem getPoseEstimatorSubsystem() {
         return this.poseEstimatorSubsystem;
+    }
+
+    public void setSlowModeTrue() {
+        ControlConstants.slowModeActive = true;
+    }
+
+    public void setSlowModeFalse() {
+        ControlConstants.slowModeActive = false;
     }
 
     private void configurePathPlannerAutoBuilder() {

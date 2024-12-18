@@ -48,10 +48,11 @@ public class SwerveDriveVoltageVSMetersPerSecondTableCreater {
 
     private void logTable(String moduleName) {
         finished = true;
+        String tableInCSVFormat = moduleName +" VoltageVSMetersPerSecondData:\n";
         for(int i = 0; i < voltageVSMetersPerSecondTable[0].length; i++) {
             table = table.concat("\n" + voltageVSMetersPerSecondTable[0][i] + ", " + voltageVSMetersPerSecondTable[1][i]);
         }
-            
+        System.out.println(tableInCSVFormat);
         //Logger.recordOutput(moduleName + " VoltageVSMPSTable: ", voltageVSMetersPerSecondTable[0][0]);
     }
 }

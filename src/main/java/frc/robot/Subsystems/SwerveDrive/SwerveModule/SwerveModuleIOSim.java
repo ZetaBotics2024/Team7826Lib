@@ -24,6 +24,7 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
     
     private double desiredVelocityRPM = 0;
     private double desiredPositionRotations = 0;
+    private double driveVolts = 0;
 
     private String swerveModuleName;
 
@@ -91,7 +92,7 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
         
         updatePIDValuesFromNetworkTables();
 
-        double driveVolts = MathUtil.clamp(this.drivePIDController.calculate(this.driveMotor.getAngularVelocityRPM(), this.desiredVelocityRPM), -12, 12);
+        //driveVolts = MathUtil.clamp(this.drivePIDController.calculate(this.driveMotor.getAngularVelocityRPM(), this.desiredVelocityRPM), -12, 12);
         double turnVolts = MathUtil.clamp(this.turnPIDController.calculate(this.turnMotor.getAngularPositionRotations(), this.desiredPositionRotations), -12, 12);
 
         inputs.driveMotorRotations = this.driveMotor.getAngularPositionRotations();
@@ -108,7 +109,7 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
         inputs.turnMotorAppliedVolts = turnVolts;
         inputs.turnMotorCurrentAmps = new double[] {this.turnMotor.getCurrentDrawAmps()};
         
-        this.driveMotor.setInputVoltage(driveVolts);
+        this.driveMotor.setInputVoltage(this.driveVolts);
         this.turnMotor.setInputVoltage(turnVolts);
     }
 
@@ -121,7 +122,8 @@ public class SwerveModuleIOSim implements SwerveModuleIO{
 
     @Override
     public void setDesiredModuleDriveVoltage(double desiredVoltage) {
-        this.driveMotor.setInputVoltage(desiredVoltage);
+        this.driveVolts = desiredVoltage;
+        //this.driveMotor.setInputVoltage(desiredVoltage);
     }
 
 

@@ -51,7 +51,7 @@ public class SwerveModule {
         updateInputs();
         //if(DriverStation.isEnabled()) {
         //    voltageTableCreator.createVoltageVSMetersPerSecondTable(swerveModuleName,
-        //    13, .1, 1, getDriveMotorSpeedInMetersPerSecond(),
+        //    13, .1, 2, getDriveMotorSpeedInMetersPerSecond(),
         //    this.swerveModuleIO::setDesiredModuleDriveVoltage);
         //}
         

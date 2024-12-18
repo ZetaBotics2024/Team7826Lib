@@ -17,8 +17,11 @@ public class SwerveDriveVoltageVSMetersPerSecondTableCreater {
     private int currentIndex = 0;
     private boolean finished = false;
 
+    private String table;
+
     public void createVoltageVSMetersPerSecondTable(String moduleName, double maxVolts, double voltageSpacing,
         double timeBetweenVoltChecks, double moduleSpeedMetersPerSecond, Consumer<Double> setVoltageMethod) {
+        table = "VoltageVSMPS";
         if(voltageVSMetersPerSecondTable == null) {
             int rowsInTable = (int)(maxVolts / voltageSpacing);
             voltageVSMetersPerSecondTable = new double[2][rowsInTable];
@@ -39,13 +42,14 @@ public class SwerveDriveVoltageVSMetersPerSecondTableCreater {
                 if(!finished)
                     logTable(moduleName);
             }
-        }           
+        }    
+        System.out.println(table);       
     }
 
     private void logTable(String moduleName) {
         finished = true;
         for(int i = 0; i < voltageVSMetersPerSecondTable[0].length; i++) {
-            System.out.println(voltageVSMetersPerSecondTable[0][i] + ", " + voltageVSMetersPerSecondTable[1][i]);
+            table = table.concat("\n" + voltageVSMetersPerSecondTable[0][i] + ", " + voltageVSMetersPerSecondTable[1][i]);
         }
             
         //Logger.recordOutput(moduleName + " VoltageVSMPSTable: ", voltageVSMetersPerSecondTable[0][0]);

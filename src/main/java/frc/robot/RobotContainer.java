@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Auton.AutonManager;
 import frc.robot.Commands.SwerveDriveCommands.FieldOrientedDriveCommand;
 import frc.robot.Commands.SwerveDriveCommands.LockSwerves;
@@ -64,6 +65,8 @@ public class RobotContainer {
         this.driverController.bindToButton(this.resetOdometry, XboxController.Button.kY.value);
         this.driverController.bindToButton(this.driveCommandFactory.createSwerveDriveTranslationProfiler(), XboxController.Button.kX.value);
         this.driverController.bindToButton(this.driveCommandFactory.createSwerveDriveRotationProfiler(), XboxController.Button.kB.value);
+        this.driverController.bindToButton(Commands.runOnce(this.driveSubsystem::setSlowModeTrue),
+        Commands.runOnce(this.driveSubsystem::setSlowModeFalse), XboxController.Button.kLeftBumper.value);
     }
 
     /**

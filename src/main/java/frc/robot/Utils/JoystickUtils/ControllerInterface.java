@@ -192,6 +192,39 @@ public class ControllerInterface {
     }
 
     /**
+     * Returns The Left Bumper's value
+     * @return Boolean: The Left Bumper's value
+     */
+    public boolean getLeftBumperValue() {
+        return this.controller.getLeftBumper();
+    }
+
+    /**
+     * Returns The Right Bumper's value
+     * @return Boolean: The Right Bumper's value
+     */
+    public boolean getRightBumperValue() {
+        return this.controller.getRightBumper();
+    }
+
+    /**
+     * Returns The Left Triggure's value
+     * @return Boolean: The Left Triggure's value
+     */
+    public boolean getLeftTriggureValue() {
+        return this.controller.getLeftTriggerAxis() != 0;
+    }
+
+     /**
+     * Returns The Right Triggure's value
+     * @return Boolean: The Right Triggure's value
+     */
+    public boolean getRightTriggureValue() {
+        return this.controller.getRightTriggerAxis() != 0;
+    }
+    
+
+    /**
      * Modifes the value return by appling a deadband to it. The deadband can be set in the ControllerConstant Files
      * @param value
      * @return Double: The joystick value with the deadband applied. 

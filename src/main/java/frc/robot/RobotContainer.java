@@ -13,8 +13,6 @@ import frc.robot.Constants.ControlConstants;
 import frc.robot.Subsystems.SwerveDrive.DriveCommandFactory;
 import frc.robot.Subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.Utils.JoystickUtils.ControllerInterface;
-import frc.robot.Utils.SwerveDriveUtils.SwerveDriveRotationProfiler;
-import frc.robot.Utils.SwerveDriveUtils.SwerveDriveTranslationProfiler;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
